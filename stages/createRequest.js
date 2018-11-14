@@ -1,48 +1,41 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const Extra = require('telegraf/extra');
-const menu = require('../menu');
+const processing = require('../processing');
 
 const name = 'createRequest';
+let userMessage;
 
 const scene = new WizardScene(
-    'name',
+    name,
     (ctx) => {
-        ctx.reply('Введіть фотографію загубленого домашньго улюбленця');
+        ctx.reply('Завантажте фотографію загубленого домашньго улюбленця');
+        userMessage = { id: 2 };
         return ctx.wizard.next();
     },
     (ctx) => {
-        if ('photo' in ctx.message){
-            ctx.reply(`Фото завантажено
-                Відправте кординати пропажі`, Extra.markup((markup) => {
-                return markup.resize()
-                    .keyboard([
-                        markup.locationRequestButton('Відправити координати')
-                    ]);
-            }) );
-            return ctx.wizard.next();
-        } else
-        {
-            ctx.reply('Щось пішло не так, відправте фото ще раз');
+        ctx.reply('Завантажте місце де улюбленець загубився');
+        if ('photo' in ctx.message) {
+            userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1];
         }
-        console.log(ctx.message);  
+        userMessage.userId = ctx.message.from.id;
+        return ctx.wizard.next();
     },
     (ctx) => {
-        if ('location' in ctx.message){
-            ctx.reply(`Координати пропажі отримані
-            Введіть невеликий опис улюбленця одним повідомленням`);
-            return ctx.wizard.next();
+        ctx.reply('Введіть невеликий опис улюбленця одним повідомленням');
+        if ('location' in ctx.message) {
+            userMessage.location = ctx.message.location;
         }
-        else {
-            ctx.reply('Щось пішло не так, натисніть на кнопку "Відправити координати" ще раз');
-        }
+        return ctx.wizard.next();
     },
     (ctx) => {
-        ctx.reply('Дякую, Ваша заявка надіслана модератору, після перевірки вона буде відправлена всім користувачам в радіусі 500м від пропажі', menu);
-        return ctx.scene.leave(); 
-    }
+        if ('text' in ctx.message) {
+            userMessage.description = ctx.message.text;
+        }
+        processing(userMessage, ctx);
+        return ctx.scene.leave();
+    },
 );
 
 module.exports = {
     name,
-    scene
+    scene,
 };

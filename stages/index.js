@@ -9,5 +9,5 @@ stage.register(getInfoScene.scene, updateDataScene.scene, createRequestScene.sce
 
 module.exports = {
     stage,
-    stagesArray: [getInfoScene, updateDataScene, createRequestScene ]
+    stagesArray: [getInfoScene, updateDataScene, createRequestScene],
 };

@@ -1,31 +1,27 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const Extra = require('telegraf/extra');
-const menu = require('../menu');
+const processing = require('../processing');
 
-const name = 'updateDate';
+const name = 'updateData';
+let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Введіть ваші нові GPS координати', Extra.markup((markup) => {
-            return markup.resize()
-                .keyboard([
-                    markup.locationRequestButton('Відправити координати')
-                ]);
-        }));
+        ctx.reply('Введіть ваші GPS координати');
+        userMessage = { id: 1 };
         return ctx.wizard.next();
     },
     (ctx) => {
-        if ('location' in ctx.message){
-            ctx.reply('Ваші геоданні оновлено', menu);
-            ctx.scene.leave();
-        } 
-        else { 
-            ctx.reply('Щось пішло не так, натисніть на кнопку "Відправити координати" ще раз');
-        }      
-    });
+        if ('location' in ctx.message) {
+            userMessage.location = ctx.message.location;
+        }
+        userMessage.userId = ctx.message.from.id;
+        processing(userMessage, ctx);
+        return ctx.scene.leave();
+    },
+);
 
 module.exports = {
     name,
-    scene
+    scene,
 };
