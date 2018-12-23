@@ -1,14 +1,14 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const processing = require('../processing');
 
-const name = 'updateData';
+const name = 'changeLocation';
 let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Для реєстрації введіть ваші GPS координати');
-        userMessage = { id: 1 };
+        ctx.reply('Введіть ваші нові GPS координати');
+        userMessage = { id: 4 };
         return ctx.wizard.next();
     },
     (ctx) => {

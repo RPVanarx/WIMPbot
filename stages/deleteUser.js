@@ -1,19 +1,19 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const processing = require('../processing');
 
-const name = 'updateData';
+const name = 'deleteUser';
 let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Для реєстрації введіть ваші GPS координати');
-        userMessage = { id: 1 };
+        ctx.reply('Ви впевнені що бажаєте видалитися із системи? (напишіть так чи ні)');
+        userMessage = { id: 5 };
         return ctx.wizard.next();
     },
     (ctx) => {
-        if ('location' in ctx.message) {
-            userMessage.location = ctx.message.location;
+        if (ctx.message.text === 'так') {
+            userMessage.answer = true;
         }
         userMessage.userId = ctx.message.from.id;
         processing(userMessage, ctx);
