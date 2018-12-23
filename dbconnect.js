@@ -1,25 +1,27 @@
-require('dotenv').config();
-const { Pool, Client } = require('pg');
+// const { Pool, Client } = require('pg');
+const { Client } = require('pg');
+const config = require('./config');
 
+/*
 const pool = new Pool({
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
+    user: config.user,
+    host: config.host,
+    database: config.database,
+    password: config.password,
+    port: config.port,
 });
 
 pool.query('SELECT NOW()', (err, res) => {
     console.log(err, res);
     pool.end();
 });
-
+*/
 const client = new Client({
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
+    user: config.user,
+    host: config.host,
+    database: config.database,
+    password: config.password,
+    port: config.port,
 });
 
 client.connect();

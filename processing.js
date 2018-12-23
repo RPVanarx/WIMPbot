@@ -22,7 +22,7 @@ module.exports = (value, ctx) => {
             }
             break;
         case 3:
-            if ('radius' in message && 'description' in message) {
+            if ('radius' in message && 'days' in message) {
                 ctx.reply('Заявка оброблена', menu);
                 // code connect to database
             } else {

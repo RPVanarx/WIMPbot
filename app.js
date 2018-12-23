@@ -1,8 +1,9 @@
-require('dotenv').config();
 const Telegraf = require('telegraf');
 
-const bot = new Telegraf(process.env.TOKEN);
 const session = require('telegraf/session');
+const config = require('./config');
+
+const bot = new Telegraf(config.token);
 const { stage, stagesArray } = require('./stages');
 const menu = require('./menu');
 
