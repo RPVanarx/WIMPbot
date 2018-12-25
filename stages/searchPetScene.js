@@ -1,14 +1,14 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const processing = require('../processing');
 
-const name = 'createRequest';
+const name = 'searchPetScene';
 let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
         ctx.reply('Завантажте фотографію загубленого домашньго улюбленця');
-        userMessage = { id: 2 };
+        userMessage = { id: 4 };
         return ctx.wizard.next();
     },
     (ctx) => {

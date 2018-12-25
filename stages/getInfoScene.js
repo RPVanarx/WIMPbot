@@ -1,7 +1,7 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const processing = require('../processing');
 
-const name = 'getInfo';
+const name = 'getInfoScene';
 let userMessage;
 
 const scene = new WizardScene(
@@ -9,7 +9,7 @@ const scene = new WizardScene(
     (ctx) => {
         ctx.reply(`В якому радіусі від ваших координат відібрати повідомлення пошуку?
             Введіть числове значення в метрах (приклад 2км = 2000)`);
-        userMessage = { id: 3 };
+        userMessage = { id: 7 };
         return ctx.wizard.next();
     },
     (ctx) => {

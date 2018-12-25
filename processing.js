@@ -1,4 +1,4 @@
-const menu = require('./menu');
+const { mainMenu } = require('./menu');
 
 module.exports = (value, ctx) => {
     const message = value;
@@ -7,40 +7,59 @@ module.exports = (value, ctx) => {
     switch (message.id) {
         case 1:
             if ('location' in message) {
-                ctx.reply('Вітаю, ви зареєструвалися в системі', menu);
+                ctx.reply('Вітаю, ви зареєструвалися в системі', mainMenu);
                 // code connect to database
             } else {
-                ctx.reply('Неправильно введенна локація, спробуйте знову', menu);
+                ctx.reply('Неправильно введенна локація, спробуйте знову', mainMenu);
             }
             break;
+
         case 2:
-            if ('photo' in message && 'location' in message && 'description' in message) {
-                ctx.reply('Заявка оброблена', menu);
-                // code connect to database
-            } else {
-                ctx.reply('Неправильно введено один із пунктів, спробуйте знову', menu);
-            }
-            break;
-        case 3:
-            if ('radius' in message && 'days' in message) {
-                ctx.reply('Заявка оброблена', menu);
-                // code connect to database
-            } else {
-                ctx.reply('Неправильно введено один із пунктів, спробуйте знову', menu);
-            }
-            break;
-        case 4:
+
             if ('location' in message) {
-                ctx.reply('Локацію змінено', menu);
+                ctx.reply('Локацію змінено', mainMenu);
                 // code connect to database
             } else {
-                ctx.reply('Неправильно введенна локація, спробуйте знову', menu);
+                ctx.reply('Неправильно введенна локація, спробуйте знову', mainMenu);
             }
             break;
-        case 5:
+
+        case 3:
             if (message.answer === true) {
-                ctx.reply('Вашу локацію видалено', menu);
-            } else (ctx.reply('Відміна видалення', menu));
+                ctx.reply('Вашу локацію видалено', mainMenu);
+            } else (ctx.reply('Відміна видалення', mainMenu));
+            break;
+
+
+        case 4:
+            if ('photo' in message && 'location' in message && 'description' in message) {
+                ctx.reply('Заявка оброблена та внесена на модерацію', mainMenu);
+                // code connect to database
+            } else {
+                ctx.reply('Неправильно введено один із пунктів, спробуйте знову', mainMenu);
+            }
+            break;
+
+        case 5:
+            if ('photo' in message && 'location' in message && 'description' in message) {
+                ctx.reply('Заявка оброблена та внесена на модерацію', mainMenu);
+                // code connect to database
+            } else {
+                ctx.reply('Неправильно введено один із пунктів, спробуйте знову', mainMenu);
+            }
+            break;
+
+        case 6:
+            ctx.reply('Ваша заявка перенесена в архів', mainMenu);
+            break;
+
+        case 7:
+            if ('radius' in message && 'days' in message) {
+                ctx.reply('Заявка оброблена', mainMenu);
+                // code connect to database
+            } else {
+                ctx.reply('Неправильно введено один із пунктів, спробуйте знову', mainMenu);
+            }
             break;
         default:
             console.log('error');

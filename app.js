@@ -1,18 +1,23 @@
 const Telegraf = require('telegraf');
 
 const session = require('telegraf/session');
-const config = require('./config');
+const {
+    TOKEN, WELCOME_MESSAGE, REGISTRATION_MENU_MESSAGE, REQUEST_MENU_MESSAGE,
+} = require('./config');
 
-const bot = new Telegraf(config.token);
+const bot = new Telegraf(TOKEN);
 const { stage, stagesArray } = require('./stages');
-const menu = require('./menu');
-const menu1 = require('./menu/registration');
+const { registrationMenu, applyMenu } = require('./menu');
 
 bot.use(session());
 bot.use(stage.middleware());
 
-stagesArray.forEach(s => bot.action(s.name, ctx => ctx.scene.enter(s.name)));
+stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene.name)));
 
-bot.start(ctx => ctx.reply('Привіт, для початку роботи зі мною зареєструйтесь в системі', menu));
-bot.on('registration', menu1);
+bot.start(ctx => ctx.reply(WELCOME_MESSAGE, registrationMenu));
+
+bot.action('registration', ctx => ctx.reply(REGISTRATION_MENU_MESSAGE, registrationMenu));
+
+bot.action('applyMenu', ctx => ctx.reply(REQUEST_MENU_MESSAGE, applyMenu));
+
 bot.startPolling();
