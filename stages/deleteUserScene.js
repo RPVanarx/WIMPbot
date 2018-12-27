@@ -6,6 +6,12 @@ const { mainMenu } = require('../menu');
 const name = 'deleteUserScene';
 let userMessage;
 
+function isYes(text) {
+    const yesArr = ['Так', 'так', 'да', 'Да', 'yes', 'Yes'];
+    if (yesArr.find(value => value === text)) { return true; }
+    return false;
+}
+
 const scene = new WizardScene(
     name,
     (ctx) => {
@@ -14,10 +20,7 @@ const scene = new WizardScene(
         return ctx.wizard.next();
     },
     (ctx) => {
-        if (ctx.message.text === 'так'
-            || ctx.message.text === 'да'
-            || ctx.message.text === 'Так'
-            || ctx.message.text === 'Да') {
+        if (ctx.message && isYes(ctx.message.text)) {
             userMessage.userId = ctx.message.from.id;
             // send request (delete user)
             ctx.reply(DELETE_USER_TRUE, mainMenu);

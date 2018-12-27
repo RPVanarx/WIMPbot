@@ -1,5 +1,13 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const processing = require('../processing');
+// const processing = require('../processing');
+const {
+    SEARCH_PET_SCENE_PHOTO_MESSAGE,
+    SEARCH_PET_SCENE_LOCATION_MESSAGE,
+    SEARCH_PET_SCENE_DESCRIPTION_MESSAGE,
+    SEARCH_PET_SCENE_ERROR,
+    REGISTRATION_ENTER,
+} = require('../config');
+const { mainMenu } = require('../menu');
 
 const name = 'searchPetScene';
 let userMessage;
@@ -7,30 +15,38 @@ let userMessage;
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Завантажте фотографію загубленого домашньго улюбленця');
-        userMessage = { id: 4 };
+        ctx.reply(SEARCH_PET_SCENE_PHOTO_MESSAGE);
         return ctx.wizard.next();
     },
     (ctx) => {
-        ctx.reply('Завантажте місце де улюбленець загубився');
-        if ('photo' in ctx.message) {
+        if (ctx.message && ctx.message.photo) {
+            ctx.reply(SEARCH_PET_SCENE_LOCATION_MESSAGE);
+            userMessage = { id: 4 };
             userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1];
+            return ctx.wizard.next();
         }
-        userMessage.userId = ctx.message.from.id;
-        return ctx.wizard.next();
+        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        return ctx.scene.leave();
     },
     (ctx) => {
-        ctx.reply('Введіть невеликий опис улюбленця одним повідомленням');
-        if ('location' in ctx.message) {
+        if (ctx.message && ctx.message.location) {
+            ctx.reply(SEARCH_PET_SCENE_DESCRIPTION_MESSAGE);
             userMessage.location = ctx.message.location;
+            return ctx.wizard.next();
         }
-        return ctx.wizard.next();
+        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        return ctx.scene.leave();
     },
     (ctx) => {
-        if ('text' in ctx.message) {
+        if (ctx.message && ctx.message.text) {
             userMessage.description = ctx.message.text;
+            userMessage.userId = ctx.message.from.id;
+            // send to logic (userMessage)
+            ctx.reply(REGISTRATION_ENTER, mainMenu);
+            return ctx.scene.leave();
         }
-        processing(userMessage, ctx);
+        // processing(userMessage, ctx);
+        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
         return ctx.scene.leave();
     },
 );

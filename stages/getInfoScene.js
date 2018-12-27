@@ -1,33 +1,36 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const processing = require('../processing');
+// const processing = require('../processing');
+const { GET_INFO_SCENE_LENGTH_MESSAGE, GET_INFO_SCENE_DAYS_MESSAGE, SEARCH_PET_SCENE_ERROR } = require('../config');
 
+const { mainMenu } = ('../menu');
 const name = 'getInfoScene';
 let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply(`В якому радіусі від ваших координат відібрати повідомлення пошуку?
-            Введіть числове значення в метрах (приклад 2км = 2000)`);
-        userMessage = { id: 7 };
+        ctx.reply(GET_INFO_SCENE_LENGTH_MESSAGE);
         return ctx.wizard.next();
     },
     (ctx) => {
-        ctx.reply(`На скільки старі повідомлення ви хочете відібрати?
-            Введіть числове значення в днях (приклад пошукові повідомлення які були подані протягом останніх 2-х місяців - 60)`);
-        if ('text' in ctx.message) {
+        if (ctx.message && ctx.message.text) {
+            ctx.reply(GET_INFO_SCENE_DAYS_MESSAGE);
+            userMessage = { id: 7 };
             userMessage.radius = ctx.message.text;
+            return ctx.wizard.next();
         }
-        userMessage.userId = ctx.message.from.id;
-        return ctx.wizard.next();
+        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        return ctx.scene.leave();
     },
     (ctx) => {
-        ctx.reply('Ваша заявка отримана, очікуйте відповіді.');
-        if ('text' in ctx.message) {
+        if (ctx.message && ctx.message.text) {
             userMessage.days = ctx.message.text;
+            userMessage.userId = ctx.message.from.id;
+            // send usermessage to logic
+            return ctx.scene.leave();
         }
-        processing(userMessage, ctx);
-
+        // processing(userMessage, ctx);
+        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
         return ctx.scene.leave();
     },
 );

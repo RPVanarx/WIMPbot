@@ -1,21 +1,32 @@
 const Extra = require('telegraf/extra');
+const {
+    MAIN_MENU_BUTTON_REGISTRATION,
+    MAIN_MENU_BUTTON_REQUEST,
+    MAIN_MENU_BUTTON_SAMPLE,
+    REGISTRATION_MENU_BUTTON_REGISTRATION,
+    REGISTRATION_MENU_BUTTON_CHANGE_LOCATION,
+    REGISTRATION_MENU_BUTTON_DELETE_USER,
+    APPLY_MENU_SEARCH,
+    APPLY_MENU_FIND,
+    APPLY_MENU_DELETE,
+} = require('../config');
 
 const mainMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton('Зареєструватися або оновити свої координати', 'registration')],
-    [message.callbackButton('Подати заявку на пошук', 'applyMenu')],
-    [message.callbackButton('Отримати інфо про пошук тварин', 'getInfoScene')],
+    [message.callbackButton(MAIN_MENU_BUTTON_REGISTRATION, 'registration')],
+    [message.callbackButton(MAIN_MENU_BUTTON_REQUEST, 'applyMenu')],
+    [message.callbackButton(MAIN_MENU_BUTTON_SAMPLE, 'getInfoScene')],
 ]));
 
 const registrationMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton('Зареєструватися', 'registrationUserScene')],
-    [message.callbackButton('Змінити свою локацію', 'changeLocationScene')],
-    [message.callbackButton('Видалитися із системи', 'deleteUserScene')],
+    [message.callbackButton(REGISTRATION_MENU_BUTTON_REGISTRATION, 'registrationUserScene')],
+    [message.callbackButton(REGISTRATION_MENU_BUTTON_CHANGE_LOCATION, 'changeLocationScene')],
+    [message.callbackButton(REGISTRATION_MENU_BUTTON_DELETE_USER, 'deleteUserScene')],
 ]));
 
 const applyMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton('Я загубив улюбленця', 'searchPetScene')],
-    [message.callbackButton('Я знайшов улюбленця', 'findPetScene')],
-    [message.callbackButton('Видалити свою заявку', 'deletePetScene')],
+    [message.callbackButton(APPLY_MENU_SEARCH, 'searchPetScene')],
+    [message.callbackButton(APPLY_MENU_FIND, 'findPetScene')],
+    [message.callbackButton(APPLY_MENU_DELETE, 'deletePetScene')],
 ]));
 
 /* const yesNo = Extra.markup((markup)=>{
