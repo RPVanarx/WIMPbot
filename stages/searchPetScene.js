@@ -6,10 +6,11 @@ const {
     SEARCH_PET_SCENE_DESCRIPTION_MESSAGE,
     SEARCH_PET_SCENE_ERROR,
     REGISTRATION_ENTER,
+    EVENT_SCENE_SEARCH_PET,
 } = require('../config');
 const { mainMenu } = require('../menu');
 
-const name = 'searchPetScene';
+const name = EVENT_SCENE_SEARCH_PET;
 let userMessage;
 
 const scene = new WizardScene(

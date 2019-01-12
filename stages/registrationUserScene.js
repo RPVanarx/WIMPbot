@@ -1,10 +1,15 @@
 const WizardScene = require('telegraf/scenes/wizard');
 // const processing = require('../processing');
-const { REGISTRATION_MESSAGE, REGISTRATION_ERROR, REGISTRATION_ENTER } = require('../config');
+const {
+    REGISTRATION_MESSAGE,
+    REGISTRATION_ERROR,
+    REGISTRATION_ENTER,
+    EVENT_SCENE_REGISTRATION_USER,
+} = require('../config');
 const { mainMenu } = require('../menu');
-const { userRegistration } = require('../services');
+const { registerUser } = require('../services');
 
-const name = 'registrationUserScene';
+const name = EVENT_SCENE_REGISTRATION_USER;
 let userMessage;
 
 const scene = new WizardScene(
@@ -18,7 +23,7 @@ const scene = new WizardScene(
             userMessage = {};
             userMessage.id = ctx.message.from.id;
             userMessage.location = ctx.message.location;
-            userRegistration(userMessage);
+            registerUser(userMessage);
             ctx.reply(REGISTRATION_ENTER, mainMenu);
             return ctx.scene.leave();
         }

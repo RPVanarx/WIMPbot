@@ -12,4 +12,4 @@ function addToBase(id, location) {
     return true;
 }
 
-module.exports = { User: { isExist, addToBase } };
+module.exports = { isExist, addToBase };

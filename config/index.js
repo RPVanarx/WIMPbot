@@ -9,6 +9,16 @@ module.exports = {
         password: process.env.PGPASSWORD,
         port: process.env.PGPORT,
     },
+    RADIUS: 1000,
+    EVENT_REGISTRATION_MENU: 'registrationMenu',
+    EVENT_REQUEST_MENU: 'requestMenu',
+    EVENT_SCENE_GET_INFO: 'getInfoScene',
+    EVENT_SCENE_REGISTRATION_USER: 'registrationUserScene',
+    EVENT_SCENE_UPDATE_LOCATION: 'updateLocationScene',
+    EVENT_SCENE_DELETE_USER: 'deleteUserScene',
+    EVENT_SCENE_SEARCH_PET: 'searchPetScene',
+    EVENT_SCENE_FIND_PET: 'findPetScene',
+    EVENT_SCENE_DELETE_PET: 'deletePetScene',
     MAIN_MENU_BUTTON_REGISTRATION: 'Зареєструватися або оновити свої координати',
     MAIN_MENU_BUTTON_REQUEST: 'Подати заявку на пошук',
     MAIN_MENU_BUTTON_SAMPLE: 'Вибірка улюбленців яких шукають або знайшли',
@@ -37,7 +47,7 @@ module.exports = {
     FIND_PET_SCENE_LOCATION_MESSAGE: 'Завантажте місце де улюбленець був знайдений',
     FIND_PET_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
     // DELETE_PET_SCENE_QUESTION: 'Улюбленець знайшовся? (напишіть так чи ні)',
-    GET_INFO_SCENE_LENGTH_MESSAGE: `В якому радіусі від ваших координат відібрати повідомлення пошуку?
+    GET_INFO_SCENE_RADIUS_MESSAGE: `В якому радіусі від ваших координат відібрати повідомлення пошуку?
     Введіть числове значення в метрах (приклад 2км = 2000)`,
     GET_INFO_SCENE_DAYS_MESSAGE: `На скільки старі повідомлення ви хочете відібрати?
     Введіть числове значення в днях (приклад пошукові повідомлення які були подані протягом останніх 2-х місяців - 60)`,

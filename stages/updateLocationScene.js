@@ -1,9 +1,14 @@
 const WizardScene = require('telegraf/scenes/wizard');
 // const processing = require('../processing');
-const { CHANGE_LOCATION_SCENE_MESSAGE, REGISTRATION_ENTER, REGISTRATION_ERROR } = require('../config');
+const {
+    CHANGE_LOCATION_SCENE_MESSAGE,
+    REGISTRATION_ENTER,
+    REGISTRATION_ERROR,
+    EVENT_SCENE_UPDATE_LOCATION,
+} = require('../config');
 const { mainMenu } = require('../menu');
 
-const name = 'changeLocationScene';
+const name = EVENT_SCENE_UPDATE_LOCATION;
 let userMessage;
 
 const scene = new WizardScene(

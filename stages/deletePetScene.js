@@ -1,8 +1,8 @@
 const WizardScene = require('telegraf/scenes/wizard');
 // const processing = require('../processing');
-const { DELETE_PET_SCENE_MESSAGE /* DELETE_PET_SCENE_QUESTION */ } = require('../config');
+const { DELETE_PET_SCENE_MESSAGE, EVENT_SCENE_DELETE_PET /* DELETE_PET_SCENE_QUESTION */ } = require('../config');
 
-const name = 'deletePetScene';
+const name = EVENT_SCENE_DELETE_PET;
 // let userMessage;
 
 const scene = new WizardScene(

@@ -1,63 +1,89 @@
-const { User } = require('../dbwrapper');
+const user = require('../db/user');
+const searchRequest = require('../db/searchRequests');
+const foundRequest = require('../db/foundRequest');
+const { RADIUS } = require('../config');
 
-function userRegistration(user) {
-    if (!User.isExist(user.id)) { // if user exist in base
-        User.addToBase(user.id, user.location);
-        return true;
-    }
-    return false;
+function registerUser(client) {
+    if (user.isExist(client.id)) { return false; }
+    user.create(client.id, client.location.longitude, client.location.latitude);
+    return true;
 }
 
-function userChangeLocation(user) {
-    if (User.isExist(user.id)) {
-        User.changeLocation(user.id, user.location);
-        return true;
-    }
-    return false;
+function updateUserLocation(client) {
+    if (!user.isExist(client.id)) { return false; }
+    user.updateLocation(client.id, client.location.longitude, client.location.latitude);
+    return true;
 }
 
-function userDelete(user) {
-    if (User.isExist(user.id)) {
-        User.delete(user.id);
-        return true;
-    }
-    return false;
+function deleteUser(client) {
+    if (!user.isExist(client.id)) { return false; }
+    user.delete(client.id);
+    return true;
 }
 
-function addSearchRequest(pet) {
-    User.addSearch(pet);
-    return User.whoUsersInRadius(pet.location); // return array of user who is in a radius of search
+function createSearchRequest(pet) {
+    searchRequest.create(pet);
+    const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
+    // return array of users who are in a radius of search
+    user.sendSearchMessage(users, pet); // send searchMessage to users
+    return true; // ?
 }
 
-function addFindRequest(pet) {
-    User.addFind(pet);
-    return User.whoUsersInRadius(pet.location); // return array of user who is in a radius of find
+function createFoundRequest(pet) {
+    foundRequest.create(pet);
+    const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
+    user.sendFoundMessage(users, pet);
+    return true;
 }
 
-function allUserRequests(user) {
-    return User.searchRequest(user).push(...User.findRequest(user));
-    // return to user array of his requests
+function userSearchRequests(client) {
+    const allSearchRequests = searchRequest.findByUser(client.id);
+    user.sendSearchMessage(client.id, allSearchRequests);
+    return true;
 }
 
-function deleteUserRequest(request) {
-    return User.deleteRequest(request); // if delete true else false
+function userFoundRequests(client) {
+    const allSearchRequests = searchRequest.findByUser(client.id);
+    user.sendFoundMessage(client.id, allSearchRequests);
+    return true;
 }
 
-function requestInfo(user, request) {
-    if (User.isExist(user.id)) {
-        return User.findAllReguest(user, request);
-        // return array all request which is true for search point(length, days) if user is reg
-    }
-    return false;
+function deleteSearchRequest(id) {
+    return searchRequest.delete(id);
+}
+
+function deleteFoundRequest(id) {
+    return foundRequest.delete(id);
+}
+
+function getSearchRequests(client, radius, days) {
+    if (!user.isExist(client.id)) { return false; }
+    // user.get (id) достать юзера  searchrequest.find(long, lat, radius, date)
+    const clientLocation = user.getLocation(client.id);
+    const searchRequests = searchRequest.find(clientLocation, radius, days);
+    user.sendSearchMessage(searchRequests);
+    return true;
+}
+
+function getFoundRequests(client, radius, days) {
+    if (!user.isExist(client.id)) { return false; }
+    // user.get (id) достать юзера  searchrequest.find(long, lat, radius, date)
+    const clientLocation = user.getLocation(client.id);
+    const foundRequests = foundRequest.find(clientLocation, radius, days);
+    user.sendFoundMessage(foundRequests);
+    return true;
 }
 
 module.exports = {
-    userRegistration,
-    userChangeLocation,
-    userDelete,
-    addSearchRequest,
-    addFindRequest,
-    allUserRequests,
-    deleteUserRequest,
-    requestInfo,
+    registerUser,
+    updateUserLocation,
+    deleteUser,
+    createSearchRequest,
+    createFoundRequest,
+    userSearchRequests,
+    userFoundRequests,
+    deleteSearchRequest,
+    deleteFoundRequest,
+    getSearchRequests,
+    getFoundRequests,
 };

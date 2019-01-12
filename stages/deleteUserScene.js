@@ -1,9 +1,14 @@
 const WizardScene = require('telegraf/scenes/wizard');
 // const processing = require('../processing');
-const { DELETE_USER_TRUE, DELETE_USER_FALSE, DELETE_USER_QUESTION } = require('../config');
+const {
+    DELETE_USER_TRUE,
+    DELETE_USER_FALSE,
+    DELETE_USER_QUESTION,
+    EVENT_SCENE_DELETE_USER,
+} = require('../config');
 const { mainMenu } = require('../menu');
 
-const name = 'deleteUserScene';
+const name = EVENT_SCENE_DELETE_USER;
 let userMessage;
 
 function isYes(text) {
