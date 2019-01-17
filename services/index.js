@@ -1,6 +1,6 @@
 const user = require('../db/user');
-const searchRequest = require('../db/searchRequests');
-const foundRequest = require('../db/foundRequest');
+const requests = require('../db/requests');
+
 const { RADIUS } = require('../config');
 
 function registerUser(client) {
@@ -22,7 +22,7 @@ function deleteUser(client) {
 }
 
 function createSearchRequest(pet) {
-    searchRequest.create(pet);
+    requests.create(pet);
     const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
     // return array of users who are in a radius of search
     user.sendSearchMessage(users, pet); // send searchMessage to users
@@ -30,37 +30,37 @@ function createSearchRequest(pet) {
 }
 
 function createFoundRequest(pet) {
-    foundRequest.create(pet);
+    requests.create(pet);
     const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
     user.sendFoundMessage(users, pet);
     return true;
 }
 
 function userSearchRequests(client) {
-    const allSearchRequests = searchRequest.findByUser(client.id);
+    const allSearchRequests = requests.findByUser(client.id);
     user.sendSearchMessage(client.id, allSearchRequests);
     return true;
 }
 
 function userFoundRequests(client) {
-    const allSearchRequests = searchRequest.findByUser(client.id);
+    const allSearchRequests = requests.findByUser(client.id);
     user.sendFoundMessage(client.id, allSearchRequests);
     return true;
 }
 
 function deleteSearchRequest(id) {
-    return searchRequest.delete(id);
+    return requests.delete(id);
 }
 
 function deleteFoundRequest(id) {
-    return foundRequest.delete(id);
+    return requests.delete(id);
 }
 
 function getSearchRequests(client, radius, days) {
     if (!user.isExist(client.id)) { return false; }
     // user.get (id) достать юзера  searchrequest.find(long, lat, radius, date)
     const clientLocation = user.getLocation(client.id);
-    const searchRequests = searchRequest.find(clientLocation, radius, days);
+    const searchRequests = requests.find(clientLocation, radius, days);
     user.sendSearchMessage(searchRequests);
     return true;
 }
@@ -69,7 +69,7 @@ function getFoundRequests(client, radius, days) {
     if (!user.isExist(client.id)) { return false; }
     // user.get (id) достать юзера  searchrequest.find(long, lat, radius, date)
     const clientLocation = user.getLocation(client.id);
-    const foundRequests = foundRequest.find(clientLocation, radius, days);
+    const foundRequests = requests.find(clientLocation, radius, days);
     user.sendFoundMessage(foundRequests);
     return true;
 }

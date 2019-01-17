@@ -19,11 +19,12 @@ const scene = new WizardScene(
         return ctx.wizard.next();
     },
     (ctx) => {
+        console.log(ctx.message);
         if (ctx.message && ctx.message.location) {
             userMessage = {};
             userMessage.id = ctx.message.from.id;
             userMessage.location = ctx.message.location;
-            registerUser(userMessage);
+            // registerUser(userMessage);
             ctx.reply(REGISTRATION_ENTER, mainMenu);
             return ctx.scene.leave();
         }
