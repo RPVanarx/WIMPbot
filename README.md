@@ -1,6 +1,6 @@
 # WIMPbot
 
-WIMPbot - Service that helps you to find your lost pet.
+WIMPbot - Service that helps people to find lost pets.
 
 Using: Telegram, Telegraf, NodeJS, Angular
 
