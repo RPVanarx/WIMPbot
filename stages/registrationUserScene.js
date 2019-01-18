@@ -1,5 +1,4 @@
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
 const {
     REGISTRATION_MESSAGE,
     REGISTRATION_ERROR,
@@ -10,7 +9,6 @@ const { mainMenu } = require('../menu');
 const { registerUser } = require('../services');
 
 const name = EVENT_SCENE_REGISTRATION_USER;
-let userMessage;
 
 const scene = new WizardScene(
     name,
@@ -18,19 +16,22 @@ const scene = new WizardScene(
         ctx.reply(REGISTRATION_MESSAGE);
         return ctx.wizard.next();
     },
-    (ctx) => {
-        console.log(ctx.message);
+    async (ctx) => {
+        let message = REGISTRATION_ERROR;
         if (ctx.message && ctx.message.location) {
-            userMessage = {};
-            userMessage.id = ctx.message.from.id;
-            userMessage.location = ctx.message.location;
-            // registerUser(userMessage);
-            ctx.reply(REGISTRATION_ENTER, mainMenu);
-            return ctx.scene.leave();
+            try {
+                if (await registerUser(
+                    ctx.message.from.id,
+                    ctx.message.from.username,
+                    'telegramm',
+                    ctx.message.location.latitude,
+                    ctx.message.location.longitude,
+                )) { message = REGISTRATION_ENTER; }
+            } catch (error) {
+                console.log(`registrationScene ${error}`);
+            }
         }
-        ctx.reply(REGISTRATION_ERROR, mainMenu);
-        // processing(userMessage, ctx);
-        // send request (create user and location) to business_logick
+        ctx.reply(message, mainMenu);
         return ctx.scene.leave();
     },
 );
