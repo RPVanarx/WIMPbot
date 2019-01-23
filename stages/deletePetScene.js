@@ -14,10 +14,15 @@ const name = EVENT_SCENE_DELETE_PET;
 const scene = new WizardScene(
     name,
     async (ctx) => {
-        const requests = await userRequests(
-            ctx.update.callback_query.from.id,
-            PLATFORM_TYPE_TELEGRAM,
-        );
+        let requests;
+        try {
+            requests = await userRequests(
+                ctx.update.callback_query.from.id,
+                PLATFORM_TYPE_TELEGRAM,
+            );
+        } catch (error) {
+            console.log(`deletePetScene ${error}`);
+        }
         if (requests.length === 0) {
             ctx.reply(DELETE_PET_SCENE_MESSAGE, mainMenu);
             return ctx.scene.leave();
