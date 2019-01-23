@@ -1,29 +1,38 @@
+const Extra = require('telegraf/extra');
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
-const { DELETE_PET_SCENE_MESSAGE, EVENT_SCENE_DELETE_PET /* DELETE_PET_SCENE_QUESTION */ } = require('../config');
+const {
+    DELETE_PET_SCENE_MESSAGE,
+    EVENT_SCENE_DELETE_PET,
+    PLATFORM_TYPE_TELEGRAM,
+    REQUEST_CLOSE,
+} = require('../config');
+const { userRequests } = require('../services');
+const { mainMenu } = require('../menu');
 
 const name = EVENT_SCENE_DELETE_PET;
-// let userMessage;
 
 const scene = new WizardScene(
     name,
-    (ctx) => {
-        ctx.reply(DELETE_PET_SCENE_MESSAGE);
-        // go to logic to find user requests
-        return ctx.wizard.next();
-    },
-    /* (ctx) => {
-        if (ctx.message && ctx.message.text) {
-            ctx.reply(DELETE_PET_SCENE_QUESTION);
-            userMessage.description = ctx.message.text;
-            userMessage = { id: 6 };
-            userMessage.userId = ctx.message.from.id;
-            return ctx.wizard.next();
+    async (ctx) => {
+        const requests = await userRequests(
+            ctx.update.callback_query.from.id,
+            PLATFORM_TYPE_TELEGRAM,
+        );
+        if (requests.length === 0) {
+            ctx.reply(DELETE_PET_SCENE_MESSAGE, mainMenu);
+            return ctx.scene.leave();
         }
-        return ctx.wizard.leave();
-    }, */
-    ctx => ctx.scene.leave()
-    ,
+        function callbackButtonDeleteRequest(value) {
+            return Extra.HTML().markup(message => message.inlineKeyboard([
+                [message.callbackButton(REQUEST_CLOSE, `${value}:delete`)],
+            ]));
+        }
+        requests.forEach((req) => {
+            ctx.reply(req, callbackButtonDeleteRequest(req));
+        });
+        return ctx.scene.leave();
+    },
+
 );
 
 module.exports = {

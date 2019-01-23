@@ -1,5 +1,4 @@
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
 const {
     SEARCH_PET_SCENE_PHOTO_MESSAGE,
     SEARCH_PET_SCENE_LOCATION_MESSAGE,
@@ -7,47 +6,63 @@ const {
     SEARCH_PET_SCENE_ERROR,
     REGISTRATION_ENTER,
     EVENT_SCENE_SEARCH_PET,
+    PLATFORM_TYPE_TELEGRAM,
+    REQUEST_TYPE_SEARCH,
 } = require('../config');
 const { mainMenu } = require('../menu');
+const { createRequest } = require('../services');
 
 const name = EVENT_SCENE_SEARCH_PET;
-let userMessage;
 
 const scene = new WizardScene(
     name,
     (ctx) => {
         ctx.reply(SEARCH_PET_SCENE_PHOTO_MESSAGE);
+        ctx.session.userMessage = {};
         return ctx.wizard.next();
     },
     (ctx) => {
         if (ctx.message && ctx.message.photo) {
+            ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
             ctx.reply(SEARCH_PET_SCENE_LOCATION_MESSAGE);
-            userMessage = { id: 4 };
-            userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1];
             return ctx.wizard.next();
         }
         ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        delete ctx.session.userMessage;
         return ctx.scene.leave();
     },
     (ctx) => {
         if (ctx.message && ctx.message.location) {
+            ctx.session.userMessage.location = ctx.message.location;
             ctx.reply(SEARCH_PET_SCENE_DESCRIPTION_MESSAGE);
-            userMessage.location = ctx.message.location;
             return ctx.wizard.next();
         }
         ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        delete ctx.session.userMessage;
         return ctx.scene.leave();
     },
-    (ctx) => {
-        if (ctx.message && ctx.message.text) {
-            userMessage.description = ctx.message.text;
-            userMessage.userId = ctx.message.from.id;
-            // send to logic (userMessage)
+    async (ctx) => {
+        if (!ctx.message || !ctx.message.text) {
             ctx.reply(REGISTRATION_ENTER, mainMenu);
+            delete ctx.session.userMessage;
             return ctx.scene.leave();
         }
-        // processing(userMessage, ctx);
-        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        try {
+            if (await createRequest(
+                ctx.message.from.id,
+                PLATFORM_TYPE_TELEGRAM,
+                REQUEST_TYPE_SEARCH,
+                ctx.session.userMessage.photo,
+                ctx.message.text,
+                ctx.session.userMessage.location.latitude,
+                ctx.session.userMessage.location.longitude,
+                ctx.update.message.date,
+            )) {
+                ctx.reply(REGISTRATION_ENTER, mainMenu);
+            }
+        } catch (error) {
+            console.log(`searchPetScene ${error}`);
+        }
         return ctx.scene.leave();
     },
 );

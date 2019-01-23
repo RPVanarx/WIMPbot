@@ -18,6 +18,8 @@ const {
     EVENT_SCENE_SEARCH_PET,
     EVENT_SCENE_FIND_PET,
     EVENT_SCENE_DELETE_PET,
+    YES,
+    NO,
 } = require('../config');
 
 const mainMenu = Extra.HTML().markup(message => message.inlineKeyboard([
@@ -38,10 +40,11 @@ const applyMenu = Extra.HTML().markup(message => message.inlineKeyboard([
     [message.callbackButton(APPLY_MENU_DELETE, EVENT_SCENE_DELETE_PET)],
 ]));
 
-/* const yesNo = Extra.markup((markup)=>{
-    return MediaStreamTrackAudioSourceNode.resize()
-    .keyboard([
-        markup.
-    ])
-}) */
-module.exports = { mainMenu, registrationMenu, applyMenu };
+const yesNoQuestion = Extra.HTML().markup(message => message.inlineKeyboard([
+    [message.callbackButton(YES, 'yes')],
+    [message.callbackButton(NO, 'no')],
+]));
+
+module.exports = {
+    mainMenu, registrationMenu, applyMenu, yesNoQuestion,
+};
