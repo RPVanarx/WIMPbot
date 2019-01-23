@@ -1,5 +1,5 @@
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
+
 const {
     GET_INFO_SCENE_RADIUS_MESSAGE,
     EVENT_SCENE_GET_INFO,
@@ -7,35 +7,48 @@ const {
     SEARCH_PET_SCENE_ERROR,
 } = require('../config');
 
-const { mainMenu } = ('../menu');
+const { mainMenu } = require('../menu');
+
 const name = EVENT_SCENE_GET_INFO;
-let userMessage;
+const { getRequests } = require('../services');
 
 const scene = new WizardScene(
     name,
     (ctx) => {
         ctx.reply(GET_INFO_SCENE_RADIUS_MESSAGE);
+        ctx.session.userMessage = {};
         return ctx.wizard.next();
     },
     (ctx) => {
-        if (ctx.message && ctx.message.text) {
-            ctx.reply(GET_INFO_SCENE_DAYS_MESSAGE);
-            userMessage = { id: 7 };
-            userMessage.radius = ctx.message.text;
-            return ctx.wizard.next();
-        }
-        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
-        return ctx.scene.leave();
-    },
-    (ctx) => {
-        if (ctx.message && ctx.message.text) {
-            userMessage.days = ctx.message.text;
-            userMessage.userId = ctx.message.from.id;
-            // send usermessage to logic
+        if (!ctx.message
+            || !ctx.message.text
+            || Number.isNaN(Number.parseInt(ctx.message.text, 10))) {
+            ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+            delete ctx.session.userMessage;
             return ctx.scene.leave();
         }
-        // processing(userMessage, ctx);
-        ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+        ctx.session.userMessage.newRadius = Number.parseInt(ctx.message.text, 10);
+        ctx.reply(GET_INFO_SCENE_DAYS_MESSAGE);
+        return ctx.wizard.next();
+    },
+    async (ctx) => {
+        if (!ctx.message
+            || !ctx.message.text
+            || Number.isNaN(Number.parseInt(ctx.message.text, 10))) {
+            ctx.reply(SEARCH_PET_SCENE_ERROR, mainMenu);
+            delete ctx.session.userMessage;
+            return ctx.scene.leave();
+        }
+        try {
+            await getRequests(
+                ctx.message.from.id,
+                ctx.session.userMessage.newRadius,
+                Number.parseInt(ctx.message.text, 10),
+            );
+        } catch (error) {
+            console.log(`getInfoScene ${error}`);
+        }
+        ctx.reply('Message send', mainMenu);
         return ctx.scene.leave();
     },
 );

@@ -4,6 +4,7 @@ const {
     REGISTRATION_ERROR,
     REGISTRATION_ENTER,
     EVENT_SCENE_REGISTRATION_USER,
+    PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
 const { mainMenu } = require('../menu');
 const { registerUser } = require('../services');
@@ -17,21 +18,21 @@ const scene = new WizardScene(
         return ctx.wizard.next();
     },
     async (ctx) => {
-        let message = REGISTRATION_ERROR;
-        if (ctx.message && ctx.message.location) {
-            try {
-                if (await registerUser(
-                    ctx.message.from.id,
-                    ctx.message.from.username,
-                    'telegramm',
-                    ctx.message.location.latitude,
-                    ctx.message.location.longitude,
-                )) { message = REGISTRATION_ENTER; }
-            } catch (error) {
-                console.log(`registrationScene ${error}`);
-            }
+        if (!ctx.message || !ctx.message.location) {
+            ctx.reply(REGISTRATION_ERROR, mainMenu);
+            return ctx.scene.leave();
         }
-        ctx.reply(message, mainMenu);
+        try {
+            if (await registerUser(
+                ctx.message.from.id,
+                ctx.message.from.username,
+                PLATFORM_TYPE_TELEGRAM,
+                ctx.message.location.latitude,
+                ctx.message.location.longitude,
+            )) { ctx.reply(REGISTRATION_ENTER, mainMenu); }
+        } catch (error) {
+            console.log(`registrationScene ${error}`);
+        }
         return ctx.scene.leave();
     },
 );

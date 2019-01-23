@@ -1,15 +1,15 @@
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
 const {
     CHANGE_LOCATION_SCENE_MESSAGE,
     REGISTRATION_ENTER,
     REGISTRATION_ERROR,
     EVENT_SCENE_UPDATE_LOCATION,
+    PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
 const { mainMenu } = require('../menu');
+const { updateUserLocation } = require('../services');
 
 const name = EVENT_SCENE_UPDATE_LOCATION;
-let userMessage;
 
 const scene = new WizardScene(
     name,
@@ -17,17 +17,21 @@ const scene = new WizardScene(
         ctx.reply(CHANGE_LOCATION_SCENE_MESSAGE);
         return ctx.wizard.next();
     },
-    (ctx) => {
-        if (ctx.message && ctx.message.location) {
-            userMessage = { id: 2 };
-            userMessage.userId = ctx.message.from.id;
-            userMessage.location = ctx.message.location;
-            ctx.reply(REGISTRATION_ENTER, mainMenu);
+    async (ctx) => {
+        if (!ctx.message || !ctx.message.location) {
+            ctx.reply(REGISTRATION_ERROR, mainMenu);
             return ctx.scene.leave();
         }
-        ctx.reply(REGISTRATION_ERROR, mainMenu);
-        // processing(userMessage, ctx);
-        // send request (change user location) to business_logick
+        try {
+            if (await updateUserLocation(
+                ctx.message.from.id,
+                PLATFORM_TYPE_TELEGRAM,
+                ctx.message.location.latitude,
+                ctx.message.location.longitude,
+            )) { ctx.reply(REGISTRATION_ENTER, mainMenu); }
+        } catch (error) {
+            console.log(`updateScene ${error}`);
+        }
         return ctx.scene.leave();
     },
 );

@@ -1,38 +1,37 @@
 const WizardScene = require('telegraf/scenes/wizard');
-// const processing = require('../processing');
 const {
     DELETE_USER_TRUE,
     DELETE_USER_FALSE,
     DELETE_USER_QUESTION,
     EVENT_SCENE_DELETE_USER,
+    PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
-const { mainMenu } = require('../menu');
+const { mainMenu, yesNoQuestion } = require('../menu');
+const { deleteUser } = require('../services');
 
 const name = EVENT_SCENE_DELETE_USER;
-let userMessage;
-
-function isYes(text) {
-    const yesArr = ['Так', 'так', 'да', 'Да', 'yes', 'Yes'];
-    if (yesArr.find(value => value === text)) { return true; }
-    return false;
-}
 
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply(DELETE_USER_QUESTION);
-        userMessage = { id: 3 };
+        ctx.reply(DELETE_USER_QUESTION, yesNoQuestion);
         return ctx.wizard.next();
     },
-    (ctx) => {
-        if (ctx.message && isYes(ctx.message.text)) {
-            userMessage.userId = ctx.message.from.id;
-            // send request (delete user)
-            ctx.reply(DELETE_USER_TRUE, mainMenu);
-            // processing(userMessage, ctx);
+    async (ctx) => {
+        if (ctx.update.callback_query.data !== 'yes') {
+            ctx.reply(DELETE_USER_FALSE, mainMenu);
             return ctx.scene.leave();
         }
-        ctx.reply(DELETE_USER_FALSE, mainMenu);
+        try {
+            if (await deleteUser(
+                ctx.update.callback_query.from.id,
+                PLATFORM_TYPE_TELEGRAM,
+            )) {
+                ctx.reply(DELETE_USER_TRUE, mainMenu);
+            }
+        } catch (error) {
+            console.log(`deleteUserScene ${error}`);
+        }
         return ctx.scene.leave();
     },
 );

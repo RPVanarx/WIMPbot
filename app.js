@@ -12,7 +12,6 @@ const bot = new Telegraf(TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { mainMenu, registrationMenu, applyMenu } = require('./menu');
 
-
 bot.use(session());
 bot.use(stage.middleware());
 
@@ -21,9 +20,21 @@ stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene
 bot.start(ctx => ctx.reply(WELCOME_MESSAGE, mainMenu));
 
 bot.action(EVENT_REGISTRATION_MENU, (ctx) => {
-    // console.log(ctx);
     ctx.reply(REGISTRATION_MENU_MESSAGE, registrationMenu);
 });
+
+/* async function qwe() {
+    const link = await bot.telegram.getFileLink('');
+    console.log(link);
+    const extra = {};
+    extra.caption = '';
+    const response = await bot.telegram.sendPhoto(, '', extra);
+    console.log(response);
+
+    return link;
+}
+qwe();
+*/
 
 bot.action(EVENT_REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, applyMenu));
 
