@@ -1,15 +1,25 @@
-// const db = require('../dbconnect');
+const user = require('../dbconnect');
 
-function isExist(id) {
-    console.log(`${id} isExist`);
-    // select SQL to base
-    return false;
+async function create(request) {
+    try {
+        user.query(`INSERT INTO requests VALUES(
+            DEFAULT,
+            (SELECT id FROM users 
+            WHERE platformId = '${request.platformId}' AND platformType = '${request.platformType}'),
+            '${request.type}',
+            '(${request.latitude},${request.longitude})',
+            '${request.photo}',
+            '${request.message}',
+            'now()',
+            'true',
+            '44',
+            'true');`);
+    } catch (error) {
+        throw new Error(error);
+    }
 }
-
-function addToBase(id, location) {
-    console.log(`${id} add to base with location ${location.latitude} + ${location.longitude}`);
-    // input SQL to base
-    return true;
-}
-
-module.exports = { isExist, addToBase };
+module.exports = {
+    requests: {
+        create,
+    },
+};
