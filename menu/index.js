@@ -3,11 +3,8 @@ const {
     MAIN_MENU_BUTTON_REGISTRATION,
     MAIN_MENU_BUTTON_REQUEST,
     MAIN_MENU_BUTTON_SAMPLE,
-    REGISTRATION_MENU_BUTTON_REGISTRATION,
     REGISTRATION_MENU_BUTTON_CHANGE_LOCATION,
-    REGISTRATION_MENU_BUTTON_DELETE_USER,
-    APPLY_MENU_SEARCH,
-    APPLY_MENU_FIND,
+    APPLY_MENU_CREATE_REQUEST,
     APPLY_MENU_DELETE,
     EVENT_REGISTRATION_MENU,
     EVENT_REQUEST_MENU,
@@ -15,12 +12,21 @@ const {
     EVENT_SCENE_REGISTRATION_USER,
     EVENT_SCENE_UPDATE_LOCATION,
     EVENT_SCENE_DELETE_USER,
-    EVENT_SCENE_SEARCH_PET,
-    EVENT_SCENE_FIND_PET,
+    EVENT_SCENE_CREATE_REQUEST,
     EVENT_SCENE_DELETE_PET,
     YES,
     NO,
+    SEARCH,
+    FOUND,
+    REGISTRATION_MENU_BUTTON_ACTIVATE_USER,
+    EVENT_SCENE_ACTIVATE_USER,
+    WELLCOME_MENU_BUTTON_REGISTRATION,
+    REGISTRATION_MENU_BUTTON_DEACTIVATE_USER,
 } = require('../config');
+
+const startRegistrationButton = Extra.HTML().markup(message => message.inlineKeyboard([
+    [message.callbackButton(WELLCOME_MENU_BUTTON_REGISTRATION, EVENT_SCENE_REGISTRATION_USER)],
+]));
 
 const mainMenu = Extra.HTML().markup(message => message.inlineKeyboard([
     [message.callbackButton(MAIN_MENU_BUTTON_REGISTRATION, EVENT_REGISTRATION_MENU)],
@@ -29,14 +35,13 @@ const mainMenu = Extra.HTML().markup(message => message.inlineKeyboard([
 ]));
 
 const registrationMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton(REGISTRATION_MENU_BUTTON_REGISTRATION, EVENT_SCENE_REGISTRATION_USER)],
     [message.callbackButton(REGISTRATION_MENU_BUTTON_CHANGE_LOCATION, EVENT_SCENE_UPDATE_LOCATION)],
-    [message.callbackButton(REGISTRATION_MENU_BUTTON_DELETE_USER, EVENT_SCENE_DELETE_USER)],
+    [message.callbackButton(REGISTRATION_MENU_BUTTON_DEACTIVATE_USER, EVENT_SCENE_DELETE_USER)],
+    [message.callbackButton(REGISTRATION_MENU_BUTTON_ACTIVATE_USER, EVENT_SCENE_ACTIVATE_USER)],
 ]));
 
 const applyMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton(APPLY_MENU_SEARCH, EVENT_SCENE_SEARCH_PET)],
-    [message.callbackButton(APPLY_MENU_FIND, EVENT_SCENE_FIND_PET)],
+    [message.callbackButton(APPLY_MENU_CREATE_REQUEST, EVENT_SCENE_CREATE_REQUEST)],
     [message.callbackButton(APPLY_MENU_DELETE, EVENT_SCENE_DELETE_PET)],
 ]));
 
@@ -45,6 +50,11 @@ const yesNoQuestion = Extra.HTML().markup(message => message.inlineKeyboard([
     [message.callbackButton(NO, 'no')],
 ]));
 
+const searchFoundMenu = Extra.HTML().markup(message => message.inlineKeyboard([
+    [message.callbackButton(SEARCH, 'search')],
+    [message.callbackButton(FOUND, 'found')],
+]));
+
 module.exports = {
-    mainMenu, registrationMenu, applyMenu, yesNoQuestion,
+    mainMenu, registrationMenu, applyMenu, yesNoQuestion, startRegistrationButton, searchFoundMenu,
 };

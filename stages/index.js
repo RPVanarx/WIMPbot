@@ -2,31 +2,32 @@ const Stage = require('telegraf/stage');
 
 const getInfoScene = require('./getInfoScene');
 const registrationUserScene = require('./registrationUserScene');
-const searchPetScene = require('./searchPetScene');
+const createRequestScene = require('./createRequestScene');
 const updateLocationScene = require('./updateLocationScene');
-const deleteUserScene = require('./deleteUserScene');
+const deactivateUserScene = require('./deactivateUserScene');
 const deletePetScene = require('./deletePetScene');
-const findPetScene = require('./findPetScene');
+const activateUserScene = require('./activateUserScene');
 
 const stage = new Stage();
 stage.register(
+    activateUserScene.scene,
     getInfoScene.scene,
     registrationUserScene.scene,
-    searchPetScene.scene,
+    createRequestScene.scene,
     updateLocationScene.scene,
-    deleteUserScene.scene,
+    deactivateUserScene.scene,
     deletePetScene.scene,
-    findPetScene.scene,
 );
 
 module.exports = {
     stage,
     stagesArray: [
+        activateUserScene,
         getInfoScene,
         registrationUserScene,
-        searchPetScene,
+        createRequestScene,
         updateLocationScene,
-        deleteUserScene,
+        deactivateUserScene,
         deletePetScene,
-        findPetScene],
+    ],
 };

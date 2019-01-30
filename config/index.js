@@ -17,40 +17,66 @@ module.exports = {
     EVENT_SCENE_REGISTRATION_USER: 'registrationUserScene',
     EVENT_SCENE_UPDATE_LOCATION: 'updateLocationScene',
     EVENT_SCENE_DELETE_USER: 'deleteUserScene',
-    EVENT_SCENE_SEARCH_PET: 'searchPetScene',
-    EVENT_SCENE_FIND_PET: 'findPetScene',
+    EVENT_SCENE_CREATE_REQUEST: 'createRequestScene',
     EVENT_SCENE_DELETE_PET: 'deletePetScene',
-    MAIN_MENU_BUTTON_REGISTRATION: 'Зареєструватися або змінити свої координати',
-    MAIN_MENU_BUTTON_REQUEST: 'Подати заявку на пошук/знаходження, закрити',
-    MAIN_MENU_BUTTON_SAMPLE: 'Переглянути улюбленців які знаходяться у розшуку',
-    REGISTRATION_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
+    EVENT_SCENE_ACTIVATE_USER: 'activateUserScene',
+    WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
+https://www.youtube.com/watch?v=vASw0m6YdWs`,
+    WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
+    MAIN_MENU_BUTTON_REGISTRATION: 'Панель керування користувача',
+    MAIN_MENU_BUTTON_REQUEST: 'Створити або закрити заявку',
+    MAIN_MENU_BUTTON_SAMPLE: 'Переглянути загублених улюбленців ',
+
     REGISTRATION_MENU_BUTTON_CHANGE_LOCATION: 'Змінити свої координати',
-    REGISTRATION_MENU_BUTTON_DELETE_USER: 'Видалити власні координати із системи',
-    REGISTRATION_MESSAGE: 'Відправте Вашу локацію',
-    REGISTRATION_ERROR: 'Локація була введена невірно, спробуйте знову',
+    REGISTRATION_MENU_BUTTON_DEACTIVATE_USER: 'Не хочу отримувати повідомлення',
+    REGISTRATION_MENU_BUTTON_ACTIVATE_USER: 'Хочу знову отримувати повідомлення',
+
+    REGISTRATION_MESSAGE: 'Відправте Вашу локацію використовуючи функцію месенджера',
+    REGISTRATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+
+    UPDATELOCATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+
     YES: 'Так',
     NO: 'Ні',
-    REGISTRATION_ENTER: 'Дякую, Ваш запит прийнято',
-    APPLY_MENU_SEARCH: 'Я загубив улюбленця',
-    APPLY_MENU_FIND: 'Я знайшов/бачив чийогось улюбленця',
+    SEARCH: 'Я загубив улюбленця',
+    FOUND: 'Я знайшов/бачив чийогось улюбленця',
+
+    REGISTRATION_ENTER: 'Ваш запит на реєстрацію прийнято',
+
+    UPDATELOCATION_ENTER: 'Ваш запит на зміну локації прийнято',
+
+    APPLY_MENU_CREATE_REQUEST: 'Створити заявку',
     APPLY_MENU_DELETE: 'Закрити власну заявку',
-    DELETE_USER_QUESTION: 'Ви впевнені що бажаєте видалити свої координати?',
-    DELETE_USER_TRUE: 'Ваш запит на видалення прийнято',
-    DELETE_USER_FALSE: 'Відміна видалення',
-    WELCOME_MESSAGE: 'Привіт, для початку роботи зі мною зареєструйтесь в системі',
-    REGISTRATION_MENU_MESSAGE: 'Ви в меню реєстрації, виберіть один із пунктів',
+
+    DEACTIVATE_USER_QUESTION: 'Ви впевнені що не бажаєте більше отримувати повідомлення про пошук?',
+    DEACTIVATE_USER_TRUE: 'Ваш запит на відписку від повідомлень прийнято',
+    DEACTIVATE_USER_FALSE: 'Відміна',
+
+    ACTIVATE_USER_QUESTION: 'Ви впевнені що бажаєте знову отримувати повідомлення про пошук?',
+    ACTIVATE_USER_TRUE: 'Ваш запит на отримання повідомлень прийнято',
+    ACTIVATE_USER_FALSE: 'Відміна',
+
+    REGISTRATION_MENU_MESSAGE: 'Ви в панелі управління, виберіть один із пунктів',
+
     REQUEST_MENU_MESSAGE: 'Ви в меню подачі заявки, виберіть один із пунктів',
+
     CHANGE_LOCATION_SCENE_MESSAGE: 'Введіть ваші нові координати',
+
     DELETE_PET_SCENE_MESSAGE: 'Ви не маєте активних заявок',
-    SEARCH_PET_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію загубленого домашньго улюбленця',
-    SEARCH_PET_SCENE_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець загубився',
-    SEARCH_PET_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
-    SEARCH_PET_SCENE_ERROR: 'Помилка введення, спробуйте знову',
+
+    CREATE_REQUEST_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію улюбленця',
+    CREATE_REQUEST_SCENE_LOCATION_MESSAGE: 'Відправте локацію де улюбленець загубився/знайшовся',
+    CREATE_REQUEST_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис одним повідомленням',
+    CREATE_REQUEST_SCENE_ERROR: 'Помилка введення, спробуйте знову',
+    CREATE_REQUEST_SCENE_ENTER: 'Ваша заявка відправлена на модерацію',
+
     FIND_PET_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
     FIND_PET_SCENE_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
     FIND_PET_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
+
     GET_INFO_SCENE_RADIUS_MESSAGE: 'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах)? Приклади: 2000, 1200, 3500',
     GET_INFO_SCENE_DAYS_MESSAGE: 'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів до 30-ти) Приклади: 5, 12, 25',
+
     REQUEST_TYPE_FOUND: 'found',
     REQUEST_TYPE_SEARCH: 'search',
     REQUEST_CLOSE: 'Закрити заявку',

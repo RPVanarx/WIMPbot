@@ -6,7 +6,7 @@ const {
     EVENT_SCENE_REGISTRATION_USER,
     PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
-const { mainMenu } = require('../menu');
+const { mainMenu, startRegistrationButton } = require('../menu');
 const { registerUser } = require('../services');
 
 const name = EVENT_SCENE_REGISTRATION_USER;
@@ -19,17 +19,19 @@ const scene = new WizardScene(
     },
     async (ctx) => {
         if (!ctx.message || !ctx.message.location) {
-            ctx.reply(REGISTRATION_ERROR, mainMenu);
+            ctx.reply(REGISTRATION_ERROR, startRegistrationButton);
             return ctx.scene.leave();
         }
         try {
             if (await registerUser(
                 ctx.message.from.id,
-                ctx.message.from.username,
                 PLATFORM_TYPE_TELEGRAM,
+                ctx.message.from.username,
                 ctx.message.location.latitude,
                 ctx.message.location.longitude,
-            )) { ctx.reply(REGISTRATION_ENTER, mainMenu); }
+            )) {
+                ctx.reply(REGISTRATION_ENTER, mainMenu);
+            }
         } catch (error) {
             console.log(`registrationScene ${error}`);
         }

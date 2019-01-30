@@ -1,36 +1,37 @@
-// const user = require('../db/user');
-const requests = require('../db/requests');
+const { user } = require('../db/user');
+const { requests } = require('../db/requests');
 
 const { RADIUS } = require('../config');
 
-function registerUser(id, userName, userType, latitude, longitude) {
-    // if (user.isExist(client.id)) { return false; }
-    // user.create(client.id, client.location.longitude, client.location.latitude);
-    console.log(`${id} ${userName} ${userType} ${latitude} ${longitude}`);
+async function registerUser(id, userType, userName, latitude, longitude) {
+    try {
+        await user.create(id, userType, userName, latitude, longitude);
+    } catch (error) {
+        throw new Error(error);
+    }
     return true;
 }
 
-function updateUserLocation(id, userType, latitude, longitude) {
-    // if (!user.isExist(client.id)) { return false; }
-    // user.updateLocation(client.id, client.location.longitude, client.location.latitude);
-    console.log(`${id} ${userType} ${latitude} ${longitude}`);
+async function changeUserActivity(id, userType, value) {
+    try {
+        await user.changeActivity(id, userType, value);
+    } catch (error) {
+        throw new Error(error);
+    }
     return true;
 }
 
-function deleteUser(id, userType) {
-    // if (!user.isExist(client.id)) { return false; }
-    // user.delete(client.id);
-    console.log(`${id} ${userType}`);
-    return true;
-}
+async function createRequest(request) {
+    try {
+        await requests.create(request);
+    } catch (error) {
+        throw new Error(error);
+    }
 
-function createRequest(id, userType, typeReq, photo, message, latitude, longitude, date) {
     // requests.create(pet);
     // const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
     // return array of users who are in a radius of search
     // user.sendSearchMessage(users, pet); // send searchMessage to users
-    const type = typeReq;
-    console.log(`${id} ${userType} ${type} ${latitude} ${longitude} ${photo} ${message} ${RADIUS} ${date}`);
     return true;
 }
 
@@ -58,8 +59,7 @@ function getRequests(id, newRadius, days) {
 
 module.exports = {
     registerUser,
-    updateUserLocation,
-    deleteUser,
+    changeUserActivity,
     createRequest,
     userRequests,
     closeSearchRequest,
