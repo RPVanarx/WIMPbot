@@ -69,6 +69,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     CREATE_REQUEST_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис одним повідомленням',
     CREATE_REQUEST_SCENE_ERROR: 'Помилка введення, спробуйте знову',
     CREATE_REQUEST_SCENE_ENTER: 'Ваша заявка відправлена на модерацію',
+    CREATE_REQUEST_CHOICE_TYPE: 'Виберіть один із пунктів',
 
     FIND_PET_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
     FIND_PET_SCENE_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',

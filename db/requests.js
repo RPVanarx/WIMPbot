@@ -2,7 +2,7 @@ const user = require('../dbconnect');
 
 async function create(request) {
     try {
-        user.query(`INSERT INTO requests VALUES(
+        await user.query(`INSERT INTO requests VALUES(
             DEFAULT,
             (SELECT id FROM users 
             WHERE platformId = '${request.platformId}' AND platformType = '${request.platformType}'),

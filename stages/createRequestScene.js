@@ -7,6 +7,7 @@ const {
     CREATE_REQUEST_SCENE_ENTER,
     EVENT_SCENE_CREATE_REQUEST,
     PLATFORM_TYPE_TELEGRAM,
+    CREATE_REQUEST_CHOICE_TYPE,
 } = require('../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest } = require('../services');
@@ -16,7 +17,7 @@ const name = EVENT_SCENE_CREATE_REQUEST;
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Виберіть один із пунктів', searchFoundMenu);
+        ctx.reply(CREATE_REQUEST_CHOICE_TYPE, searchFoundMenu);
         ctx.session.userMessage = {};
         return ctx.wizard.next();
     },
