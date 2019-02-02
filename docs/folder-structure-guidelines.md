@@ -3,7 +3,6 @@
 ## Root folder structure
 
     .
-    ├── build                   # Compiled files
     ├── docs                    # Documentation files
     ├── src                     # Source files
     ├── LICENSE
