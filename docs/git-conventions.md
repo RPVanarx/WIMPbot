@@ -1,6 +1,6 @@
 # Git Guidelines
 
-###Table of content:
+## Table of content:
 1. [Branches](#branches)
 2. [Commit message](#commit-message)
 3. [Issues](#issues)
