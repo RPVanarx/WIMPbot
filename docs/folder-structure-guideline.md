@@ -21,12 +21,11 @@
 ## Each folder (module) in root source folder
 
     .
-    ├── build                   # Compiled files
-    ├── docs                    # Documentation files (specific docs)
+    ├── docs                    # Documentation files (specific docs. not necessary)
     ├── src                     # Source files
     ├── test                    # Automated tests
-    ├── tools                   # Tools and utilities
-    └── README.md               # Short description of module and link to the main documentation file
+    ├── tools                   # Tools and utilities (no necessary)
+    └── README.md               # Short description of current module and link to the main documentation file
 
 
 #### Example
