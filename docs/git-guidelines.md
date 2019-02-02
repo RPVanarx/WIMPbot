@@ -47,6 +47,8 @@ More details with examples: [How to Write a Git Commit Message](https://chris.be
 
 ## Issues
 
-#### Tags
+#### Labels
 
-Add tag that coresponds to its part of the project: `telegram`, `viber`, `web-api`, `business-logic`, `db-wrapper`, `db` etc.
+Add label that coresponds to the part of the project: `telegram`, `viber`, `web-api`, `business-logic`, `db-wrapper`, `db` etc.
+
+Add label(s) to highlight reason, action or process: `bug`, `critical`, `question`, `refactoring`, `enhancement`, etc. 
