@@ -15,7 +15,8 @@
     ├── services                # Main application logic
     ├── db                      # Database files    
     ├── telegram                # Telegram bot files
-    └── viber                   # Viber bot files
+    ├── viber                   # Viber bot files
+    └─── app.js                 # Main entry point
 
 ## Module folder structure
 
