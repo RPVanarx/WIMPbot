@@ -14,7 +14,7 @@
     ├── web-api                 # Web API files
     ├── business-logic          # Main application logic
     ├── db                      # Database files    
-    ├── telegramm               # Telegramm bot files
+    ├── telegram                # Telegram bot files
     └── viber                   # Viber bot files
 
 ## Each folder (module) in root source folder
