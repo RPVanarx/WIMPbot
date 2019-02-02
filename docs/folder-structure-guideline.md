@@ -1,11 +1,11 @@
 # Folder Structure Guideline
 
-## Root folde structure
+## Root folder structure
 
     .
     ├── build                   # Compiled files
     ├── docs                    # Documentation files
-    ├── src                     # [Source files](#root-source-folder)
+    ├── src                     # Source files
     ├── LICENSE
     └── README.md
 
