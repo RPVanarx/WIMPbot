@@ -12,7 +12,7 @@
 
     .
     ├── web-api                 # Web API files
-    ├── business-logic          # Main application logic
+    ├── services                # Main application logic
     ├── db                      # Database files    
     ├── telegram                # Telegram bot files
     └── viber                   # Viber bot files
