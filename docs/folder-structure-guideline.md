@@ -28,4 +28,19 @@
     ├── tools                   # Tools and utilities
     └── README.md               # Short description of module and link to the main documentation file
 
+
+#### Example
+
+    .                          # Root folder
+    ├── ...
+    ├── src                    # Root source folder
+    │   ├── ...
+    │   ├── telegram           # Telegram bot folder
+    │   │   ├── ...
+    │   │   ├── src            # Telegram source files and folders
+    │   │   ├── test           # Telegram test files and folders
+    │   │   └── ...
+    │   └── ...
+    └── ...
+
 Guideline is based on [Folder Structure Conventions](https://github.com/kriasoft/Folder-Structure-Conventions/blob/master/README.md)
