@@ -8,7 +8,7 @@
     ├── LICENSE
     └── README.md
 
-## Root source folder
+## Source folder structure
 
     .
     ├── web-api                 # Web API files
@@ -17,25 +17,20 @@
     ├── telegram                # Telegram bot files
     └── viber                   # Viber bot files
 
-## Each folder (module) in root source folder
+## Module folder structure
 
     .
-    ├── docs                    # Documentation files (specific docs. not necessary)
-    ├── src                     # Source files
-    ├── test                    # Automated tests
-    ├── tools                   # Tools and utilities (no necessary)
-    └── README.md               # Short description of current module and link to the main documentation file
+    └── test                    # Automated tests
 
 
 #### Example
 
     .                          # Root folder
     ├── ...
-    ├── src                    # Root source folder
+    ├── src                    # Source folder
     │   ├── ...
     │   ├── telegram           # Telegram bot folder
     │   │   ├── ...
-    │   │   ├── src            # Telegram source files and folders
     │   │   ├── test           # Telegram test files and folders
     │   │   └── ...
     │   └── ...
