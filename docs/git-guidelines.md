@@ -28,9 +28,9 @@ Delete your branch from the upstream repository after it's merged, unless there 
 
 ## Commit message
 
-Subject of a message should end with the reference to the issue. You can find issue number right after it's name.
+Subject of a message should end with the reference to the issue. You can find issue number right after its name.
 
-e.g: #11 refers to *Discuss folder and project structures* issue, so commit message might be *Add git guidelines #11*
+e.g: `#11` refers to *Discuss folder and project structures* issue, so commit message might be *Add git guidelines #11*
 
 Message should correspond to the next rules:
 
@@ -49,4 +49,4 @@ More details with examples: [How to Write a Git Commit Message](https://chris.be
 
 #### Tags
 
-Add tag that coresponds to its part of the project: *telegram, viber, web page, main-module, db*, etc.
+Add tag that coresponds to its part of the project: `telegram`, `viber`, `web-api`, `business-logic`, `db-wrapper`, `db` etc.
