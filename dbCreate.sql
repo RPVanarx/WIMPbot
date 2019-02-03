@@ -21,5 +21,4 @@ CREATE TABLE requests(
     statusChangedBy BIGINT NOT NULL,
     isActive BOOLEAN,
     FOREIGN KEY (userId) REFERENCES users(id),
-    FOREIGN KEY (statusChangedBy) REFERENCES users(id)
 );

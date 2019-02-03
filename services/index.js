@@ -1,7 +1,7 @@
 const { user } = require('../db/user');
 const { requests } = require('../db/requests');
 
-const { RADIUS } = require('../config');
+// const { RADIUS } = require('../config');
 
 async function registerUser(id, userType, userName, latitude, longitude) {
     try {

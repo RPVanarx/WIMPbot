@@ -7,16 +7,12 @@ const {
     TOKEN, WELCOME_MESSAGE,
     REGISTRATION_MENU_MESSAGE,
     REQUEST_MENU_MESSAGE,
-    EVENT_SCENE_REGISTRATION_USER,
 } = require('./config');
-
-const reg = require('./stages/registrationUserScene');
-
 
 const bot = new Telegraf(TOKEN);
 const { stage, stagesArray } = require('./stages');
 const {
-    startRegistrationButton, mainMenu, registrationMenu, applyMenu,
+    startRegistrationButton, registrationMenu, applyMenu,
 } = require('./menu');
 
 bot.use(session());

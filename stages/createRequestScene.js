@@ -7,6 +7,7 @@ const {
     CREATE_REQUEST_SCENE_ENTER,
     EVENT_SCENE_CREATE_REQUEST,
     PLATFORM_TYPE_TELEGRAM,
+    CREATE_REQUEST_CHOICE_TYPE,
 } = require('../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest } = require('../services');
@@ -16,7 +17,7 @@ const name = EVENT_SCENE_CREATE_REQUEST;
 const scene = new WizardScene(
     name,
     (ctx) => {
-        ctx.reply('Виберіть один із пунктів', searchFoundMenu);
+        ctx.reply(CREATE_REQUEST_CHOICE_TYPE, searchFoundMenu);
         ctx.session.userMessage = {};
         return ctx.wizard.next();
     },
@@ -31,8 +32,6 @@ const scene = new WizardScene(
         return ctx.scene.leave();
     },
     (ctx) => {
-        console.log(ctx.session.userMessage.requestType);
-
         if (ctx.message && ctx.message.photo) {
             ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
             ctx.reply(CREATE_REQUEST_SCENE_LOCATION_MESSAGE);
@@ -71,7 +70,7 @@ const scene = new WizardScene(
                 ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
             }
         } catch (error) {
-            console.log(`searchPetScene ${error}`);
+            console.log(`createPetScene ${error}`);
         }
         return ctx.scene.leave();
     },
