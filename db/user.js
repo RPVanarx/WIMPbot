@@ -22,12 +22,10 @@ async function create(platformId, userType, userName, latitude, longitude) {
 }
 
 async function changeActivity(platformId, userType, value) {
+    const text = 'UPDATE users SET isactive = $1 WHERE platformId = $2 AND platformType = $3';
+    const values = [value, platformId, userType];
     try {
-        await user.query(
-            `UPDATE users
-            SET isactive = '${value}'
-            WHERE platformId = '${platformId}' AND platformType = '${userType}'`,
-        );
+        await user.query(text, values);
     } catch (error) {
         throw new Error(error);
     }
