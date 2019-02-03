@@ -17,8 +17,8 @@ CREATE TABLE requests(
     photo VARCHAR(100) NOT NULL,
     message TEXT NOT NULL,
     creation_date DATE NOT NULL,
-    is_approved BOOLEAN,
-    status_changed_by BIGINT,
-    is_active BOOLEAN,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    is_approved BOOLEAN DEFAULT false,
+    status_changed_by BIGINT DEFAULT 0,
+    is_active BOOLEAN DEFAULT false,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

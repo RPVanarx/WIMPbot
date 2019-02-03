@@ -21,9 +21,9 @@ async function changeUserActivity(id, userType, value) {
     return true;
 }
 
-async function createRequest(request) {
+async function createRequest(platformId, platformType, reqType, img, message, latitude, longitude) {
     try {
-        await requests.create(request);
+        await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
     } catch (error) {
         throw new Error(error);
     }

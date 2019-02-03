@@ -58,15 +58,15 @@ const scene = new WizardScene(
             return ctx.scene.leave();
         }
         try {
-            if (await createRequest({
-                platformId: ctx.message.from.id,
-                platformType: PLATFORM_TYPE_TELEGRAM,
-                type: ctx.session.userMessage.requestType,
-                photo: ctx.session.userMessage.photo,
-                message: ctx.message.text,
-                latitude: ctx.session.userMessage.location.latitude,
-                longitude: ctx.session.userMessage.location.longitude,
-            })) {
+            if (await createRequest(
+                ctx.message.from.id,
+                PLATFORM_TYPE_TELEGRAM,
+                ctx.session.userMessage.requestType,
+                ctx.session.userMessage.location.latitude,
+                ctx.session.userMessage.location.longitude,
+                ctx.session.userMessage.photo,
+                ctx.message.text,
+            )) {
                 ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
             }
         } catch (error) {
