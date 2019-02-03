@@ -3,18 +3,8 @@ const user = require('../dbconnect');
 async function create(platformId, userType, userName, latitude, longitude) {
     try {
         await user.query(
-            `INSERT INTO users VALUES(
-            DEFAULT,
-            '${platformId}',
-            '${userType}',
-            '${userName}',
-            '(${latitude},${longitude})',
-            0,
-            true
-        )
-        ON CONFLICT (platformId, platformType)
-        DO UPDATE SET 
-            location = '(${latitude}, ${longitude})'`,
+            'INSERT INTO users VALUES(DEFAULT, $1, $2, $3, (point($4, $5)), 0, true) ON CONFLICT (platformId, platformType) DO UPDATE SET location = (point($4, $5))',
+            [platformId, userType, userName, latitude, longitude],
         );
     } catch (error) {
         throw new Error(error);
