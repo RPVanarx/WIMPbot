@@ -4,8 +4,8 @@ CREATE TABLE users(
     platformType VARCHAR(10) NOT NULL,
     userName VARCHAR(30) NOT NULL,
     location POINT NOT NULL,
-    badRequestCount INT NOT NULL,
-    isActive BOOLEAN NOT NULL,
+    badRequestCount INT DEFAULT 0,
+    isActive BOOLEAN DEFAULT true,
     UNIQUE (platformId, platformType)
 );
 
