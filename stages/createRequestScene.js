@@ -32,8 +32,6 @@ const scene = new WizardScene(
         return ctx.scene.leave();
     },
     (ctx) => {
-        console.log(ctx.session.userMessage.requestType);
-
         if (ctx.message && ctx.message.photo) {
             ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
             ctx.reply(CREATE_REQUEST_SCENE_LOCATION_MESSAGE);
@@ -72,7 +70,7 @@ const scene = new WizardScene(
                 ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
             }
         } catch (error) {
-            console.log(`searchPetScene ${error}`);
+            console.log(`createPetScene ${error}`);
         }
         return ctx.scene.leave();
     },
