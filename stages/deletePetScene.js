@@ -1,4 +1,3 @@
-const Extra = require('telegraf/extra');
 const WizardScene = require('telegraf/scenes/wizard');
 const {
     DELETE_PET_SCENE_MESSAGE,
@@ -27,17 +26,11 @@ const scene = new WizardScene(
             ctx.reply(DELETE_PET_SCENE_MESSAGE, mainMenu);
             return ctx.scene.leave();
         }
-        function callbackButtonDeleteRequest(value) {
-            return Extra.HTML().markup(message => message.inlineKeyboard([
-                [message.callbackButton(REQUEST_CLOSE, `${value}:delete`)],
-            ]));
-        }
         requests.forEach((req) => {
-            ctx.reply(req, callbackButtonDeleteRequest(req));
+            ctx.replyWithPhoto(req.photo, { reply_markup: { inline_keyboard: [[{ text: REQUEST_CLOSE, callback_data: `deleteRequest:${req.id}` }]] }, caption: req.message });
         });
         return ctx.scene.leave();
     },
-
 );
 
 module.exports = {
