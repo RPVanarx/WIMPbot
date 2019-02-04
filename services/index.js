@@ -43,7 +43,7 @@ async function userRequests(platformId, platformType) {
 
 async function deleteRequest(id) {
     try {
-        requests.deleteRequest(id);
+        await requests.deleteRequest(id);
     } catch (error) {
         throw new Error(error);
     }
