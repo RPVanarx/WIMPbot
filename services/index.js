@@ -21,26 +21,32 @@ async function changeUserActivity(id, userType, value) {
     return true;
 }
 
-async function createRequest(request) {
+async function createRequest(platformId, platformType, reqType, img, message, latitude, longitude) {
     try {
-        await requests.create(request);
+        await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
     } catch (error) {
         throw new Error(error);
     }
-
-    // requests.create(pet);
-    // const users = user.findByLocation(pet.location.longitude, pet.location.langitude, RADIUS);
-    // return array of users who are in a radius of search
-    // user.sendSearchMessage(users, pet); // send searchMessage to users
     return true;
 }
 
 
-function userRequests(id, userType) {
-    // const allSearchRequests = requests.findByUser(client.id);
-    // user.sendSearchMessage(client.id, allSearchRequests);
-    console.log(`${id} ${userType}`);
-    return [1, 2, 3];
+async function userRequests(platformId, platformType) {
+    let arrayOfRequests;
+    try {
+        arrayOfRequests = await requests.findToDelete(platformId, platformType);
+    } catch (error) {
+        throw new Error(error);
+    }
+    return arrayOfRequests;
+}
+
+async function deleteRequest(id) {
+    try {
+        await requests.deleteRequest(id);
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 function closeSearchRequest(id) {
@@ -64,4 +70,5 @@ module.exports = {
     userRequests,
     closeSearchRequest,
     getRequests,
+    deleteRequest,
 };
