@@ -11,6 +11,7 @@
 ## Source folder structure
 
     .
+    ├── config                  # Configuration files
     ├── web-api                 # Web API files
     ├── services                # Main application logic
     ├── db                      # Database files    
