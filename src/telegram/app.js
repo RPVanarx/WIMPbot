@@ -1,18 +1,18 @@
 const Telegraf = require('telegraf');
 const session = require('telegraf/session');
 const Router = require('telegraf/router');
-const { EVENT_REGISTRATION_MENU, EVENT_REQUEST_MENU } = require('./config');
+const { EVENT_REGISTRATION_MENU, EVENT_REQUEST_MENU } = require('../config');
 
 const {
     TOKEN, WELCOME_MESSAGE,
     REGISTRATION_MENU_MESSAGE,
     REQUEST_MENU_MESSAGE,
-} = require('./config');
+} = require('../config');
 
 const bot = new Telegraf(TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
-const { deleteRequest } = require('./services');
+const { deleteRequest } = require('../services');
 
 bot.use(session());
 bot.use(stage.middleware());

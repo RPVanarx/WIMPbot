@@ -5,12 +5,12 @@ const {
     EVENT_SCENE_GET_INFO,
     GET_INFO_SCENE_DAYS_MESSAGE,
     SEARCH_PET_SCENE_ERROR,
-} = require('../config');
+} = require('../../config');
 
 const { mainMenu } = require('../menu');
 
 const name = EVENT_SCENE_GET_INFO;
-const { getRequests } = require('../services');
+const { getRequests } = require('../../services');
 
 const scene = new WizardScene(
     name,
