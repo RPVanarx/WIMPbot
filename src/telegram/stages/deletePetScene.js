@@ -4,8 +4,8 @@ const {
     EVENT_SCENE_DELETE_PET,
     PLATFORM_TYPE_TELEGRAM,
     REQUEST_CLOSE,
-} = require('../config');
-const { userRequests } = require('../services');
+} = require('../../config');
+const { userRequests } = require('../../services');
 const { mainMenu } = require('../menu');
 
 const name = EVENT_SCENE_DELETE_PET;

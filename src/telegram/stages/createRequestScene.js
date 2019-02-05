@@ -8,9 +8,9 @@ const {
     EVENT_SCENE_CREATE_REQUEST,
     PLATFORM_TYPE_TELEGRAM,
     CREATE_REQUEST_CHOICE_TYPE,
-} = require('../config');
+} = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
-const { createRequest } = require('../services');
+const { createRequest } = require('../../services');
 
 const name = EVENT_SCENE_CREATE_REQUEST;
 

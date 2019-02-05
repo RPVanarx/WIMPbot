@@ -22,7 +22,7 @@ const {
     EVENT_SCENE_ACTIVATE_USER,
     WELLCOME_MENU_BUTTON_REGISTRATION,
     REGISTRATION_MENU_BUTTON_DEACTIVATE_USER,
-} = require('../config');
+} = require('../../config');
 
 const startRegistrationButton = Extra.HTML().markup(message => message.inlineKeyboard([
     [message.callbackButton(WELLCOME_MENU_BUTTON_REGISTRATION, EVENT_SCENE_REGISTRATION_USER)],
