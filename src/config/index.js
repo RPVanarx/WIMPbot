@@ -16,7 +16,7 @@ module.exports = {
     EVENT_SCENE_GET_INFO: 'getInfoScene',
     EVENT_SCENE_REGISTRATION_USER: 'registrationUserScene',
     EVENT_SCENE_UPDATE_LOCATION: 'updateLocationScene',
-    EVENT_SCENE_DELETE_USER: 'deleteUserScene',
+    EVENT_SCENE_DEACTIVATE_USER: 'deleteUserScene',
     EVENT_SCENE_CREATE_REQUEST: 'createRequestScene',
     EVENT_SCENE_DELETE_PET: 'deletePetScene',
     EVENT_SCENE_ACTIVATE_USER: 'activateUserScene',
