@@ -3,13 +3,13 @@ const {
     DEACTIVATE_USER_TRUE,
     DEACTIVATE_USER_FALSE,
     DEACTIVATE_USER_QUESTION,
-    EVENT_SCENE_DELETE_USER,
+    EVENT_SCENE_DEACTIVATE_USER,
     PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
 const { changeUserActivity } = require('../../services');
 
-const name = EVENT_SCENE_DELETE_USER;
+const name = EVENT_SCENE_DEACTIVATE_USER;
 
 const scene = new WizardScene(
     name,

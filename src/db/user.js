@@ -22,9 +22,22 @@ async function changeActivity(platformId, userType, value) {
     }
 }
 
+async function activeValue(platformId, userType) {
+    try {
+        const userActivirty = await user.query(
+            'SELECT is_active FROM users WHERE platform_id = $1 AND platform_type = $2',
+            [platformId, userType],
+        );
+        return userActivirty.rows[0].is_active;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 module.exports = {
     user: {
         create,
         changeActivity,
+        activeValue,
     },
 };

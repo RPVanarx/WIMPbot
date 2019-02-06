@@ -49,9 +49,19 @@ async function deleteRequest(id) {
     }
 }
 
+async function userActivity(platformId, platformType) {
+    try {
+        return await user.activeValue(platformId, platformType);
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+
 function closeSearchRequest(id) {
     return requests.delete(id);
 }
+
 
 function getRequests(id, newRadius, days) {
     // if (!user.isExist(client.id)) { return false; }
@@ -71,4 +81,5 @@ module.exports = {
     closeSearchRequest,
     getRequests,
     deleteRequest,
+    userActivity,
 };
