@@ -11,6 +11,4 @@ const client = new Client({
 
 client.connect();
 
-// client.query('DELETE FROM users');
-
 module.exports = client;

@@ -23,14 +23,14 @@ const scene = new WizardScene(
             return ctx.scene.leave();
         }
         try {
-            if (await changeUserActivity(
+            await changeUserActivity(
                 ctx.update.callback_query.from.id,
                 PLATFORM_TYPE_TELEGRAM,
                 true,
-            )) {
-                ctx.reply(ACTIVATE_USER_TRUE, mainMenu);
-            }
+            );
+            ctx.reply(ACTIVATE_USER_TRUE, mainMenu);
         } catch (error) {
+            ctx.reply(ACTIVATE_USER_FALSE, mainMenu);
             console.log(`deleteUserScene ${error}`);
         }
         return ctx.scene.leave();

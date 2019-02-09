@@ -4,73 +4,34 @@ const { requests } = require('../db/requests');
 // const { RADIUS } = require('../config');
 
 async function registerUser(id, userType, userName, latitude, longitude) {
-    try {
-        await user.create(id, userType, userName, latitude, longitude);
-    } catch (error) {
-        throw new Error(error);
-    }
-    return true;
+    await user.create(id, userType, userName, latitude, longitude);
 }
 
 async function changeUserActivity(id, userType, value) {
-    try {
-        await user.changeActivity(id, userType, value);
-    } catch (error) {
-        throw new Error(error);
-    }
-    return true;
+    await user.changeActivity(id, userType, value);
 }
 
 async function createRequest(platformId, platformType, reqType, img, message, latitude, longitude) {
-    try {
-        await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
-    } catch (error) {
-        throw new Error(error);
-    }
-    return true;
+    await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
 }
 
-
 async function userRequests(platformId, platformType) {
-    let arrayOfRequests;
-    try {
-        arrayOfRequests = await requests.findToDelete(platformId, platformType);
-    } catch (error) {
-        throw new Error(error);
-    }
-    return arrayOfRequests;
+    const arrOfRequests = await requests.findToDelete(platformId, platformType);
+    return arrOfRequests;
 }
 
 async function deleteRequest(id) {
-    try {
-        await requests.deleteRequest(id);
-    } catch (error) {
-        throw new Error(error);
-    }
+    await requests.deleteRequest(id);
 }
 
 async function userActivity(platformId, platformType) {
-    try {
-        return await user.activeValue(platformId, platformType);
-    } catch (error) {
-        throw new Error(error);
-    }
+    const value = await user.activeValue(platformId, platformType);
+    return value;
 }
 
-
-function closeSearchRequest(id) {
-    return requests.delete(id);
-}
-
-
-function getRequests(id, newRadius, days) {
-    // if (!user.isExist(client.id)) { return false; }
-    // user.get (id) достать юзера  searchrequest.find(long, lat, radius, date)
-    // const clientLocation = user.getLocation(client.id);
-    // const searchRequests = requests.find(clientLocation, radius, days);
-    // user.sendSearchMessage(searchRequests);
-    console.log(`${id} ${newRadius} ${days}`);
-    return true;
+async function getRequests(platformId, platformType, radius, days) {
+    const infoRequests = await requests.search(platformId, platformType, radius, days);
+    return infoRequests;
 }
 
 module.exports = {
@@ -78,7 +39,6 @@ module.exports = {
     changeUserActivity,
     createRequest,
     userRequests,
-    closeSearchRequest,
     getRequests,
     deleteRequest,
     userActivity,

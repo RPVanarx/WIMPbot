@@ -58,18 +58,18 @@ const scene = new WizardScene(
             return ctx.scene.leave();
         }
         try {
-            if (await createRequest(
+            await createRequest(
                 ctx.message.from.id,
                 PLATFORM_TYPE_TELEGRAM,
                 ctx.session.userMessage.requestType,
-                ctx.session.userMessage.location.latitude,
                 ctx.session.userMessage.location.longitude,
+                ctx.session.userMessage.location.latitude,
                 ctx.session.userMessage.photo,
                 ctx.message.text,
-            )) {
-                ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
-            }
+            );
+            ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
         } catch (error) {
+            ctx.reply(CREATE_REQUEST_SCENE_ERROR, mainMenu);
             console.log(`createPetScene ${error}`);
         }
         return ctx.scene.leave();
