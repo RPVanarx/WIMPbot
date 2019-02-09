@@ -23,16 +23,16 @@ const scene = new WizardScene(
             return ctx.scene.leave();
         }
         try {
-            if (await registerUser(
+            await registerUser(
                 ctx.message.from.id,
                 PLATFORM_TYPE_TELEGRAM,
                 ctx.message.from.username,
-                ctx.message.location.latitude,
                 ctx.message.location.longitude,
-            )) {
-                ctx.reply(REGISTRATION_ENTER, mainMenu);
-            }
+                ctx.message.location.latitude,
+            );
+            ctx.reply(REGISTRATION_ENTER, mainMenu);
         } catch (error) {
+            ctx.reply(REGISTRATION_ERROR, startRegistrationButton);
             console.log(`registrationScene ${error}`);
         }
         return ctx.scene.leave();

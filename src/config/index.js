@@ -16,7 +16,7 @@ module.exports = {
     EVENT_SCENE_GET_INFO: 'getInfoScene',
     EVENT_SCENE_REGISTRATION_USER: 'registrationUserScene',
     EVENT_SCENE_UPDATE_LOCATION: 'updateLocationScene',
-    EVENT_SCENE_DELETE_USER: 'deleteUserScene',
+    EVENT_SCENE_DEACTIVATE_USER: 'deleteUserScene',
     EVENT_SCENE_CREATE_REQUEST: 'createRequestScene',
     EVENT_SCENE_DELETE_PET: 'deletePetScene',
     EVENT_SCENE_ACTIVATE_USER: 'activateUserScene',
@@ -77,6 +77,8 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
 
     GET_INFO_SCENE_RADIUS_MESSAGE: 'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах)? Приклади: 2000, 1200, 3500',
     GET_INFO_SCENE_DAYS_MESSAGE: 'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів до 30-ти) Приклади: 5, 12, 25',
+    GET_INFO_SCENE_ERROR: 'Помилка введення, спробуйте знову',
+    GET_INFO_SCENE_NO_REQUESTS: 'Заявок для показу не знайдено',
 
     REQUEST_TYPE_FOUND: 'found',
     REQUEST_TYPE_SEARCH: 'search',

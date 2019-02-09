@@ -1,3 +1,6 @@
+CREATE EXTENSION cube;
+CREATE EXTENSION earthdistance;
+
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     platform_id VARCHAR(50) NOT NULL,
@@ -16,7 +19,7 @@ CREATE TABLE requests(
     location POINT NOT NULL,
     photo VARCHAR(100) NOT NULL,
     message TEXT NOT NULL,
-    creation_date DATE NOT NULL,
+    creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'UTC'),
     is_approved BOOLEAN DEFAULT false,
     status_changed_by BIGINT DEFAULT 0,
     is_active BOOLEAN DEFAULT false,

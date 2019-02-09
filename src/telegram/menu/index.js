@@ -11,7 +11,7 @@ const {
     EVENT_SCENE_GET_INFO,
     EVENT_SCENE_REGISTRATION_USER,
     EVENT_SCENE_UPDATE_LOCATION,
-    EVENT_SCENE_DELETE_USER,
+    EVENT_SCENE_DEACTIVATE_USER,
     EVENT_SCENE_CREATE_REQUEST,
     EVENT_SCENE_DELETE_PET,
     YES,
@@ -34,10 +34,11 @@ const mainMenu = Extra.HTML().markup(message => message.inlineKeyboard([
     [message.callbackButton(MAIN_MENU_BUTTON_SAMPLE, EVENT_SCENE_GET_INFO)],
 ]));
 
-const registrationMenu = Extra.HTML().markup(message => message.inlineKeyboard([
-    [message.callbackButton(REGISTRATION_MENU_BUTTON_CHANGE_LOCATION, EVENT_SCENE_UPDATE_LOCATION)],
-    [message.callbackButton(REGISTRATION_MENU_BUTTON_DEACTIVATE_USER, EVENT_SCENE_DELETE_USER)],
-    [message.callbackButton(REGISTRATION_MENU_BUTTON_ACTIVATE_USER, EVENT_SCENE_ACTIVATE_USER)],
+const registrationMenu = isActive => Extra.HTML().markup(m => m.inlineKeyboard([
+    [m.callbackButton(REGISTRATION_MENU_BUTTON_CHANGE_LOCATION, EVENT_SCENE_UPDATE_LOCATION)],
+    isActive
+        ? [m.callbackButton(REGISTRATION_MENU_BUTTON_DEACTIVATE_USER, EVENT_SCENE_DEACTIVATE_USER)]
+        : [m.callbackButton(REGISTRATION_MENU_BUTTON_ACTIVATE_USER, EVENT_SCENE_ACTIVATE_USER)],
 ]));
 
 const applyMenu = Extra.HTML().markup(message => message.inlineKeyboard([
