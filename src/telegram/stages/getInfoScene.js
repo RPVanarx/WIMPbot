@@ -53,6 +53,7 @@ const scene = new WizardScene(
                 return ctx.scene.leave();
             }
             await requests.forEach((req) => {
+                req.reqId = req.id;
                 sendPhotoMessage(ctx, req, ctx.message.from.id);
             });
             setTimeout(() => ctx.reply('Вибірка завершена', mainMenu), 2000);

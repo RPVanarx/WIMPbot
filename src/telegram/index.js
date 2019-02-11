@@ -62,19 +62,19 @@ const callbackHandler = new Router(({ callbackQuery }) => {
 callbackHandler.on('deleteRequest', async (ctx) => {
     try {
         await deleteRequest(ctx.state.data);
+        ctx.deleteMessage();
     } catch (error) {
         console.error(`deleteRequest ${error}`);
     }
 });
 
-/* callbackHandler.on('comment', async (ctx) => {
-    console.log(ctx.state.data);
+callbackHandler.on('comment', async (ctx) => {
     try {
-        await deleteRequest(ctx.state.data, ctx.state.id);
+        console.log(1);
     } catch (error) {
-        console.error(`deleteRequest ${error}`);
+        console.error(`comment ${error}`);
     }
-}); */
+});
 
 callbackHandler.on('moderate', async (ctx) => {
     try {
@@ -84,9 +84,8 @@ callbackHandler.on('moderate', async (ctx) => {
             ctx.update.callback_query.from.id,
         );
         const users = await usersInRequestRadius(request.location);
-        console.log(request);
-
         users.forEach(element => sendPhotoMessage(ctx, request, element.platform_id));
+        ctx.deleteMessage();
     } catch (error) {
         console.error(`moderate ${error}`);
     }

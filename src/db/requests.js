@@ -33,8 +33,8 @@ async function search(platformId, platformType, radius, days) {
     )).rows;
 }
 
-async function changeActiveStatus(id, value, moderatorId) {
-    const request = (await user.query('UPDATE requests SET is_approved = $2, is_active = $2, status_changed_by = $3 WHERE id = $1 RETURNING *', [id, value, moderatorId])).rows[0];
+async function changeActiveStatus(reqId, value, moderatorId) {
+    const request = (await user.query('UPDATE requests SET is_approved = $2, is_active = $2, status_changed_by = $3 WHERE id = $1 RETURNING *', [reqId, value, moderatorId])).rows[0];
     const userReq = (await user.query('SELECT user_name, platform_type FROM users WHERE id = $1', [request.user_id])).rows[0];
     return Object.assign(request, userReq);
 }

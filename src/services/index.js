@@ -1,8 +1,6 @@
 const { user } = require('../db/user');
 const { requests } = require('../db/requests');
 
-// const { RADIUS } = require('../config');
-
 async function registerUser(id, userType, userName, latitude, longitude) {
     await user.create(id, userType, userName, latitude, longitude);
 }
@@ -32,8 +30,6 @@ async function userActivity(platformId, platformType) {
 
 async function getRequests(platformId, platformType, radius, days) {
     const infoRequests = await requests.search(platformId, platformType, radius, days);
-    console.log(infoRequests);
-
     return infoRequests;
 }
 
