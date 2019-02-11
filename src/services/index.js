@@ -1,8 +1,6 @@
 const { user } = require('../db/user');
 const { requests } = require('../db/requests');
 
-// const { RADIUS } = require('../config');
-
 async function registerUser(id, userType, userName, latitude, longitude) {
     await user.create(id, userType, userName, latitude, longitude);
 }
@@ -11,8 +9,9 @@ async function changeUserActivity(id, userType, value) {
     await user.changeActivity(id, userType, value);
 }
 
-async function createRequest(platformId, platformType, reqType, img, message, latitude, longitude) {
-    await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
+async function createRequest(request) {
+    const createdRequest = await requests.create(request);
+    return createdRequest;
 }
 
 async function userRequests(platformId, platformType) {
@@ -34,6 +33,16 @@ async function getRequests(platformId, platformType, radius, days) {
     return infoRequests;
 }
 
+async function changeRequestActiveStatus(reqId, value, moderatorId) {
+    const request = await requests.changeActiveStatus(reqId, value, moderatorId);
+    return request;
+}
+
+async function usersInRequestRadius(location) {
+    const users = await user.usersInRequestRadius(location);
+    return users;
+}
+
 module.exports = {
     registerUser,
     changeUserActivity,
@@ -42,4 +51,6 @@ module.exports = {
     getRequests,
     deleteRequest,
     userActivity,
+    changeRequestActiveStatus,
+    usersInRequestRadius,
 };

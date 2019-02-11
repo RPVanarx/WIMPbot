@@ -9,6 +9,7 @@ module.exports = {
         password: process.env.PGPASSWORD,
         port: process.env.PGPORT,
     },
+    MODERATORSID: process.env.MODERATORSID,
     RADIUS: 1000,
     PLATFORM_TYPE_TELEGRAM: 'telegram',
     EVENT_REGISTRATION_MENU: 'registrationMenu',

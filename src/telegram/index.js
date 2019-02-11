@@ -7,12 +7,14 @@ const {
     REGISTRATION_MENU_MESSAGE,
     REQUEST_MENU_MESSAGE, PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
-
+const { sendPhotoMessage } = require('./addFunctions');
 
 const bot = new Telegraf(TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
-const { deleteRequest, userActivity } = require('../services');
+const {
+    deleteRequest, userActivity, changeRequestActiveStatus, usersInRequestRadius,
+} = require('../services');
 
 bot.use(session());
 bot.use(stage.middleware());
@@ -52,6 +54,7 @@ const callbackHandler = new Router(({ callbackQuery }) => {
         route: value[0],
         state: {
             data: value[1],
+            req: value[2],
         },
     };
 });
@@ -59,8 +62,32 @@ const callbackHandler = new Router(({ callbackQuery }) => {
 callbackHandler.on('deleteRequest', async (ctx) => {
     try {
         await deleteRequest(ctx.state.data);
+        ctx.deleteMessage();
     } catch (error) {
-        console.error(error);
+        console.error(`deleteRequest ${error}`);
+    }
+});
+
+callbackHandler.on('comment', async (ctx) => {
+    try {
+        console.log(1);
+    } catch (error) {
+        console.error(`comment ${error}`);
+    }
+});
+
+callbackHandler.on('moderate', async (ctx) => {
+    try {
+        const request = await changeRequestActiveStatus(
+            ctx.state.req,
+            ctx.state.data,
+            ctx.update.callback_query.from.id,
+        );
+        const users = await usersInRequestRadius(request.location);
+        users.forEach(element => sendPhotoMessage(ctx, request, element.platform_id));
+        ctx.deleteMessage();
+    } catch (error) {
+        console.error(`moderate ${error}`);
     }
 });
 
