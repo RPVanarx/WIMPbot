@@ -8,9 +8,11 @@ const {
     EVENT_SCENE_CREATE_REQUEST,
     PLATFORM_TYPE_TELEGRAM,
     CREATE_REQUEST_CHOICE_TYPE,
+    MODERATORSID,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest } = require('../../services');
+const { sendPhotoMessageToModerate } = require('../addFunctions');
 
 const name = EVENT_SCENE_CREATE_REQUEST;
 
@@ -58,15 +60,19 @@ const scene = new WizardScene(
             return ctx.scene.leave();
         }
         try {
-            await createRequest(
-                ctx.message.from.id,
-                PLATFORM_TYPE_TELEGRAM,
-                ctx.session.userMessage.requestType,
-                ctx.session.userMessage.location.longitude,
-                ctx.session.userMessage.location.latitude,
-                ctx.session.userMessage.photo,
-                ctx.message.text,
-            );
+            const request = {
+                platformId: ctx.message.from.id,
+                platformType: PLATFORM_TYPE_TELEGRAM,
+                userName: ctx.message.from.username,
+                requestType: ctx.session.userMessage.requestType,
+                longitude: ctx.session.userMessage.location.longitude,
+                latitude: ctx.session.userMessage.location.latitude,
+                photo: ctx.session.userMessage.photo,
+                message: ctx.message.text,
+                creationDate: new Date(),
+            };
+            request.reqId = await createRequest(request);
+            sendPhotoMessageToModerate(ctx, request, MODERATORSID);
             ctx.reply(CREATE_REQUEST_SCENE_ENTER, mainMenu);
         } catch (error) {
             ctx.reply(CREATE_REQUEST_SCENE_ERROR, mainMenu);

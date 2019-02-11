@@ -8,7 +8,7 @@ const {
     PLATFORM_TYPE_TELEGRAM,
     GET_INFO_SCENE_NO_REQUESTS,
 } = require('../../config');
-
+const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
 
 const name = EVENT_SCENE_GET_INFO;
@@ -52,20 +52,14 @@ const scene = new WizardScene(
                 ctx.reply(GET_INFO_SCENE_NO_REQUESTS, mainMenu);
                 return ctx.scene.leave();
             }
-
-            requests.forEach((req) => {
-                const messageToSend = `Тип заявки: ${req.request_type === 'search' ? 'пошук' : 'знайшли'}
-Меседжер: ${req.platform_type === 'telegram' ? 'телеграм' : 'вайбер'}
-Відправник: ${req.platform_type === 'telegram' ? '@' : ''}${req.user_name}
-Дата заявки: ${req.creation_date.toLocaleString()}
-Повідомлення від користувача: ${req.message}`;
-                ctx.replyWithPhoto(req.photo, { reply_markup: { inline_keyboard: [[{ text: 'дати коментар', callback_data: 'deleteRequest' }]] }, caption: messageToSend });
+            await requests.forEach((req) => {
+                sendPhotoMessage(ctx, req, ctx.message.from.id);
             });
+            setTimeout(() => ctx.reply('Вибірка завершена', mainMenu), 2000);
         } catch (error) {
             ctx.reply(GET_INFO_SCENE_ERROR, mainMenu);
             console.log(`getInfoScene ${error}`);
         }
-        ctx.reply('Вибірка завершена', mainMenu);
         return ctx.scene.leave();
     },
 );

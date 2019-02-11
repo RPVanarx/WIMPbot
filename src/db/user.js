@@ -1,4 +1,5 @@
 const user = require('../dbconnect');
+const { RADIUS } = require('../config');
 
 async function create(platformId, userType, userName, longitude, latitude) {
     await user.query(
@@ -21,10 +22,15 @@ async function activeValue(platformId, userType) {
     )).rows[0].is_active;
 }
 
+async function usersInRequestRadius(location) {
+    return (await user.query('SELECT platform_id FROM users WHERE is_active = true AND location <@> point($1, $2) <= $3/1609.34', [location.x, location.y, RADIUS])).rows;
+}
+
 module.exports = {
     user: {
         create,
         changeActivity,
         activeValue,
+        usersInRequestRadius,
     },
 };

@@ -11,8 +11,9 @@ async function changeUserActivity(id, userType, value) {
     await user.changeActivity(id, userType, value);
 }
 
-async function createRequest(platformId, platformType, reqType, img, message, latitude, longitude) {
-    await requests.create(platformId, platformType, reqType, img, message, latitude, longitude);
+async function createRequest(request) {
+    const createdRequest = await requests.create(request);
+    return createdRequest;
 }
 
 async function userRequests(platformId, platformType) {
@@ -31,7 +32,19 @@ async function userActivity(platformId, platformType) {
 
 async function getRequests(platformId, platformType, radius, days) {
     const infoRequests = await requests.search(platformId, platformType, radius, days);
+    console.log(infoRequests);
+
     return infoRequests;
+}
+
+async function changeRequestActiveStatus(reqId, value, moderatorId) {
+    const request = await requests.changeActiveStatus(reqId, value, moderatorId);
+    return request;
+}
+
+async function usersInRequestRadius(location) {
+    const users = await user.usersInRequestRadius(location);
+    return users;
 }
 
 module.exports = {
@@ -42,4 +55,6 @@ module.exports = {
     getRequests,
     deleteRequest,
     userActivity,
+    changeRequestActiveStatus,
+    usersInRequestRadius,
 };
