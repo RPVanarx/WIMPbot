@@ -13,14 +13,48 @@
     "author": "RPVanarx",
     "license": "MIT",
     "devDependencies": {
-        "eslint": "^5.8.0",
+        "eslint": "^5.13.0",
         "eslint-config-airbnb-base": "^13.1.0",
-        "eslint-plugin-import": "^2.14.0",
-        "prettier": "1.14.3"
+        "eslint-config-prettier": "^4.0.0",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-prettier": "^3.0.1",
+        "prettier": "^1.16.4"
     },
     "dependencies": {
         "dotenv": "^6.2.0",
         "pg": "^7.6.0",
         "telegraf": "^3.25.0"
+    },
+    "prettier": {
+        "bracketSpacing": true,
+        "parser": "babylon",
+        "printWidth": 100,
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "all",
+        "useTabs": false
+    },
+    "eslintConfig": {
+        "env": {
+            "node": true
+        },
+        "extends": [
+            "airbnb-base",
+            "plugin:prettier/recommended"
+        ],
+        "plugins": [
+            "prettier"
+        ],
+        "root": true,
+        "rules": {
+            "prettier/prettier": "error",
+            "no-param-reassign": [
+                "error",
+                {
+                    "props": false
+                }
+            ]
+        }
     }
 }
