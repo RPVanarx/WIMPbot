@@ -42,7 +42,7 @@ Message should correspond to the next rules:
 
 More details with examples: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
 
-## Pull reqests
+## Pull requests
 
 #### Description
 
