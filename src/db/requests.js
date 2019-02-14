@@ -45,11 +45,9 @@ async function changeActiveStatus(reqId, value, moderatorId) {
 }
 
 module.exports = {
-  requests: {
-    create,
-    findToDelete,
-    deleteRequest,
-    search,
-    changeActiveStatus,
-  },
+  create,
+  findToDelete,
+  deleteRequest,
+  search,
+  changeActiveStatus,
 };
