@@ -32,7 +32,12 @@ bot.start(ctx => ctx.reply(WELCOME_MESSAGE, startRegistrationButton));
 bot.action(EVENT_REGISTRATION_MENU, async ctx => {
   ctx.reply(
     REGISTRATION_MENU_MESSAGE,
-    registrationMenu(await userActivity(ctx.update.callback_query.from.id, PLATFORM_TYPE_TELEGRAM)),
+    registrationMenu(
+      await userActivity({
+        platformId: ctx.update.callback_query.from.id,
+        platformType: PLATFORM_TYPE_TELEGRAM,
+      }),
+    ),
   );
 });
 
@@ -71,13 +76,17 @@ callbackHandler.on('comment', async ctx => {
 
 callbackHandler.on('moderate', async ctx => {
   try {
-    const request = await changeRequestActiveStatus(
-      ctx.state.req,
-      ctx.state.data,
-      ctx.update.callback_query.from.id,
-    );
+    const request = await changeRequestActiveStatus({
+      reqId: ctx.state.req,
+      value: ctx.state.data,
+      moderatorId: ctx.update.callback_query.from.id,
+    });
+    console.log(request);
+
     const users = await usersInRequestRadius(request.location);
-    users.forEach(element => sendPhotoMessage(ctx, request, element.platform_id));
+    console.log(users);
+
+    users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
     ctx.deleteMessage();
   } catch (error) {
     console.error(`moderate ${error}`);

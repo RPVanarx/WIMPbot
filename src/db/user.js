@@ -2,9 +2,11 @@ const user = require('../dbconnect');
 const { RADIUS } = require('../config');
 
 async function create(platformId, userType, userName, longitude, latitude) {
+  console.log(longitude, latitude);
+
   await user.query(
     'INSERT INTO users VALUES(DEFAULT, $1, $2, $3, (point($4, $5))) ON CONFLICT (platform_id, platform_type) DO UPDATE SET location = (point($4, $5))',
-    [platformId, userType, userName, longitude, latitude],
+    [platformId, userType, userName, latitude, longitude],
   );
 }
 
