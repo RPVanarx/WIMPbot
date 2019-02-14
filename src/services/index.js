@@ -1,5 +1,4 @@
-const { user } = require('../db/user');
-const { requests } = require('../db/requests');
+const { user, requests } = require('../db');
 
 async function registerUser({ platformId, platformType, userName, latitude, longitude }) {
   await user.create(platformId, platformType, userName, latitude, longitude);

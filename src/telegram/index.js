@@ -81,11 +81,7 @@ callbackHandler.on('moderate', async ctx => {
       value: ctx.state.data,
       moderatorId: ctx.update.callback_query.from.id,
     });
-    console.log(request);
-
     const users = await usersInRequestRadius(request.location);
-    console.log(users);
-
     users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
     ctx.deleteMessage();
   } catch (error) {
