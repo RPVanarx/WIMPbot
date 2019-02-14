@@ -2,8 +2,9 @@
 
 ## Table of content:
 1. [Branches](#branches)
-2. [Commit message](#commit-message)
-3. [Issues](#issues)
+2. [Commit messages](#commit-messages)
+3. [Pull requests](#pull-requests)
+4. [Issues](#issues)
 
 
 ## Branches
@@ -26,7 +27,7 @@ e.g.: *telegram-login-scene*
 
 Delete your branch from the upstream repository after it's merged, unless there is a specific reason not to.
 
-## Commit message
+## Commit messages
 
 Message should correspond to the next rules:
 
@@ -41,7 +42,7 @@ Message should correspond to the next rules:
 
 More details with examples: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
 
-## Pull reqest
+## Pull reqests
 
 #### Description
 
@@ -51,7 +52,7 @@ e.g: `#11` refers to *Discuss folder and project structures* issue, so a pull re
 
 ## Issues
 
-#### Labels
+#### Label
 
 Add label that coresponds to the part of the project: `telegram`, `viber`, `web-api`, `business-logic`, `db-wrapper`, `db` etc.
 
