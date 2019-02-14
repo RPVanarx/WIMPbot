@@ -1,33 +1,33 @@
 const Stage = require('telegraf/stage');
 
-const getInfoScene = require('./findRequestsInRadius');
-const registrationUserScene = require('./registrateUser');
-const createRequestScene = require('./createRequest');
-const updateLocationScene = require('./updateLocation');
-const deactivateUserScene = require('./deactivateUser');
-const deletePetScene = require('./closeOwnRequest');
-const activateUserScene = require('./activateUser');
+const findRequests = require('./findRequests');
+const registrateUser = require('./registrateUser');
+const createRequest = require('./createRequest');
+const updateLocation = require('./updateLocation');
+const deactivateUser = require('./deactivateUser');
+const closeOwnRequest = require('./closeOwnRequest');
+const activateUser = require('./activateUser');
 
 const stage = new Stage();
 stage.register(
-  activateUserScene.scene,
-  getInfoScene.scene,
-  registrationUserScene.scene,
-  createRequestScene.scene,
-  updateLocationScene.scene,
-  deactivateUserScene.scene,
-  deletePetScene.scene,
+  registrateUser.scene,
+  findRequests.scene,
+  activateUser.scene,
+  createRequest.scene,
+  updateLocation.scene,
+  deactivateUser.scene,
+  closeOwnRequest.scene,
 );
 
 module.exports = {
   stage,
   stagesArray: [
-    activateUserScene,
-    getInfoScene,
-    registrationUserScene,
-    createRequestScene,
-    updateLocationScene,
-    deactivateUserScene,
-    deletePetScene,
+    findRequests,
+    registrateUser,
+    createRequest,
+    updateLocation,
+    deactivateUser,
+    closeOwnRequest,
+    activateUser,
   ],
 };

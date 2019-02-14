@@ -3,13 +3,13 @@ const {
   DEACTIVATE_USER_TRUE,
   DEACTIVATE_USER_FALSE,
   DEACTIVATE_USER_QUESTION,
-  EVENT_SCENE_DEACTIVATE_USER,
+  EVENT_DEACTIVATE_USER,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
 const { changeUserActivity } = require('../../services');
 
-const name = EVENT_SCENE_DEACTIVATE_USER;
+const name = EVENT_DEACTIVATE_USER;
 
 const scene = new WizardScene(
   name,
@@ -18,12 +18,16 @@ const scene = new WizardScene(
     return ctx.wizard.next();
   },
   async ctx => {
-    if (!ctx.update || !ctx.update.callback_query || ctx.update.callback_query.data === 'no') {
+    if (!(ctx.update && ctx.update.callback_query && ctx.update.callback_query.data === 'yes')) {
       ctx.reply(DEACTIVATE_USER_FALSE, mainMenu);
       return ctx.scene.leave();
     }
     try {
-      await changeUserActivity(ctx.update.callback_query.from.id, PLATFORM_TYPE_TELEGRAM, false);
+      await changeUserActivity({
+        platformId: ctx.update.callback_query.from.id,
+        platformType: PLATFORM_TYPE_TELEGRAM,
+        value: false,
+      });
       ctx.reply(DEACTIVATE_USER_TRUE, mainMenu);
     } catch (error) {
       ctx.reply(DEACTIVATE_USER_FALSE, mainMenu);

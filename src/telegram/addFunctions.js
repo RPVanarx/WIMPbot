@@ -1,42 +1,36 @@
-function messageCreator(requestType, platformType, userName, creationDate, message) {
-  return `Тип заявки: ${requestType === 'search' ? 'пошук' : 'знайшли'}
-Меседжер: ${platformType === 'telegram' ? 'телеграм' : 'вайбер'}
-Відправник: ${platformType === 'telegram' ? '@' : ''}${userName}
-Дата заявки: ${creationDate.toLocaleString()}
-Повідомлення від користувача: ${message}`;
+function createMessage(request) {
+  return `Тип заявки: ${request.requestType === 'search' ? 'пошук' : 'знайшли'}
+Меседжер: ${request.platformType === 'telegram' ? 'телеграм' : 'вайбер'}
+Відправник: ${request.platformType === 'telegram' ? '@' : ''}${request.userName}
+Дата заявки: ${request.creationDate.toLocaleString()}
+Повідомлення від користувача: ${request.message}`;
 }
 
-function sendPhotoMessage(ctx, req, userId) {
-  ctx.telegram.sendPhoto(userId, req.photo, {
+function sendPhotoMessage({ ctx, request, chatId }) {
+  ctx.telegram.sendPhoto(chatId, request.photo, {
     reply_markup: {
-      inline_keyboard: [[{ text: 'дати коментар', callback_data: `comment:${req.reqId}` }]],
+      inline_keyboard: [[{ text: 'дати коментар', callback_data: `comment:${request.reqId}` }]],
     },
-    caption: messageCreator(
-      req.request_type,
-      req.platform_type,
-      req.user_name,
-      req.creation_date,
-      req.message,
-    ),
+    caption: createMessage({
+      requestType: request.request_type,
+      platformType: request.platform_type,
+      userName: request.user_name,
+      creationDate: request.creation_date,
+      message: request.message,
+    }),
   });
 }
 
-function sendPhotoMessageToModerate(ctx, req, moderatorId) {
-  ctx.telegram.sendPhoto(moderatorId, req.photo, {
+function sendPhotoMessageToModerate({ ctx, request, moderatorId }) {
+  ctx.telegram.sendPhoto(moderatorId, request.photo, {
     reply_markup: {
       inline_keyboard: [
-        [{ text: 'апрув', callback_data: `moderate:true:${req.reqId}` }],
-        [{ text: 'деклайн', callback_data: `moderate:false:${req.reqId}` }],
+        [{ text: 'апрув', callback_data: `moderate:true:${request.reqId}` }],
+        [{ text: 'деклайн', callback_data: `moderate:false:${request.reqId}` }],
       ],
     },
-    caption: messageCreator(
-      req.requestType,
-      req.platformType,
-      req.userName,
-      req.creationDate,
-      req.message,
-    ),
+    caption: createMessage(request),
   });
 }
 
-module.exports = { messageCreator, sendPhotoMessage, sendPhotoMessageToModerate };
+module.exports = { sendPhotoMessage, sendPhotoMessageToModerate };

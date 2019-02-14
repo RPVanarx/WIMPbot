@@ -1,20 +1,24 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  DELETE_PET_SCENE_MESSAGE,
-  EVENT_SCENE_DELETE_PET,
+  CLOSE_REQUEST_MESSAGE,
+  EVENT_DELETE_PET,
   PLATFORM_TYPE_TELEGRAM,
   REQUEST_CLOSE,
+  CLOSE_OWN_REQUEST_END,
 } = require('../../config');
 const { userRequests } = require('../../services');
 const { mainMenu } = require('../menu');
 
-const name = EVENT_SCENE_DELETE_PET;
+const name = EVENT_DELETE_PET;
 
 const scene = new WizardScene(name, async ctx => {
   try {
-    const requests = await userRequests(ctx.update.callback_query.from.id, PLATFORM_TYPE_TELEGRAM);
+    const requests = await userRequests({
+      platformId: ctx.update.callback_query.from.id,
+      platformType: PLATFORM_TYPE_TELEGRAM,
+    });
     if (requests.length === 0) {
-      ctx.reply(DELETE_PET_SCENE_MESSAGE, mainMenu);
+      ctx.reply(CLOSE_REQUEST_MESSAGE, mainMenu);
       return ctx.scene.leave();
     }
     requests.forEach(req => {
@@ -25,7 +29,7 @@ const scene = new WizardScene(name, async ctx => {
         caption: req.message,
       });
     });
-    setTimeout(() => ctx.reply('Вибірка завершена', mainMenu), 2000);
+    setTimeout(() => ctx.reply(CLOSE_OWN_REQUEST_END, mainMenu), 2000);
   } catch (error) {
     console.log(`deletePetScene ${error}`);
   }

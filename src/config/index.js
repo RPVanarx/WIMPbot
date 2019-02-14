@@ -14,13 +14,13 @@ module.exports = {
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
   EVENT_REQUEST_MENU: 'requestMenu',
-  EVENT_SCENE_GET_INFO: 'getInfoScene',
-  EVENT_SCENE_REGISTRATION_USER: 'registrationUserScene',
-  EVENT_SCENE_UPDATE_LOCATION: 'updateLocationScene',
-  EVENT_SCENE_DEACTIVATE_USER: 'deleteUserScene',
-  EVENT_SCENE_CREATE_REQUEST: 'createRequestScene',
-  EVENT_SCENE_DELETE_PET: 'deletePetScene',
-  EVENT_SCENE_ACTIVATE_USER: 'activateUserScene',
+  EVENT_FIND_REQUESTS: 'findRequests',
+  EVENT_REGISTRATION_USER: 'registrateUser',
+  UPDATE_LOCATION: 'updateLocation',
+  EVENT_DEACTIVATE_USER: 'deactivateUser',
+  EVENT_CREATE_REQUEST: 'createRequest',
+  EVENT_DELETE_PET: 'closeOwnRequest',
+  EVENT_ACTIVATE_USER: 'activateUser',
   WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
 https://www.youtube.com/watch?v=vASw0m6YdWs`,
   WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
   REGISTRATION_MESSAGE: 'Відправте Вашу локацію використовуючи функцію месенджера',
   REGISTRATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
 
-  UPDATELOCATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+  UPDATE_LOCATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
 
   YES: 'Так',
   NO: 'Ні',
@@ -44,7 +44,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
 
   REGISTRATION_ENTER: 'Ваш запит на реєстрацію прийнято',
 
-  UPDATELOCATION_ENTER: 'Ваш запит на зміну локації прийнято',
+  UPDATE_LOCATION_ENTER: 'Ваш запит на зміну локації прийнято',
 
   APPLY_MENU_CREATE_REQUEST: 'Створити заявку',
   APPLY_MENU_DELETE: 'Закрити власну заявку',
@@ -61,29 +61,30 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
 
   REQUEST_MENU_MESSAGE: 'Ви в меню подачі заявки, виберіть один із пунктів',
 
-  CHANGE_LOCATION_SCENE_MESSAGE: 'Введіть ваші нові координати',
+  CHANGE_LOCATION_MESSAGE: 'Введіть ваші нові координати',
 
-  DELETE_PET_SCENE_MESSAGE: 'Ви не маєте активних заявок',
+  CLOSE_REQUEST_MESSAGE: 'Ви не маєте активних заявок',
 
-  CREATE_REQUEST_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію улюбленця',
-  CREATE_REQUEST_SCENE_LOCATION_MESSAGE: 'Відправте локацію де улюбленець загубився/знайшовся',
-  CREATE_REQUEST_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис одним повідомленням',
-  CREATE_REQUEST_SCENE_ERROR: 'Помилка введення, спробуйте знову',
-  CREATE_REQUEST_SCENE_ENTER: 'Ваша заявка відправлена на модерацію',
+  CREATE_REQUEST_PHOTO_MESSAGE: 'Завантажте фотографію улюбленця',
+  CREATE_REQUEST_LOCATION_MESSAGE: 'Відправте локацію де улюбленець загубився/знайшовся',
+  CREATE_REQUEST_DESCRIPTION_MESSAGE: 'Введіть невеликий опис одним повідомленням',
+  CREATE_REQUEST_ERROR: 'Помилка введення, спробуйте знову',
+  CREATE_REQUEST_ENTER: 'Ваша заявка відправлена на модерацію',
   CREATE_REQUEST_CHOICE_TYPE: 'Виберіть один із пунктів',
 
-  FIND_PET_SCENE_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
-  FIND_PET_SCENE_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
-  FIND_PET_SCENE_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
+  FIND_PET_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
+  FIND_PET_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
+  FIND_PET_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
 
-  GET_INFO_SCENE_RADIUS_MESSAGE:
+  GET_INFO_RADIUS_MESSAGE:
     'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах)? Приклади: 2000, 1200, 3500',
-  GET_INFO_SCENE_DAYS_MESSAGE:
+  GET_INFO_DAYS_MESSAGE:
     'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів до 30-ти) Приклади: 5, 12, 25',
-  GET_INFO_SCENE_ERROR: 'Помилка введення, спробуйте знову',
-  GET_INFO_SCENE_NO_REQUESTS: 'Заявок для показу не знайдено',
+  GET_INFO_ERROR: 'Помилка введення, спробуйте знову',
+  GET_INFO_NO_REQUESTS: 'Заявок для показу не знайдено',
 
   REQUEST_TYPE_FOUND: 'found',
   REQUEST_TYPE_SEARCH: 'search',
   REQUEST_CLOSE: 'Закрити заявку',
+  CLOSE_OWN_REQUEST_END: 'Вибірка завершена',
 };
