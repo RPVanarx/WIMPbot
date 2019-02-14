@@ -28,10 +28,6 @@ Delete your branch from the upstream repository after it's merged, unless there 
 
 ## Commit message
 
-Subject of a message should end with the reference to the issue. You can find issue number right after its name.
-
-e.g: `#11` refers to *Discuss folder and project structures* issue, so commit message might be *Add git guidelines #11*
-
 Message should correspond to the next rules:
 
 #### The seven rules of a great Git commit message
@@ -44,6 +40,14 @@ Message should correspond to the next rules:
 7. Use the body to explain what and why vs. how
 
 More details with examples: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+
+## Pull reqest
+
+#### Description
+
+Description of a pull request should contain a reference to the issue. You can find issue number (reference) right after its name.
+
+e.g: `#11` refers to *Discuss folder and project structures* issue, so a pull request description might end with *Should resolve #11*
 
 ## Issues
 
