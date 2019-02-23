@@ -1,13 +1,13 @@
 const { createHash, createHmac } = require('crypto');
 const { TOKEN: TELEGRAM_TOKEN } = require('../config');
 
-const MAX_HASH_LENGTH = 512;
-const MAX_AUTH_PERIOD = 24 * 60 * 60 * 1000; // 24 hours in millisecs
+const WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH = 512;
+const WEB_AUTH_MAX_AUTH_PERIOD = 24 * 60 * 60 * 1000; // 24 hours in millisecs
 
 function validatePayload(data) {
   if (!data) throw new TypeError('Empty payload or invalid payload type');
 
-  if (!data.hash || !data.hash.length || data.hash.length > MAX_HASH_LENGTH) {
+  if (!data.hash || !data.hash.length || data.hash.length > WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH) {
     throw new Error('Invalid hash property');
   }
 }
@@ -40,7 +40,7 @@ function validateAuthDate({ auth_date: dateInSeconds }) {
   const date = new Date(0);
   date.setSeconds(dateInSeconds);
 
-  if (Date.now() - date > MAX_AUTH_PERIOD) throw new Error('Authentication expired');
+  if (Date.now() - date > WEB_AUTH_MAX_AUTH_PERIOD) throw new Error('Authentication expired');
 }
 
 module.exports = function authorize(data) {
