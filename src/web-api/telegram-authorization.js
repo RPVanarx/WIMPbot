@@ -57,23 +57,23 @@ module.exports = function authorize(data) {
 
 // Sample
 
-// Response sample with date Feb 23 2018 18:33:20 GMT+0200
-const payload = {
-  id: '424242424242',
-  first_name: 'John',
-  last_name: 'Doe',
-  username: 'username',
-  photo_url: 'https://t.me/i/userpic/320/username.jpg',
-  auth_date: '1519400000',
-  hash: 'fd99f6545c6bda17b8d85ce11d3393dbbf12713f338f420673c9bf4fd4256cc7',
-};
+// // Response sample with date Feb 23 2018 18:33:20 GMT+0200
+// const payload = {
+//   id: '424242424242',
+//   first_name: 'John',
+//   last_name: 'Doe',
+//   username: 'username',
+//   photo_url: 'https://t.me/i/userpic/320/username.jpg',
+//   auth_date: '1519400000',
+//   hash: 'fd99f6545c6bda17b8d85ce11d3393dbbf12713f338f420673c9bf4fd4256cc7',
+// };
 
-async function as() {
-  try {
-    console.log(module.exports(payload));
-  } catch (err) {
-    console.log(err.message);
-  }
-}
+// async function as() {
+//   try {
+//     console.log(module.exports(payload));
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// }
 
-as();
+// as();
