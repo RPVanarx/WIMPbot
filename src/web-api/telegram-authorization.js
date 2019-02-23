@@ -1,7 +1,7 @@
 const { createHash, createHmac } = require('crypto');
 const { TOKEN: TELEGRAM_TOKEN } = require('../config');
 
-const WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH = 512;
+const WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH = 64;
 const WEB_AUTH_MAX_AUTH_PERIOD = 24 * 60 * 60 * 1000; // 24 hours in millisecs
 
 function validatePayload(data) {
