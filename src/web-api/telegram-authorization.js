@@ -1,8 +1,9 @@
 const { createHash, createHmac } = require('crypto');
-const { TOKEN: TELEGRAM_TOKEN } = require('../config');
-
-const WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH = 64;
-const WEB_AUTH_MAX_AUTH_PERIOD = 24 * 60 * 60 * 1000; // 24 hours in millisecs
+const {
+  TOKEN: TELEGRAM_TOKEN,
+  WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH,
+  WEB_AUTH_MAX_AUTH_PERIOD,
+} = require('../config');
 
 function validatePayload(data) {
   if (!data) throw new TypeError('Empty payload or invalid payload type');
@@ -56,23 +57,23 @@ module.exports = function authorize(data) {
 
 // Sample
 
-// // Response sample with date Feb 23 2018 18:33:20 GMT+0200
-// const payload = {
-//   id: '424242424242',
-//   first_name: 'John',
-//   last_name: 'Doe',
-//   username: 'username',
-//   photo_url: 'https://t.me/i/userpic/320/username.jpg',
-//   auth_date: '1519400000',
-//   hash: 'fd99f6545c6bda17b8d85ce11d3393dbbf12713f338f420673c9bf4fd4256cc7',
-// };
+// Response sample with date Feb 23 2018 18:33:20 GMT+0200
+const payload = {
+  id: '424242424242',
+  first_name: 'John',
+  last_name: 'Doe',
+  username: 'username',
+  photo_url: 'https://t.me/i/userpic/320/username.jpg',
+  auth_date: '1519400000',
+  hash: 'fd99f6545c6bda17b8d85ce11d3393dbbf12713f338f420673c9bf4fd4256cc7',
+};
 
-// async function as() {
-//   try {
-//     console.log(module.exports(payload));
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// }
+async function as() {
+  try {
+    console.log(module.exports(payload));
+  } catch (err) {
+    console.log(err.message);
+  }
+}
 
-// as();
+as();

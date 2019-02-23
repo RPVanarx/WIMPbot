@@ -10,6 +10,10 @@ module.exports = {
     port: process.env.PGPORT,
   },
   MODERATOR_GROUP_ID: process.env.MODERATORSID,
+
+  WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH: process.env.WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH,
+  WEB_AUTH_MAX_AUTH_PERIOD: process.env.WEB_AUTH_MAX_AUTH_PERIOD,
+
   RADIUS: 1000,
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
