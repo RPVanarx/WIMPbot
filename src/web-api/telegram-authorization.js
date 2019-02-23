@@ -1,14 +1,12 @@
 const { createHash, createHmac } = require('crypto');
-const {
-  TOKEN: TELEGRAM_TOKEN,
-  WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH,
-  WEB_AUTH_MAX_AUTH_PERIOD,
-} = require('../config');
+const { TOKEN: TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../config');
+
+const SHA_256_HASH_LENGTH = 64;
 
 function validatePayload(data) {
   if (!data) throw new TypeError('Empty payload or invalid payload type');
 
-  if (!data.hash || !data.hash.length || data.hash.length > WEB_AUTH_TELEGRAM_MAX_HASH_LENGTH) {
+  if (!data.hash || !data.hash.length || data.hash.length !== SHA_256_HASH_LENGTH) {
     throw new Error('Invalid hash property');
   }
 }
