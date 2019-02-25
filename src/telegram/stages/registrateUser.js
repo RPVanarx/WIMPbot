@@ -26,7 +26,6 @@ const scene = new WizardScene(
       await registerUser({
         platformId: ctx.message.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
-        userName: ctx.message.from.username,
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
       });

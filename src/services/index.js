@@ -1,7 +1,7 @@
 const { user, requests } = require('../db');
 
-async function registerUser({ platformId, platformType, userName, latitude, longitude }) {
-  await user.create(platformId, platformType, userName, latitude, longitude);
+async function registerUser({ platformId, platformType, latitude, longitude }) {
+  await user.create(platformId, platformType, latitude, longitude);
 }
 
 async function changeUserActivity({ platformId, platformType, value }) {
