@@ -1,6 +1,11 @@
 const user = require('../dbconnect');
 
 async function create(request) {
+  await user.query(
+    'UPDATE users SET user_name = $1, bad_request_count = bad_request_count + 1 WHERE platform_id = $2 AND platform_type = $3',
+    [request.userName, request.platformId, request.platformType],
+  );
+
   return (await user.query(
     'INSERT INTO requests VALUES(DEFAULT,(SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2), $3, (point($4, $5)), $6, $7, now()) RETURNING id',
     [
@@ -38,6 +43,11 @@ async function changeActiveStatus(reqId, value, moderatorId) {
     'UPDATE requests SET is_approved = $2, is_active = $2, status_changed_by = $3 WHERE id = $1 RETURNING *',
     [reqId, value, moderatorId],
   )).rows[0];
+
+  await user.query('UPDATE users SET bad_request_count = bad_request_count - 1 WHERE id = $1', [
+    request.user_id,
+  ]);
+
   const userReq = (await user.query('SELECT user_name, platform_type FROM users WHERE id = $1', [
     request.user_id,
   ])).rows[0];

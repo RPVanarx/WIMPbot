@@ -9,16 +9,35 @@ const {
   PLATFORM_TYPE_TELEGRAM,
   CREATE_REQUEST_CHOICE_TYPE,
   MODERATOR_GROUP_ID,
+  CREATE_REQUEST_NO_USER_NAME,
+  CREATE_REQUEST_MANY_BAD_REQUESTS,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
-const { createRequest } = require('../../services');
+const { createRequest, getBadRequestCount } = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
 
 const name = EVENT_CREATE_REQUEST;
 
 const scene = new WizardScene(
   name,
-  ctx => {
+  async ctx => {
+    if (!ctx.update.callback_query.from.username) {
+      ctx.reply(CREATE_REQUEST_NO_USER_NAME, mainMenu);
+      return ctx.scene.leave();
+    }
+    let bad;
+    try {
+      bad = await getBadRequestCount({
+        platformId: ctx.update.callback_query.from.id,
+        platformType: PLATFORM_TYPE_TELEGRAM,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    if (bad >= 5) {
+      ctx.reply(CREATE_REQUEST_MANY_BAD_REQUESTS, mainMenu);
+      return ctx.scene.leave();
+    }
     ctx.reply(CREATE_REQUEST_CHOICE_TYPE, searchFoundMenu);
     ctx.session.userMessage = {};
     return ctx.wizard.next();

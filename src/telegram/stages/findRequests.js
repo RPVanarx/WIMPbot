@@ -22,7 +22,7 @@ const scene = new WizardScene(
     return ctx.wizard.next();
   },
   ctx => {
-    if (!ctx.message || !ctx.message.text || Number.isNaN(Number.parseInt(ctx.message.text, 10))) {
+    if (!ctx.message || !ctx.message.text || !/^\d+$/.test(ctx.message.text)) {
       ctx.reply(GET_INFO_ERROR, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
@@ -32,7 +32,7 @@ const scene = new WizardScene(
     return ctx.wizard.next();
   },
   async ctx => {
-    if (!ctx.message || !ctx.message.text || Number.isNaN(Number.parseInt(ctx.message.text, 10))) {
+    if (!ctx.message || !ctx.message.text || !/^\d+$/.test(ctx.message.text)) {
       ctx.reply(GET_INFO_ERROR, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();

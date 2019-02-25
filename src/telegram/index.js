@@ -4,7 +4,7 @@ const Router = require('telegraf/router');
 const {
   EVENT_REGISTRATION_MENU,
   EVENT_REQUEST_MENU,
-  TOKEN,
+  TELEGRAM_TOKEN,
   WELCOME_MESSAGE,
   REGISTRATION_MENU_MESSAGE,
   REQUEST_MENU_MESSAGE,
@@ -12,7 +12,7 @@ const {
 } = require('../config');
 const { sendPhotoMessage } = require('./addFunctions');
 
-const bot = new Telegraf(TOKEN);
+const bot = new Telegraf(TELEGRAM_TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
 const {
@@ -68,7 +68,11 @@ callbackHandler.on('deleteRequest', async ctx => {
 
 callbackHandler.on('comment', async ctx => {
   try {
-    console.log(ctx);
+    const a = await ctx.telegram.sendPhoto(
+      433445035,
+      'http://static1.banki.ru/ugc/62/b3/09/df/7255314.jpg',
+    );
+    console.log(a);
   } catch (error) {
     console.error(`comment ${error}`);
   }
@@ -76,6 +80,11 @@ callbackHandler.on('comment', async ctx => {
 
 callbackHandler.on('moderate', async ctx => {
   try {
+    if (!JSON.parse(ctx.state.data)) {
+      console.log('send message to user that him request was decline');
+      ctx.deleteMessage();
+      return;
+    }
     const request = await changeRequestActiveStatus({
       reqId: ctx.state.req,
       value: ctx.state.data,
@@ -83,7 +92,6 @@ callbackHandler.on('moderate', async ctx => {
     });
     const users = await usersInRequestRadius(request.location);
     users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
-    ctx.deleteMessage();
   } catch (error) {
     console.error(`moderate ${error}`);
   }
