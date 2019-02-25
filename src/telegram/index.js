@@ -68,7 +68,11 @@ callbackHandler.on('deleteRequest', async ctx => {
 
 callbackHandler.on('comment', async ctx => {
   try {
-    console.log(ctx);
+    const a = await ctx.telegram.sendPhoto(
+      433445035,
+      'http://static1.banki.ru/ugc/62/b3/09/df/7255314.jpg',
+    );
+    console.log(a);
   } catch (error) {
     console.error(`comment ${error}`);
   }
