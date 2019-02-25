@@ -80,6 +80,11 @@ callbackHandler.on('comment', async ctx => {
 
 callbackHandler.on('moderate', async ctx => {
   try {
+    if (!JSON.parse(ctx.state.data)) {
+      console.log('send message to user that him request was decline');
+      ctx.deleteMessage();
+      return;
+    }
     const request = await changeRequestActiveStatus({
       reqId: ctx.state.req,
       value: ctx.state.data,
@@ -87,7 +92,6 @@ callbackHandler.on('moderate', async ctx => {
     });
     const users = await usersInRequestRadius(request.location);
     users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
-    ctx.deleteMessage();
   } catch (error) {
     console.error(`moderate ${error}`);
   }

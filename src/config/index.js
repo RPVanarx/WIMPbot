@@ -73,6 +73,8 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
   CREATE_REQUEST_CHOICE_TYPE: 'Виберіть один із пунктів',
   CREATE_REQUEST_NO_USER_NAME:
     'Для того щоб відправити заявку, у вашому профілі має бути вказаний Username. Створіть власний Username та спробуйте відправити заявку знову',
+  CREATE_REQUEST_MANY_BAD_REQUESTS: 'Перевищено ліміт непідтверджених заявок',
+
   FIND_PET_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
   FIND_PET_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
   FIND_PET_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',

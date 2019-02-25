@@ -42,6 +42,11 @@ async function usersInRequestRadius(location) {
   return users;
 }
 
+async function getBadRequestCount({ platformId, platformType }) {
+  const count = await user.badRequestCount({ platformId, platformType });
+  return count;
+}
+
 module.exports = {
   registerUser,
   changeUserActivity,
@@ -52,4 +57,5 @@ module.exports = {
   userActivity,
   changeRequestActiveStatus,
   usersInRequestRadius,
+  getBadRequestCount,
 };
