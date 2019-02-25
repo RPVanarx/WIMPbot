@@ -92,6 +92,7 @@ callbackHandler.on('moderate', async ctx => {
     });
     const users = await usersInRequestRadius(request.location);
     users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
+    ctx.deleteMessage();
   } catch (error) {
     console.error(`moderate ${error}`);
   }
