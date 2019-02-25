@@ -9,6 +9,7 @@ const {
   PLATFORM_TYPE_TELEGRAM,
   CREATE_REQUEST_CHOICE_TYPE,
   MODERATOR_GROUP_ID,
+  CREATE_REQUEST_NO_USER_NAME,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest } = require('../../services');
@@ -19,6 +20,10 @@ const name = EVENT_CREATE_REQUEST;
 const scene = new WizardScene(
   name,
   ctx => {
+    if (!ctx.update.callback_query.from.username) {
+      ctx.reply(CREATE_REQUEST_NO_USER_NAME, mainMenu);
+      return ctx.scene.leave();
+    }
     ctx.reply(CREATE_REQUEST_CHOICE_TYPE, searchFoundMenu);
     ctx.session.userMessage = {};
     return ctx.wizard.next();

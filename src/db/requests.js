@@ -1,6 +1,11 @@
 const user = require('../dbconnect');
 
 async function create(request) {
+  await user.query(
+    'UPDATE users SET user_name = $1 WHERE platform_id = $2 AND platform_type = $3',
+    [request.userName, request.platformId, request.platformType],
+  );
+
   return (await user.query(
     'INSERT INTO requests VALUES(DEFAULT,(SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2), $3, (point($4, $5)), $6, $7, now()) RETURNING id',
     [

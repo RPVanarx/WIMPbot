@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
-  TOKEN: process.env.TOKEN,
+  TELEGRAM_TOKEN: process.env.TOKEN,
   db: {
     user: process.env.PGUSER,
     host: process.env.PGHOST,
@@ -71,7 +71,8 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
   CREATE_REQUEST_ERROR: 'Помилка введення, спробуйте знову',
   CREATE_REQUEST_ENTER: 'Ваша заявка відправлена на модерацію',
   CREATE_REQUEST_CHOICE_TYPE: 'Виберіть один із пунктів',
-
+  CREATE_REQUEST_NO_USER_NAME:
+    'Для того щоб відправити заявку, у вашому профілі має бути вказаний Username. Створіть власний Username та спробуйте відправити заявку знову',
   FIND_PET_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
   FIND_PET_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
   FIND_PET_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',

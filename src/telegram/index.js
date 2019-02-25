@@ -4,7 +4,7 @@ const Router = require('telegraf/router');
 const {
   EVENT_REGISTRATION_MENU,
   EVENT_REQUEST_MENU,
-  TOKEN,
+  TELEGRAM_TOKEN,
   WELCOME_MESSAGE,
   REGISTRATION_MENU_MESSAGE,
   REQUEST_MENU_MESSAGE,
@@ -12,7 +12,7 @@ const {
 } = require('../config');
 const { sendPhotoMessage } = require('./addFunctions');
 
-const bot = new Telegraf(TOKEN);
+const bot = new Telegraf(TELEGRAM_TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
 const {
