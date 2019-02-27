@@ -1,5 +1,5 @@
 module.exports = ({ router }) => {
   router.get('/', async ctx => {
-    ctx.body = 'Using: /api/v1/*';
+    ctx.body = 'Usage: /api/v1/*';
   });
 };
