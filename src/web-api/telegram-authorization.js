@@ -1,5 +1,5 @@
 const { createHash, createHmac } = require('crypto');
-const { TOKEN: TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../config');
+const { TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../config');
 
 const SHA_256_HASH_LENGTH = 64;
 
