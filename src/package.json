@@ -4,7 +4,8 @@
     "description": "telegram bot",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test-web-api": "jest /web-api",
+        "test-web-api-watch": "jest --watchAll /web-api"
     },
     "keywords": [
         "telegram",
@@ -41,7 +42,8 @@
     },
     "eslintConfig": {
         "env": {
-            "node": true
+            "node": true,
+            "jest": true
         },
         "extends": [
             "airbnb-base",
@@ -60,5 +62,8 @@
                 }
             ]
         }
+    },
+    "jest": {
+        "verbose": true
     }
 }
