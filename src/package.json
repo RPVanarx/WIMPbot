@@ -4,7 +4,8 @@
     "description": "telegram bot",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test-web-api": "jest /web-api",
+        "test-web-api-watch": "jest --watchAll /web-api"
     },
     "keywords": [
         "telegram",
@@ -18,11 +19,14 @@
         "eslint-config-prettier": "^4.0.0",
         "eslint-plugin-import": "^2.16.0",
         "eslint-plugin-prettier": "^3.0.1",
-        "prettier": "^1.16.4"
+        "jest": "^24.1.0",
+        "prettier": "^1.16.4",
+        "supertest": "^3.4.2"
     },
     "dependencies": {
         "dotenv": "^6.2.0",
         "koa": "^2.7.0",
+        "koa-router": "^7.4.0",
         "pg": "^7.6.0",
         "telegraf": "^3.25.0"
     },
@@ -38,7 +42,8 @@
     },
     "eslintConfig": {
         "env": {
-            "node": true
+            "node": true,
+            "jest": true
         },
         "extends": [
             "airbnb-base",
@@ -57,5 +62,8 @@
                 }
             ]
         }
+    },
+    "jest": {
+        "verbose": true
     }
 }
