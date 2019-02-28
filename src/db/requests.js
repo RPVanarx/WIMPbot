@@ -38,6 +38,18 @@ async function search(platformId, platformType, radius, days) {
   )).rows;
 }
 
+async function searchInArea(longitude, latitude, radius, days) {
+  return (await user.query(
+    `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, u.user_name, u.platform_type 
+    FROM requests AS r, users AS u 
+    WHERE (point($1, $2) <@> r.location) <= $3/1609.34 
+    AND u.id = r.user_id 
+    AND r.is_active = true 
+    AND r.creation_date >= (now() AT TIME ZONE 'UTC' - $4 * interval '1 day')`,
+    [longitude, latitude, radius, days],
+  )).rows;
+}
+
 async function changeActiveStatus(reqId, value, moderatorId) {
   const request = (await user.query(
     'UPDATE requests SET is_approved = $2, is_active = $2, status_changed_by = $3 WHERE id = $1 RETURNING *',
@@ -59,5 +71,6 @@ module.exports = {
   findToDelete,
   deleteRequest,
   search,
+  searchInArea,
   changeActiveStatus,
 };
