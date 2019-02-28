@@ -6,7 +6,5 @@ function setResponse(ctx) {
 }
 
 module.exports = ({ router }) => {
-  router.get(rootRoutes, async ctx => {
-    setResponse(ctx);
-  });
+  router.get(rootRoutes, async ctx => setResponse(ctx));
 };
