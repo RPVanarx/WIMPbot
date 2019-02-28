@@ -32,6 +32,11 @@ async function getRequests({ platformId, platformType, radius, days }) {
   return infoRequests;
 }
 
+async function getRequestsInArea({ longitude, latitude, radius, days }) {
+  const foundRequests = await requests.searchInArea(longitude, latitude, radius, days);
+  return foundRequests;
+}
+
 async function changeRequestActiveStatus({ reqId, value, moderatorId }) {
   const request = await requests.changeActiveStatus(reqId, value, moderatorId);
   return request;
@@ -53,6 +58,7 @@ module.exports = {
   createRequest,
   userRequests,
   getRequests,
+  getRequestsInArea,
   deleteRequest,
   userActivity,
   changeRequestActiveStatus,
