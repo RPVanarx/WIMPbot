@@ -26,6 +26,7 @@
     "dependencies": {
         "dotenv": "^6.2.0",
         "koa": "^2.7.0",
+        "koa-json": "^2.0.2",
         "koa-router": "^7.4.0",
         "pg": "^7.6.0",
         "telegraf": "^3.25.0"
