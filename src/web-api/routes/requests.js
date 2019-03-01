@@ -78,6 +78,7 @@ async function setResponse(ctx) {
     validateQuery(ctx.request.query);
   } catch (err) {
     ctx.body = addError({}, `Validation failed: ${err.message}`);
+    ctx.status = 400;
     return;
   }
 
