@@ -30,6 +30,23 @@ describe('/reqests route test', () => {
 });
 
 describe('/requests/list route test', () => {
+  describe('JSON test', () => {
+    test(`should response with status 200 on GET ${route}/list?r=10&d=10&lon=1&lat=2`, async () => {
+      const response = await request(server).get(`${route}/list?r=10&d=10&lon=1&lat=2`);
+      expect(response.status).toEqual(200);
+    });
+    test(`should response with proper JSON`, async () => {
+      const response = await request(server).get(`${route}/list?r=1000&d=30&lon=1&lat=2`);
+      expect(response.headers['content-type']).toContain('application/json');
+
+      const json = JSON.parse(response.text);
+      expect(json).toHaveProperty('error');
+      expect(json).toHaveProperty('requests');
+      expect(json.error).not.toBeTruthy();
+      expect(Array.isArray(json.requests)).toBeTruthy();
+    });
+  });
+
   describe('Error test', () => {
     const routeList = `${route}/list`;
 
@@ -49,20 +66,5 @@ describe('/requests/list route test', () => {
       expect(json).toHaveProperty('error');
       expect(json.error).toBeTruthy();
     });
-  });
-
-  describe('JSON test', () => {
-    test(`should response with status 200 on GET ${route}/list?r=10&d=10&lon=1&lat=2`, async () => {
-      const response = await request(server).get(`${route}/list?r=10&d=10&lon=1&lat=2`);
-      expect(response.status).toEqual(200);
-    });
-    // test(`should response with proper JSON`, async () => {
-    //   const response = await request(server).get(`${route}/list?r=1000&d=30&lon=1&lat=2`);
-    //   expect(response.headers['content-type']).toContain('application/json');
-
-    //   const json = JSON.parse(response.text);
-    //   expect(json).toHaveProperty('error');
-    //   expect(json.error).toBeTruthy();
-    // });
   });
 });
