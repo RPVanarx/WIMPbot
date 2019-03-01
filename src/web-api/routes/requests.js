@@ -1,6 +1,6 @@
 const path = require('path');
 const services = require('../../services');
-const { WEB_API_V1_PREFIX } = require('../../config');
+const { WEB_API_V1_PREFIX, RADIUS: DEFAULT_RADIUS } = require('../../config');
 
 const REQUEST_SUFFIX = '/requests';
 const LIST_SUFFIX = '/list';
@@ -18,9 +18,6 @@ function addError(obj, errorValue = '', force = false) {
   return obj;
 }
 
-// function getRequests(radius, daysOld, latitude, longitude) {
-
-// }
 function formRequestObject(req) {
   const creationDate = req.creation_date.getTime();
   return {
@@ -42,20 +39,49 @@ function formBody(requests) {
   return body;
 }
 
-async function getRequests({ request: { query } }) {
+async function getRequests({ r, d, lon, lat }) {
   const payload = {
-    latitude: query.lat,
-    longitude: query.lon,
-    radius: query.r,
-    days: query.d,
+    latitude: Number.parseFloat(lat),
+    longitude: Number.parseFloat(lon),
+    radius: Number.parseInt(r, 10),
+    days: Number.parseInt(d, 10),
   };
 
   return services.getRequestsInArea(payload);
 }
 
+function validateQuery({ r = DEFAULT_RADIUS, d, lon, lat }) {
+  if (Number.isNaN(Number.parseInt(r, 10)) || r < 1) {
+    throw new TypeError("Radius 'r' must be a positive number!");
+  }
+  if (Number.isNaN(Number.parseInt(d, 10)) || d < 1) {
+    // TODO: check max value
+    throw new TypeError("Days 'd' must be a positive number!");
+  }
+  if (Number.isNaN(Number.parseFloat(lon)) || lon < -180 || lon > 180) {
+    throw new TypeError("Longitude 'lon' must be a number in range -180 to 180!");
+  }
+  if (Number.isNaN(Number.parseFloat(lat)) || lat < -90 || lat > 90) {
+    throw new TypeError("Latitude 'lat' must be a number in range -90 to 90!");
+  }
+}
+
 async function setResponse(ctx) {
-  // validateQuery(ctx);
-  const requests = await getRequests(ctx);
+  try {
+    validateQuery(ctx.request.query);
+  } catch (err) {
+    ctx.body = addError({}, `Validation failed: ${err.message}`);
+    return;
+  }
+
+  let requests;
+  try {
+    requests = await getRequests(ctx.request.query);
+  } catch (err) {
+    console.error('Error: cannot get requests');
+    throw err;
+  }
+
   ctx.body = formBody(requests);
 }
 
