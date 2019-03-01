@@ -42,15 +42,15 @@ function formBody(requests) {
   return body;
 }
 
-async function getRequests(ctx) {
-  const fakePayload = {
-    latitude: 32.0833,
-    longitude: 49.4323,
-    radius: 1000,
-    days: 30,
+async function getRequests({ request: { query } }) {
+  const payload = {
+    latitude: query.lat,
+    longitude: query.lon,
+    radius: query.r,
+    days: query.d,
   };
 
-  return services.getRequestsInArea(fakePayload);
+  return services.getRequestsInArea(payload);
 }
 
 async function setResponse(ctx) {
