@@ -2,7 +2,6 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const koaJSON = require('koa-json'); // Probably should be disabled in production
 const { WEB_PORT } = require('../config');
-// const services = require('../services');
 
 const app = new Koa();
 
@@ -19,6 +18,7 @@ function createRouter(route, KoaRouter = Router, koaApp = app) {
 }
 
 createRouter(require('./routes/root'));
+createRouter(require('./routes/requests'));
 
 app.use(async (ctx, next) => {
   try {

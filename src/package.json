@@ -4,8 +4,8 @@
     "description": "telegram bot",
     "main": "index.js",
     "scripts": {
-        "test-web-api": "jest /web-api",
-        "test-web-api-watch": "jest --watchAll /web-api"
+        "test-web-api": "jest /web-api --runInBand",
+        "test-web-api-watch": "jest --watchAll --runInBand /web-api"
     },
     "keywords": [
         "telegram",
