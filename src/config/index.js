@@ -15,7 +15,7 @@ module.exports = {
   WEB_PORT: process.env.WEB_PORT || 3003,
   WEB_API_V1_PREFIX: '/api/v1',
 
-  RADIUS: 1000,
+  DEFAULT_RADIUS: 1000,
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
   EVENT_REQUEST_MENU: 'requestMenu',

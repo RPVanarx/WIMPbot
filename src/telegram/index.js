@@ -10,17 +10,11 @@ const {
   REQUEST_MENU_MESSAGE,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
-const { sendPhotoMessage } = require('./addFunctions');
 
 const bot = new Telegraf(TELEGRAM_TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
-const {
-  deleteRequest,
-  userActivity,
-  changeRequestActiveStatus,
-  usersInRequestRadius,
-} = require('../services');
+const { deleteRequest, userActivity, startModerateRequest } = require('../services');
 
 bot.use(session());
 bot.use(stage.middleware());
@@ -79,31 +73,15 @@ callbackHandler.on('comment', async ctx => {
 });
 
 callbackHandler.on('moderate', async ctx => {
-  try {
-    if (!JSON.parse(ctx.state.data)) {
-      console.log('send message to user that him request was decline');
-      ctx.deleteMessage();
-      return;
-    }
-    const request = await changeRequestActiveStatus({
-      reqId: ctx.state.req,
-      value: ctx.state.data,
-      moderatorId: ctx.update.callback_query.from.id,
-    });
-    const users = await usersInRequestRadius(request.location);
-    users.forEach(element => sendPhotoMessage({ ctx, request, chatId: element.platform_id }));
-    ctx.deleteMessage();
-  } catch (error) {
-    console.error(`moderate ${error}`);
-  }
+  startModerateRequest({
+    ctx,
+    reqId: ctx.state.req,
+    value: ctx.state.data,
+    moderatorId: ctx.update.callback_query.from.id,
+  });
+  ctx.deleteMessage();
 });
 
 bot.on('callback_query', callbackHandler);
 
 bot.startPolling();
-
-function getFileLink(id) {
-  return bot.telegram.getFileLink(id);
-}
-
-module.exports = getFileLink;

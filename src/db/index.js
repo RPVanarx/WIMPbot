@@ -1,7 +1,7 @@
 const user = require('./user');
-const requests = require('./requests');
+const request = require('./request');
 
 module.exports = {
   user,
-  requests,
+  request,
 };

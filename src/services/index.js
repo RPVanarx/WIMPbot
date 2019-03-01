@@ -1,55 +1,68 @@
-const { user, requests } = require('../db');
+const { user, request } = require('../db');
+const { sendPhotoMessage } = require('../telegram/addFunctions');
 
-async function registerUser({ platformId, platformType, latitude, longitude }) {
-  await user.create(platformId, platformType, latitude, longitude);
+function registerUser({ platformId, platformType, latitude, longitude }) {
+  user.create({ platformId, platformType, latitude, longitude });
 }
 
-async function changeUserActivity({ platformId, platformType, value }) {
-  await user.changeActivity(platformId, platformType, value);
+function changeUserActivity({ platformId, platformType, value }) {
+  user.changeActivity({ platformId, platformType, value });
 }
 
-async function createRequest(request) {
-  const createdRequest = await requests.create(request);
-  return createdRequest;
+function createRequest(req) {
+  return request.create(req);
 }
 
-async function userRequests({ platformId, platformType }) {
-  const arrOfRequests = await requests.findToDelete(platformId, platformType);
-  return arrOfRequests;
+function userRequests({ platformId, platformType }) {
+  return request.findToDelete(platformId, platformType);
 }
 
-async function deleteRequest(id) {
-  await requests.deleteRequest(id);
+function deleteRequest(id) {
+  request.deleteRequest(id);
 }
 
-async function userActivity({ platformId, platformType }) {
-  const value = await user.activeValue(platformId, platformType);
-  return value;
+function userActivity({ platformId, platformType }) {
+  return user.activeValue({ platformId, platformType });
 }
 
-async function getRequests({ platformId, platformType, radius, days }) {
-  const infoRequests = await requests.search(platformId, platformType, radius, days);
-  return infoRequests;
+function getRequests({ platformId, platformType, radius, days }) {
+  return request.search(platformId, platformType, radius, days);
 }
 
-async function getRequestsInArea({ longitude, latitude, radius, days }) {
-  const foundRequests = await requests.searchInArea(longitude, latitude, radius, days);
-  return foundRequests;
+function getRequestsInArea({ longitude, latitude, radius, days }) {
+  return request.searchInArea(longitude, latitude, radius, days);
 }
 
-async function changeRequestActiveStatus({ reqId, value, moderatorId }) {
-  const request = await requests.changeActiveStatus(reqId, value, moderatorId);
-  return request;
+function usersInRequestRadius(location) {
+  return user.usersInRequestRadius(location);
 }
 
-async function usersInRequestRadius(location) {
-  const users = await user.usersInRequestRadius(location);
-  return users;
+function getBadRequestCount({ platformId, platformType }) {
+  return user.badRequestCount({ platformId, platformType });
 }
 
-async function getBadRequestCount({ platformId, platformType }) {
-  const count = await user.badRequestCount({ platformId, platformType });
-  return count;
+async function startModerateRequest({ ctx, reqId, value, moderatorId }) {
+  try {
+    const data = JSON.parse(value);
+    const userRequest = await request.changeActiveStatus({ reqId, data, moderatorId });
+    if (!data) {
+      ctx.telegram.sendMessage(
+        userRequest.platform_id,
+        'Ваша заявка не пройшла модерацію і була відхилена',
+      );
+      return;
+    }
+    ctx.telegram.sendMessage(
+      userRequest.platform_id,
+      'Ваша заявка пройшла модерацію і була опублінована в системі',
+    );
+    const users = await usersInRequestRadius(userRequest.location);
+    users.forEach(element =>
+      sendPhotoMessage({ ctx, request: userRequest, chatId: element.platform_id }),
+    );
+  } catch (error) {
+    console.error(`moderate ${error}`);
+  }
 }
 
 module.exports = {
@@ -61,7 +74,7 @@ module.exports = {
   getRequestsInArea,
   deleteRequest,
   userActivity,
-  changeRequestActiveStatus,
   usersInRequestRadius,
   getBadRequestCount,
+  startModerateRequest,
 };
