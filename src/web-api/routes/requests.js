@@ -51,17 +51,24 @@ async function getRequests({ r, d, lon, lat }) {
 }
 
 function validateQuery({ r = DEFAULT_RADIUS, d, lon, lat }) {
-  if (Number.isNaN(Number.parseInt(r, 10)) || r < 1) {
+  const radius = Number.parseInt(r, 10);
+  if (Number.isNaN() || radius < 1) {
     throw new TypeError("Radius 'r' must be a positive number!");
   }
-  if (Number.isNaN(Number.parseInt(d, 10)) || d < 1) {
+
+  const days = Number.parseInt(d, 10);
+  if (Number.isNaN(days) || days < 1) {
     // TODO: check max value
     throw new TypeError("Days 'd' must be a positive number!");
   }
-  if (Number.isNaN(Number.parseFloat(lon)) || lon < -180 || lon > 180) {
+
+  const longitude = Number.parseFloat(lon);
+  if (Number.isNaN(longitude) || longitude < -180 || longitude > 180) {
     throw new TypeError("Longitude 'lon' must be a number in range -180 to 180!");
   }
-  if (Number.isNaN(Number.parseFloat(lat)) || lat < -90 || lat > 90) {
+
+  const latitude = Number.parseFloat(lat);
+  if (Number.isNaN(latitude) || latitude < -90 || latitude > 90) {
     throw new TypeError("Latitude 'lat' must be a number in range -90 to 90!");
   }
 }
