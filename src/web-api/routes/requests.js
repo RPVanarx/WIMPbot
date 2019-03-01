@@ -52,7 +52,7 @@ async function getRequests({ r, d, lon, lat }) {
 
 function validateQuery({ r = DEFAULT_RADIUS, d, lon, lat }) {
   const radius = Number.parseInt(r, 10);
-  if (Number.isNaN() || radius < 1) {
+  if (Number.isNaN(radius) || radius < 1) {
     throw new TypeError("Radius 'r' must be a positive number!");
   }
 
