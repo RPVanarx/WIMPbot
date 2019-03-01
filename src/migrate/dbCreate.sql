@@ -5,7 +5,7 @@ CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     platform_id VARCHAR(50) NOT NULL,
     platform_type VARCHAR(10) NOT NULL,
-    user_name VARCHAR(30) DEFAULT 0,
+    user_name VARCHAR(30),
     location POINT NOT NULL,
     bad_request_count INT DEFAULT 0,
     is_active BOOLEAN DEFAULT true,
