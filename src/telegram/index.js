@@ -101,3 +101,9 @@ callbackHandler.on('moderate', async ctx => {
 bot.on('callback_query', callbackHandler);
 
 bot.startPolling();
+
+function getFileLink(id) {
+  return bot.telegram.getFileLink(id);
+}
+
+module.exports = getFileLink;
