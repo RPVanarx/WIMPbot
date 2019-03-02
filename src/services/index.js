@@ -1,5 +1,6 @@
 const { user, request } = require('../db');
 const { sendPhotoMessage } = require('../telegram/addFunctions');
+const bot = require('../telegram/bot');
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
   user.create({ platformId, platformType, latitude, longitude });
@@ -41,28 +42,36 @@ function getBadRequestCount({ platformId, platformType }) {
   return user.badRequestCount({ platformId, platformType });
 }
 
-async function startModerateRequest({ ctx, reqId, value, moderatorId }) {
+async function startModerateRequest({ reqId, value, moderatorId }) {
+  console.log(value);
+
   try {
     const data = JSON.parse(value);
     const userRequest = await request.changeActiveStatus({ reqId, data, moderatorId });
+    console.log(userRequest);
+
     if (!data) {
-      ctx.telegram.sendMessage(
+      bot.telegram.sendMessage(
         userRequest.platform_id,
         'Ваша заявка не пройшла модерацію і була відхилена',
       );
       return;
     }
-    ctx.telegram.sendMessage(
+    bot.telegram.sendMessage(
       userRequest.platform_id,
       'Ваша заявка пройшла модерацію і була опублінована в системі',
     );
     const users = await usersInRequestRadius(userRequest.location);
     users.forEach(element =>
-      sendPhotoMessage({ ctx, request: userRequest, chatId: element.platform_id }),
+      sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
     );
   } catch (error) {
     console.error(`moderate ${error}`);
   }
+}
+
+function getFileLink(id) {
+  return bot.telegram.getFileLink(id);
 }
 
 module.exports = {
@@ -77,4 +86,5 @@ module.exports = {
   usersInRequestRadius,
   getBadRequestCount,
   startModerateRequest,
+  getFileLink,
 };

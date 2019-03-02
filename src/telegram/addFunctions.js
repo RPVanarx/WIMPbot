@@ -1,3 +1,5 @@
+const bot = require('./bot');
+
 function createMessage(request) {
   return `Тип заявки: ${request.requestType === 'search' ? 'пошук' : 'знайшли'}
 Меседжер: ${request.platformType === 'telegram' ? 'телеграм' : 'вайбер'}
@@ -6,8 +8,8 @@ function createMessage(request) {
 Повідомлення від користувача: ${request.message}`;
 }
 
-function sendPhotoMessage({ ctx, request, chatId }) {
-  ctx.telegram.sendPhoto(chatId, request.photo, {
+function sendPhotoMessage({ request, chatId }) {
+  bot.telegram.sendPhoto(chatId, request.photo, {
     reply_markup: {
       inline_keyboard: [[{ text: 'дати коментар', callback_data: `comment:${request.reqId}` }]],
     },
@@ -21,8 +23,8 @@ function sendPhotoMessage({ ctx, request, chatId }) {
   });
 }
 
-function sendPhotoMessageToModerate({ ctx, request, moderatorId }) {
-  ctx.telegram.sendPhoto(moderatorId, request.photo, {
+function sendPhotoMessageToModerate({ request, moderatorId }) {
+  bot.telegram.sendPhoto(moderatorId, request.photo, {
     reply_markup: {
       inline_keyboard: [
         [{ text: 'апрув', callback_data: `moderate:true:${request.reqId}` }],
