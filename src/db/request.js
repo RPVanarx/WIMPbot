@@ -72,17 +72,17 @@ async function changeActiveStatus({ reqId, data, moderatorId }) {
     WHERE id = $1 RETURNING *`,
     [reqId, data, moderatorId],
   )).rows[0];
-  if (!data) return '';
-  await client.query(
-    `UPDATE users SET bad_request_count = bad_request_count - 1 
-    WHERE id = $1`,
-    [request.user_id],
-  );
   const userReq = (await client.query(
     `SELECT user_name, platform_type, platform_id FROM users 
     WHERE id = $1`,
     [request.user_id],
   )).rows[0];
+  if (!data) return Object.assign(request, userReq);
+  await client.query(
+    `UPDATE users SET bad_request_count = bad_request_count - 1 
+    WHERE id = $1`,
+    [request.user_id],
+  );
   return Object.assign(request, userReq);
 }
 

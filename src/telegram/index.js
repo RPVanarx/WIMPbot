@@ -1,17 +1,15 @@
-const Telegraf = require('telegraf');
 const session = require('telegraf/session');
 const Router = require('telegraf/router');
+const bot = require('./bot');
 const {
   EVENT_REGISTRATION_MENU,
   EVENT_REQUEST_MENU,
-  TELEGRAM_TOKEN,
   WELCOME_MESSAGE,
   REGISTRATION_MENU_MESSAGE,
   REQUEST_MENU_MESSAGE,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
 
-const bot = new Telegraf(TELEGRAM_TOKEN);
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
 const { deleteRequest, userActivity, startModerateRequest } = require('../services');
@@ -74,7 +72,6 @@ callbackHandler.on('comment', async ctx => {
 
 callbackHandler.on('moderate', async ctx => {
   startModerateRequest({
-    ctx,
     reqId: ctx.state.req,
     value: ctx.state.data,
     moderatorId: ctx.update.callback_query.from.id,
@@ -85,9 +82,3 @@ callbackHandler.on('moderate', async ctx => {
 bot.on('callback_query', callbackHandler);
 
 bot.startPolling();
-
-function getFileLink(id) {
-  return bot.telegram.getFileLink(id);
-}
-
-module.exports = getFileLink;
