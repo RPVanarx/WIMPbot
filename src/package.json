@@ -29,7 +29,11 @@
         "koa-json": "^2.0.2",
         "koa-router": "^7.4.0",
         "pg": "^7.6.0",
-        "telegraf": "^3.25.0"
+        "telegraf": "^3.25.0",
+        "koa": "^2.7.0",
+        "koa-router": "^7.4.0",
+        "axios": "^0.18.0",
+        "@cesium133/forgjs":"1.1.9"
     },
     "prettier": {
         "bracketSpacing": true,
