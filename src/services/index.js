@@ -43,13 +43,9 @@ function getBadRequestCount({ platformId, platformType }) {
 }
 
 async function startModerateRequest({ reqId, value, moderatorId }) {
-  console.log(value);
-
   try {
     const data = JSON.parse(value);
     const userRequest = await request.changeActiveStatus({ reqId, data, moderatorId });
-    console.log(userRequest);
-
     if (!data) {
       bot.telegram.sendMessage(
         userRequest.platform_id,
