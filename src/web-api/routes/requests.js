@@ -6,8 +6,8 @@ const REQUEST_SUFFIX = '/requests';
 const LIST_SUFFIX = '/list';
 const ERROR_NAME = 'error';
 
-const requestsRoute = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
-const listRoute = path.join(requestsRoute, LIST_SUFFIX);
+const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
+const routeList = path.join(routeRequests, LIST_SUFFIX);
 
 function addError(obj, errorValue = '', force = false) {
   if (!force && ERROR_NAME in obj && !obj[ERROR_NAME]) {
@@ -99,8 +99,8 @@ function set404(ctx) {
 }
 
 module.exports = ({ router }) => {
-  router.get(listRoute, async ctx => setResponse(ctx));
+  router.get(routeList, async ctx => setResponse(ctx));
 
-  const startsWithRequestRoute = new RegExp(`^${requestsRoute}(/|$)`);
+  const startsWithRequestRoute = new RegExp(`^${routeRequests}(/|$)`);
   router.get(startsWithRequestRoute, async ctx => set404(ctx));
 };
