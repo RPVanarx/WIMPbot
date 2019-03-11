@@ -18,16 +18,16 @@ function addError(obj, errorValue = '', force = false) {
   return obj;
 }
 
-function formRequestObject(req) {
-  const creationDate = req.creation_date.getTime();
+function formRequestObject(request) {
+  const r = { ...request };
   return {
-    id: req.id,
-    type: req.request_type,
-    message: req.message,
-    photoURL: req.photo,
-    creationDate,
-    username: req.user_name,
-    userPlatform: req.platform_type,
+    id: r.id.toString(),
+    type: r.request_type,
+    message: r.message,
+    photoURL: r.photo,
+    creationDate: r.creation_date.getTime().toString(),
+    username: r.user_name,
+    userPlatform: r.platform_type,
   };
 }
 
