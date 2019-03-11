@@ -1,6 +1,6 @@
 const path = require('path');
 const { getRequestsInArea } = require('../../services');
-const { WEB_API_V1_PREFIX, RADIUS: DEFAULT_RADIUS } = require('../../config');
+const { WEB_API_V1_PREFIX, DEFAULT_RADIUS } = require('../../config');
 
 const REQUEST_SUFFIX = '/requests';
 const LIST_SUFFIX = '/list';
