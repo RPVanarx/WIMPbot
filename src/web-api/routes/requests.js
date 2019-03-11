@@ -1,5 +1,5 @@
 const path = require('path');
-const services = require('../../services');
+const { getRequestsInArea } = require('../../services');
 const { WEB_API_V1_PREFIX, RADIUS: DEFAULT_RADIUS } = require('../../config');
 
 const REQUEST_SUFFIX = '/requests';
@@ -47,7 +47,7 @@ async function getRequests({ r, d, lon, lat }) {
     days: Number.parseInt(d, 10),
   };
 
-  return services.getRequestsInArea(payload);
+  return getRequestsInArea(payload);
 }
 
 function validateQuery({ r = DEFAULT_RADIUS, d, lon, lat }) {
