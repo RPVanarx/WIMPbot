@@ -4,6 +4,7 @@
     "description": "telegram bot",
     "main": "index.js",
     "scripts": {
+        "start": "node app.js",
         "test-web-api": "jest /web-api --runInBand",
         "test-web-api-watch": "jest --watchAll --runInBand /web-api"
     },
@@ -28,7 +29,6 @@
         "axios": "^0.18.0",
         "dotenv": "^6.2.0",
         "koa": "^2.7.0",
-        "koa-json": "^2.0.2",
         "koa-multer": "^1.0.2",
         "koa-router": "^7.4.0",
         "pg": "^7.6.0",

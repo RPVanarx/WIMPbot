@@ -1,7 +1,7 @@
-CREATE EXTENSION cube;
-CREATE EXTENSION earthdistance;
+const cube = 'CREATE EXTENSION IF NOT EXISTS cube;';
+const earthdistance = 'CREATE EXTENSION IF NOT EXISTS earthdistance;';
 
-CREATE TABLE users(
+const createTableUser = `CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
     platform_id VARCHAR(50) NOT NULL,
     platform_type VARCHAR(10) NOT NULL,
@@ -10,9 +10,9 @@ CREATE TABLE users(
     bad_request_count INT DEFAULT 0,
     is_active BOOLEAN DEFAULT true,
     UNIQUE (platform_id, platform_type)
-);
+);`;
 
-CREATE TABLE requests(
+const createTableRequests = `CREATE TABLE IF NOT EXISTS requests(
     id SERIAL PRIMARY KEY,
     user_id BIGINT,
     request_type VARCHAR(10) NOT NULL, 
@@ -24,4 +24,6 @@ CREATE TABLE requests(
     status_changed_by BIGINT DEFAULT 0,
     is_active BOOLEAN DEFAULT false,
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
+);`;
+
+module.exports = { cube, earthdistance, createTableUser, createTableRequests };
