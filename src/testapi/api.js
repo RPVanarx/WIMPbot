@@ -1,8 +1,10 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const axios = require('axios');
+const multer = require('koa-multer');
 const { getFileLink, getRequestsInArea } = require('../services');
 const requestValidator = require('./validation');
+const bot = require('../telegram/bot');
 
 const app = new Koa();
 const router = new Router();
@@ -16,6 +18,14 @@ app.use(async (ctx, next) => {
       message: err.message,
     };
   }
+});
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post('/upload', upload.single('file'), async ctx => {
+  const { file } = ctx.req;
+  const res = await bot.telegram.sendPhoto(433445035, { source: file.buffer });
+  ctx.body = res[res.length - 1];
 });
 
 router.get('/img/:id', async ctx => {
