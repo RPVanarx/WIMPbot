@@ -24,16 +24,15 @@
         "supertest": "^3.4.2"
     },
     "dependencies": {
+        "@cesium133/forgjs": "1.1.9",
+        "axios": "^0.18.0",
         "dotenv": "^6.2.0",
         "koa": "^2.7.0",
         "koa-json": "^2.0.2",
+        "koa-multer": "^1.0.2",
         "koa-router": "^7.4.0",
         "pg": "^7.6.0",
-        "telegraf": "^3.25.0",
-        "koa": "^2.7.0",
-        "koa-router": "^7.4.0",
-        "axios": "^0.18.0",
-        "@cesium133/forgjs":"1.1.9"
+        "telegraf": "^3.25.0"
     },
     "prettier": {
         "bracketSpacing": true,
