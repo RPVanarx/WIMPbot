@@ -19,6 +19,7 @@ function createRouter(route, KoaRouter = Router, koaApp = app) {
 
 createRouter(require('./routes/root'));
 createRouter(require('./routes/requests'));
+createRouter(require('./routes/photo'));
 
 app.use(async (ctx, next) => {
   try {
