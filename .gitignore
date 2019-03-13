@@ -66,3 +66,5 @@ karma.conf.js
 protractor.conf.js
 
 .vscode/
+
+.base/
