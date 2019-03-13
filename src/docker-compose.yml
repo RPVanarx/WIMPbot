@@ -1,19 +1,19 @@
-version: "3.1"
+version: "3.7"
 services:
   db:
     image: postgres:11-alpine
+    volumes:
+      - ./.base/data:/var/lib/postgresql/data
     restart: always
     env_file:
       - ./.env.db
-    volumes:
-      - ./.base/data:/var/lib/postgresql/data
     ports:
       - 5431:5432
   web:
     image: wimp
-    restart: always
     depends_on:
       - db
+    restart: always
     ports:
       - 3030:3000
   adminer:

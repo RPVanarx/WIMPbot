@@ -24,6 +24,7 @@ const createConnection = async () => {
     console.log('connected to base');
   } catch (err) {
     console.log(err);
+    process.exit(1);
   }
 };
 
