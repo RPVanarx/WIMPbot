@@ -4,6 +4,7 @@ const { getFileLink } = require('../../services');
 const { WEB_API_V1_PREFIX } = require('../../config');
 
 // TODO: move suffixes and response names to config
+// TODO: move photo to requests
 const REQUEST_SUFFIX = '/photo';
 const ERROR_NAME = 'error';
 
@@ -24,39 +25,45 @@ function set404(ctx) {
   ctx.status = 404;
 }
 
-function getPhotoURL(ctx) {
+function getPhotoId(ctx) {
   if (!ctx.accepts('image/*')) {
     ctx.throw(415, 'Images only!');
   }
-  const imageName = path.relative(ctx.path, routePhoto);
-  //TODO: handle empty string
-  return getFileLink(imageName);
+  const photoId = path.relative(routePhoto, ctx.path);
+  // TODO: handle empty string
+  // TODO: validate ID
+  return photoId;
 }
 
-function getPhotoStream(url) {
+async function getPhotoURL(id) {
+  try {
+    return getFileLink(id);
+  } catch (err) {
+    throw new Error('Cannot get photo link');
+  }
+}
+
+function getPhoto(url) {
   return new Promise((resolve, reject) => {
     get(url, res => resolve(res)).on('error', error => reject(error));
   });
 }
 
-async function sendPhoto(ctx) {
-  const photoURL = getPhotoURL(ctx);
-  //get photo name (id)
-  //get photo stream
-  //send photo stream
+async function handlePhotoRoute(ctx) {
+  const photoId = getPhotoId(ctx);
 
   try {
-    const res = await getPhotoStream('https://i.ibb.co/rpn22CF/pexels-photo-1276553.jpg');
-    ctx.type = res.headers['content-type'];
-    ctx.body = res;
-  } catch (error) {
-    ctx.body = addError({}, 'Cannot get photo');
+    const photoURL = await getPhotoURL(photoId);
+    const response = await getPhoto(photoURL);
+    ctx.type = response.headers['content-type'];
+    ctx.body = response;
+  } catch (err) {
+    ctx.body = addError({}, `Cannot get photo: ${err.message}`);
     ctx.status = 500;
-    console.log(error);
   }
 }
 
 module.exports = ({ router }) => {
   const startsWithPhotoRoute = new RegExp(`^${routePhoto}/.+$`);
-  router.get(startsWithPhotoRoute, async ctx => sendPhoto(ctx));
+  router.get(startsWithPhotoRoute, async ctx => handlePhotoRoute(ctx));
 };
