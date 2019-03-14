@@ -14,6 +14,7 @@ module.exports = {
   WEB_AUTH_MAX_AUTH_PERIOD: process.env.WEB_AUTH_MAX_AUTH_PERIOD,
   WEB_PORT: process.env.WEB_PORT || 3003,
   WEB_API_V1_PREFIX: '/api/v1',
+  WEB_API_JSON_ERROR_NAME: 'error',
 
   DEFAULT_RADIUS: 1000,
   PLATFORM_TYPE_TELEGRAM: 'telegram',
