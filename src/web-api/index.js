@@ -35,8 +35,9 @@ function createRouter(route, KoaRouter = Router, koaApp = app) {
   return router;
 }
 createRouter(require('./routes/root'));
-createRouter(require('./routes/requests'));
+createRouter(require('./routes/request'));
 createRouter(require('./routes/photo'));
+createRouter(require('./routes/requests'));
 
 const server = app.listen(WEB_PORT, () => {
   console.log(`Web API is listening on port ${WEB_PORT}`);
