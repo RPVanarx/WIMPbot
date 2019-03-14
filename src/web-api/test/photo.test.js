@@ -24,8 +24,9 @@ describe('/photo route test', () => {
       const response = await request(server).get(route);
       expect(response.status).toEqual(404);
     });
-    test(`should response with status 404 on GET ${route}/aaa`, async () => {
-      const response = await request(server).get(`${route}/aaa`);
+    test(`should response with status 404 on GET ${route}/fake-photo.jpg`, async () => {
+      // getFileLink.mockReturnValue(Promise.reject(new Error('400: Bad Request: invalid file id')));
+      const response = await request(server).get(`${route}/fake-photo.jpg`);
       expect(response.status).toEqual(404);
     });
     test(`should response with JSON that contains error message`, async () => {

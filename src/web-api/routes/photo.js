@@ -2,45 +2,26 @@ const path = require('path');
 const { get } = require('https');
 const { getFileLink } = require('../../services');
 const { WEB_API_V1_PREFIX } = require('../../config');
+const { addError } = require('../utils/error-handling');
 
 // TODO: move suffixes and response names to config
 // TODO: move photo to requests
 const REQUEST_SUFFIX = '/photo';
-const ERROR_NAME = 'error';
 
 const routePhoto = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
 
-// TODO: move addError and set404 to separate module or move 404 to index.js
-function addError(obj, errorValue = '', force = false) {
-  if (!force && ERROR_NAME in obj && !obj[ERROR_NAME]) {
-    return obj;
-  }
-
-  obj[ERROR_NAME] = errorValue;
-  return obj;
-}
-
-function set404(ctx) {
-  ctx.body = addError({}, 'Not Found');
-  ctx.status = 404;
-}
-
 function getPhotoId(ctx) {
-  if (!ctx.accepts('image/*')) {
-    ctx.throw(415, 'Images only!');
-  }
+  ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
+
   const photoId = path.relative(routePhoto, ctx.path);
   // TODO: handle empty string
   // TODO: validate ID
-  return photoId;
-}
+  // FIXME: No corresponding function in services!
+  ctx.assert(!Number.isNaN(Number.parseInt(photoId, 10)), 404, 'Requested photo not found', {
+    error: new Error('Photo ID not found!'),
+  });
 
-async function getPhotoURL(id) {
-  try {
-    return getFileLink(id);
-  } catch (err) {
-    throw new Error('Cannot get photo link');
-  }
+  return photoId;
 }
 
 function getPhoto(url) {
@@ -53,13 +34,13 @@ async function handlePhotoRoute(ctx) {
   const photoId = getPhotoId(ctx);
 
   try {
-    const photoURL = await getPhotoURL(photoId);
+    const photoURL = await getFileLink(photoId);
     const response = await getPhoto(photoURL);
+
     ctx.type = response.headers['content-type'];
     ctx.body = response;
   } catch (err) {
-    ctx.body = addError({}, `Cannot get photo: ${err.message}`);
-    ctx.status = 500;
+    ctx.throw(500, 'Cannot get photo', { error: err });
   }
 }
 

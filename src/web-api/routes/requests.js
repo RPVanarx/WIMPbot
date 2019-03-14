@@ -1,21 +1,39 @@
 const path = require('path');
 const { getRequestsInArea } = require('../../services');
 const { WEB_API_V1_PREFIX, DEFAULT_RADIUS } = require('../../config');
+const { setError } = require('../utils/error-handling');
 
 const REQUEST_SUFFIX = '/requests';
 const LIST_SUFFIX = '/list';
-const ERROR_NAME = 'error';
 
 const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
 const routeList = path.join(routeRequests, LIST_SUFFIX);
 
-function addError(obj, errorValue = '', force = false) {
-  if (!force && ERROR_NAME in obj && !obj[ERROR_NAME]) {
-    return obj;
-  }
+function validateQuery(ctx) {
+  const inRange = (number, min, max) => number >= min && number <= max;
 
-  obj[ERROR_NAME] = errorValue;
-  return obj;
+  const { r = DEFAULT_RADIUS, d, lon, lat } = ctx.request.query;
+
+  const radius = Number.parseInt(r, 10);
+  ctx.assert(!Number.isNaN(radius) && radius >= 1, 400, "Radius 'r' must be a positive number!");
+
+  const days = Number.parseInt(d, 10);
+  // TODO: check max value
+  ctx.assert(!Number.isNaN(days) && days >= 1, 400, "Days 'd' must be a positive number!");
+
+  const longitude = Number.parseFloat(lon);
+  ctx.assert(
+    !Number.isNaN(longitude) && inRange(longitude, -180, 180),
+    400,
+    "Longitude 'lon' must be a number in range -180 to 180!",
+  );
+
+  const latitude = Number.parseFloat(lat);
+  ctx.assert(
+    !Number.isNaN(latitude) && inRange(latitude, -90, 90),
+    400,
+    "Latitude 'lat' must be a number in range -90 to 90!",
+  );
 }
 
 function formRequestObject(request) {
@@ -32,14 +50,12 @@ function formRequestObject(request) {
 }
 
 function formBody(requests) {
-  const body = { requests: [] };
-  addError(body, '');
-
+  const body = setError();
   body.requests = requests.map(formRequestObject);
   return body;
 }
 
-async function getRequests({ r, d, lon, lat }) {
+function getRequests({ r, d, lon, lat }) {
   const payload = {
     latitude: Number.parseFloat(lat),
     longitude: Number.parseFloat(lon),
@@ -47,60 +63,23 @@ async function getRequests({ r, d, lon, lat }) {
     days: Number.parseInt(d, 10),
   };
 
-  return getRequestsInArea(payload);
-}
-
-function validateQuery({ r = DEFAULT_RADIUS, d, lon, lat }) {
-  const radius = Number.parseInt(r, 10);
-  if (Number.isNaN(radius) || radius < 1) {
-    throw new TypeError("Radius 'r' must be a positive number!");
-  }
-
-  const days = Number.parseInt(d, 10);
-  if (Number.isNaN(days) || days < 1) {
-    // TODO: check max value
-    throw new TypeError("Days 'd' must be a positive number!");
-  }
-
-  const longitude = Number.parseFloat(lon);
-  if (Number.isNaN(longitude) || longitude < -180 || longitude > 180) {
-    throw new TypeError("Longitude 'lon' must be a number in range -180 to 180!");
-  }
-
-  const latitude = Number.parseFloat(lat);
-  if (Number.isNaN(latitude) || latitude < -90 || latitude > 90) {
-    throw new TypeError("Latitude 'lat' must be a number in range -90 to 90!");
-  }
+  return getRequestsInArea(payload) || [];
 }
 
 async function setResponse(ctx) {
+  validateQuery(ctx);
+
   try {
-    validateQuery(ctx.request.query);
+    const requests = await getRequests(ctx.request.query);
+    ctx.body = formBody(requests);
   } catch (err) {
-    ctx.body = addError({}, `Validation failed: ${err.message}`);
-    ctx.status = 400;
-    return;
+    ctx.throw(500, 'Cannot get requests', { error: err });
   }
-
-  let requests;
-  try {
-    requests = await getRequests(ctx.request.query);
-  } catch (err) {
-    console.error('Error: cannot get requests');
-    throw err;
-  }
-
-  ctx.body = formBody(requests);
-}
-
-function set404(ctx) {
-  ctx.body = addError({}, 'Not Found');
-  ctx.status = 404;
 }
 
 module.exports = ({ router }) => {
   router.get(routeList, async ctx => setResponse(ctx));
 
-  const startsWithRequestRoute = new RegExp(`^${routeRequests}(/|$)`);
-  router.get(startsWithRequestRoute, async ctx => set404(ctx));
+  // const startsWithRequestRoute = new RegExp(`^${routeRequests}(/|$)`);
+  // router.get(startsWithRequestRoute, async ctx => set404(ctx));
 };
