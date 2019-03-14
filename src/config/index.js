@@ -22,6 +22,7 @@ module.exports = {
   WEB_API_PATH_REQUEST: '/request',
 
   DEFAULT_RADIUS: 1000,
+  PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
   EVENT_REQUEST_MENU: 'requestMenu',
