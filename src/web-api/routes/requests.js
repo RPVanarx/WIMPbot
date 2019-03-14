@@ -1,10 +1,12 @@
 const path = require('path');
 const { getRequestsInArea } = require('../../services');
-const { WEB_API_V1_PREFIX, DEFAULT_RADIUS } = require('../../config');
+const {
+  WEB_API_V1_PREFIX,
+  DEFAULT_RADIUS,
+  WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
+  WEB_API_PATH_LIST: LIST_SUFFIX,
+} = require('../../config');
 const { setError } = require('../utils/error-handling');
-
-const REQUEST_SUFFIX = '/requests';
-const LIST_SUFFIX = '/list';
 
 const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
 const routeList = path.join(routeRequests, LIST_SUFFIX);

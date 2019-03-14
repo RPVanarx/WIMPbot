@@ -1,14 +1,11 @@
 const path = require('path');
 const { get } = require('https');
 const { getFileLink } = require('../../services');
-const { WEB_API_V1_PREFIX } = require('../../config');
-const { addError } = require('../utils/error-handling');
+const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO: SUFFIX } = require('../../config');
 
-// TODO: move suffixes and response names to config
 // TODO: move photo to requests
-const REQUEST_SUFFIX = '/photo';
 
-const routePhoto = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
+const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
 
 function getPhotoId(ctx) {
   ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
