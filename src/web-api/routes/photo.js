@@ -1,13 +1,10 @@
 const path = require('path');
 const { get } = require('https');
 const { getFileLink } = require('../../services');
-const { WEB_API_V1_PREFIX } = require('../../config');
+const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO: SUFFIX } = require('../../config');
 const { urlToId } = require('../utils/photo');
 
-// TODO: move suffixes and response names to config
-const REQUEST_SUFFIX = '/photo';
-
-const routePhoto = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
+const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
 
 function getPhoto(url) {
   return new Promise((resolve, reject) => {

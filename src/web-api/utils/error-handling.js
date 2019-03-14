@@ -1,12 +1,11 @@
-// TODO: move to config
-const ERROR_NAME = 'error';
+const { WEB_API_JSON_ERROR_NAME: ERROR } = require('../../config');
 
 function setError(obj = {}, errorMessage = '') {
-  return { ...obj, [ERROR_NAME]: errorMessage };
+  return { ...obj, [ERROR]: errorMessage };
 }
 
 function addError(obj, errorMessage = '') {
-  obj[ERROR_NAME] = obj[ERROR_NAME] ? `${obj[ERROR_NAME]} ${errorMessage}` : errorMessage;
+  obj[ERROR] = obj[ERROR] ? `${obj[ERROR]} ${errorMessage}` : errorMessage;
   return obj;
 }
 

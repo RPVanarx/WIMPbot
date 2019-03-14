@@ -1,10 +1,16 @@
-const client = require('../dbconnect');
+const dbconnect = require('../dbconnect');
+
 const { DEFAULT_RADIUS } = require('../config');
+
+let client;
+dbconnect.then(res => {
+  client = res;
+});
 
 async function create({ platformId, platformType, longitude, latitude }) {
   await client.query(
     'INSERT INTO users VALUES(DEFAULT, $1, $2, DEFAULT, (point($3, $4))) ON CONFLICT (platform_id, platform_type) DO UPDATE SET location = (point($3, $4))',
-    [platformId, platformType, latitude, longitude],
+    [platformId, platformType, longitude, latitude],
   );
 }
 
