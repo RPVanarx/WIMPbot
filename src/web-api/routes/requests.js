@@ -18,7 +18,6 @@ function validateQuery(ctx) {
   ctx.assert(!Number.isNaN(radius) && radius >= 1, 400, "Radius 'r' must be a positive number!");
 
   const days = Number.parseInt(d, 10);
-  // TODO: check max value
   ctx.assert(!Number.isNaN(days) && days >= 1, 400, "Days 'd' must be a positive number!");
 
   const longitude = Number.parseFloat(lon);
