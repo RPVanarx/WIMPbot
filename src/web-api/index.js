@@ -1,6 +1,5 @@
 const Koa = require('koa');
 const Router = require('koa-router');
-const koaBody = require('koa-body');
 const { WEB_PORT } = require('../config');
 const { set404, handleError } = require('./utils/error-handling');
 
@@ -26,11 +25,9 @@ app.on('error', (err, ctx) => {
   console.log(`Path: ${ctx.path}`);
 });
 
-function createRouter(route, { KoaRouter = Router, koaApp = app, isMultipart = false } = {}) {
+function createRouter(route, KoaRouter = Router, koaApp = app) {
   const router = new KoaRouter();
   route({ router });
-
-  if (isMultipart) koaApp.use(koaBody({ multipart: true }));
 
   koaApp.use(router.routes());
   koaApp.use(router.allowedMethods());
@@ -40,7 +37,7 @@ function createRouter(route, { KoaRouter = Router, koaApp = app, isMultipart = f
 createRouter(require('./routes/root'));
 createRouter(require('./routes/photo'));
 createRouter(require('./routes/requests'));
-createRouter(require('./routes/request'), { isMultipart: true });
+createRouter(require('./routes/request'));
 
 const server = app.listen(WEB_PORT, () => {
   console.log(`Web API is listening on port ${WEB_PORT}`);
