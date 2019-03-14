@@ -2,27 +2,12 @@ const path = require('path');
 const { get } = require('https');
 const { getFileLink } = require('../../services');
 const { WEB_API_V1_PREFIX } = require('../../config');
-const { urlToId, idToUrl } = require('../utils/photo');
+const { urlToId } = require('../utils/photo');
 
 // TODO: move suffixes and response names to config
-// TODO: move photo to requests
 const REQUEST_SUFFIX = '/photo';
 
 const routePhoto = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
-
-function getPhotoId(ctx) {
-  ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
-
-  const photoId = path.relative(routePhoto, ctx.path);
-  // TODO: handle empty string
-  // TODO: validate ID
-  // FIXME: No corresponding function in services!
-  ctx.assert(!Number.isNaN(Number.parseInt(photoId, 10)), 404, 'Requested photo not found', {
-    error: new Error('Photo ID not found!'),
-  });
-
-  return photoId;
-}
 
 function getPhoto(url) {
   return new Promise((resolve, reject) => {
@@ -31,7 +16,9 @@ function getPhoto(url) {
 }
 
 async function handlePhotoRoute(ctx) {
-  const photoId = getPhotoId(ctx);
+  ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
+
+  const photoId = urlToId(ctx.href);
 
   try {
     const photoURL = await getFileLink(photoId);
@@ -40,6 +27,8 @@ async function handlePhotoRoute(ctx) {
     ctx.type = response.headers['content-type'];
     ctx.body = response;
   } catch (err) {
+    if (err.code === 404) ctx.throw(404, 'Photo not found', { error: err });
+
     ctx.throw(500, 'Cannot get photo', { error: err });
   }
 }
