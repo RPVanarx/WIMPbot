@@ -79,7 +79,4 @@ async function setResponse(ctx) {
 
 module.exports = ({ router }) => {
   router.get(routeList, async ctx => setResponse(ctx));
-
-  // const startsWithRequestRoute = new RegExp(`^${routeRequests}(/|$)`);
-  // router.get(startsWithRequestRoute, async ctx => set404(ctx));
 };
