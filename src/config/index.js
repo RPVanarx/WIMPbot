@@ -19,6 +19,7 @@ module.exports = {
   WEB_API_PATH_PHOTO: '/photo',
   WEB_API_PATH_REQUESTS: '/requests',
   WEB_API_PATH_LIST: '/list',
+  WEB_API_PATH_REQUEST: '/request',
 
   DEFAULT_RADIUS: 1000,
   PLATFORM_TYPE_TELEGRAM: 'telegram',
