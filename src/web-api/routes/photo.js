@@ -2,7 +2,7 @@ const path = require('path');
 const { get } = require('https');
 const { getFileLink } = require('../../services');
 const { WEB_API_V1_PREFIX } = require('../../config');
-const { addError } = require('../utils/error-handling');
+const { urlToId, idToUrl } = require('../utils/photo');
 
 // TODO: move suffixes and response names to config
 // TODO: move photo to requests
