@@ -1,10 +1,15 @@
-const rootRoutes = ['/', '/api', '/api/v1'];
+const { WEB_API_V1_PREFIX } = require('../../config');
+
+// '/path/to' --> [ '/', '/path/', '/path/to/' ]
+const routes = WEB_API_V1_PREFIX.split('/').reduce((arr, val, idx) => {
+  arr[idx] = `${arr[idx - 1] || ''}${val}/`;
+  return arr;
+}, []);
 
 function setResponse(ctx) {
-  const message = { message: 'Usage: /api/v1/*' };
-  ctx.body = message;
+  ctx.body = { Usage: `${ctx.protocol}://${ctx.host}/api/v1/*` };
 }
 
 module.exports = ({ router }) => {
-  router.get(rootRoutes, async ctx => setResponse(ctx));
+  router.get(routes, async ctx => setResponse(ctx));
 };
