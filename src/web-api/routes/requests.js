@@ -7,6 +7,7 @@ const {
   WEB_API_PATH_LIST: LIST_SUFFIX,
 } = require('../../config');
 const { setError } = require('../utils/error-handling');
+const { idToUrl } = require('../utils/photo');
 
 const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
 const routeList = path.join(routeRequests, LIST_SUFFIX);
@@ -37,22 +38,39 @@ function validateQuery(ctx) {
   );
 }
 
-function formRequestObject(request) {
-  const r = { ...request };
-  return {
-    id: r.id.toString(),
-    type: r.request_type,
-    message: r.message,
-    photoURL: r.photo,
-    creationDate: r.creation_date.getTime().toString(),
-    username: r.user_name,
-    userPlatform: r.platform_type,
-  };
+function getPhotoUrl(photoId, ctx) {
+  const photoUrlPath = new URL(ctx.origin);
+  photoUrlPath.pathname = path.join(WEB_API_V1_PREFIX, '/photo');
+
+  let photoURL = '';
+  try {
+    photoURL = idToUrl(photoId, photoUrlPath.href);
+  } catch (err) {
+    ctx.app.emit('error', err, ctx);
+  }
+
+  return photoURL;
+}
+
+function convertToResponse(dbRequests, ctx) {
+  return dbRequests.map(request => {
+    const r = { ...request };
+
+    return {
+      id: r.id.toString(),
+      type: r.request_type,
+      message: r.message,
+      photoURL: getPhotoUrl(r.photo, ctx),
+      creationDate: r.creation_date.getTime().toString(),
+      username: r.user_name,
+      userPlatform: r.platform_type,
+    };
+  });
 }
 
 function formBody(requests) {
   const body = setError();
-  body.requests = requests.map(formRequestObject);
+  body.requests = requests;
   return body;
 }
 
@@ -71,8 +89,9 @@ async function setResponse(ctx) {
   validateQuery(ctx);
 
   try {
-    const requests = await getRequests(ctx.request.query);
-    ctx.body = formBody(requests);
+    const dbRequests = await getRequests(ctx.request.query);
+    const resRequests = convertToResponse(dbRequests, ctx);
+    ctx.body = formBody(resRequests);
   } catch (err) {
     ctx.throw(500, 'Cannot get requests', { error: err });
   }
