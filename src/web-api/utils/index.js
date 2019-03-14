@@ -1,4 +1,4 @@
-const errorResponse = require('./error-response');
+const errorResponse = require('./error-handling');
 
 module.exports = {
   errorResponse,
