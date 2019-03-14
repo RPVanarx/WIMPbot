@@ -6,7 +6,7 @@ const requestValidator = new Validator({
     'latitude must be float or integer and between -180 and 180',
   ),
   longitude: new Rule(
-    { type: 'float|int', min: -180, max: 180 },
+    { type: 'float|int', min: -90, max: 90 },
     'longitude must be float or integer and between -90 and 90',
   ),
   radius: new Rule(
