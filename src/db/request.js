@@ -1,4 +1,9 @@
-const client = require('../dbconnect');
+const dbconnect = require('../dbconnect');
+
+let client;
+dbconnect.then(res => {
+  client = res;
+});
 
 async function create(request) {
   await client.query(
