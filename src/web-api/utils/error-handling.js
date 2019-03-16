@@ -10,7 +10,7 @@ function addError(obj, errorMessage = '') {
 }
 
 function set400(ctx, message = '') {
-  const errorMessage = message ? `Bar request: ${message}` : 'Bad request';
+  const errorMessage = message ? `Bad request: ${message}` : 'Bad request';
 
   ctx.status = 400;
 
