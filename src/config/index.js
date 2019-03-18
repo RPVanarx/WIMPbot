@@ -21,6 +21,11 @@ module.exports = {
   WEB_API_PATH_LIST: '/list',
 
   DEFAULT_RADIUS: 1000,
+  DEFAULT_DAYS_MIN: 1,
+  DEFAULT_DAYS_MAX: 30,
+  DEFAULT_RADIUS_MIN: 50,
+  DEFAULT_RADIUS_MAX: 10000,
+
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
   EVENT_REQUEST_MENU: 'requestMenu',
@@ -99,10 +104,12 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
 
   FIND_REQUESTS_MESSAGES: {
     RADIUS:
-      'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах)? Приклади: 2000, 1200, 3500',
+      'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах від 50 до 10000)? Приклади: 2000, 1200, 3500',
     DAYS:
-      'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів до 30-ти) Приклади: 5, 12, 25',
+      'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів від 1 до 30-ти) Приклади: 5, 12, 25',
     ERROR: 'Помилка введення, спробуйте знову',
+    ERROR_DAYS: 'Кількість днів має бути в межах від 1 до 30',
+    ERROR_RADIUS: 'Кількість метрів має бути в межах від 50 до 10000',
     NO_REQUESTS: 'Заявок для показу не знайдено',
   },
 

@@ -4,6 +4,10 @@ const {
   FIND_REQUESTS_MESSAGES,
   EVENT_FIND_REQUESTS,
   PLATFORM_TYPE_TELEGRAM,
+  DEFAULT_DAYS_MIN,
+  DEFAULT_DAYS_MAX,
+  DEFAULT_RADIUS_MIN,
+  DEFAULT_RADIUS_MAX,
 } = require('../../config');
 const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
@@ -24,13 +28,25 @@ const scene = new WizardScene(
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
-    ctx.session.userMessage.newRadius = Number.parseInt(ctx.message.text, 10);
+    const radius = Number.parseInt(ctx.message.text, 10);
+    if (radius < DEFAULT_RADIUS_MIN || radius > DEFAULT_RADIUS_MAX) {
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_RADIUS, mainMenu);
+      delete ctx.session.userMessage;
+      return ctx.scene.leave();
+    }
+    ctx.session.userMessage.newRadius = radius;
     ctx.reply(FIND_REQUESTS_MESSAGES.DAYS);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.text || !/^\d+$/.test(ctx.message.text)) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
+      delete ctx.session.userMessage;
+      return ctx.scene.leave();
+    }
+    const days = Number.parseInt(ctx.message.text, 10);
+    if (days < DEFAULT_DAYS_MIN || days > DEFAULT_DAYS_MAX) {
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_DAYS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
