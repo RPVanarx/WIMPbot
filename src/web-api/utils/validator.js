@@ -75,7 +75,9 @@ module.exports = {
     ];
   },
 
-  requestQuery({ msg, lon, lat, token }) {
+  requestQuery({ body }) {
+    if (!body) return ['POST body must not be empty!'];
+    const { msg, lon, lat, token } = body;
     return [
       ...location.getErrors({ lon, lat }),
       ...webToken.getErrors({ token }),
@@ -83,9 +85,9 @@ module.exports = {
     ];
   },
 
-  photoUpload({ photo }) {
-    if (!photo) return ["File field 'photo' must not be empty"];
-    const { size, type } = photo;
+  photoUpload({ files }) {
+    if (!files || !files.photo) return ["File field 'photo' must not be empty"];
+    const { size, type } = files.photo;
     return photoUpload.getErrors({ size, type });
   },
 };
