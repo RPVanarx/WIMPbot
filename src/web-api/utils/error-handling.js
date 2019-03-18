@@ -9,11 +9,7 @@ function addError(obj, errorMessage = '') {
   return obj;
 }
 
-function set400(ctx, message = '') {
-  const errorMessage = message ? `Bad request: ${message}` : 'Bad request';
-
-  ctx.status = 400;
-
+function setMessage(ctx, errorMessage) {
   if (ctx.accepts('json')) {
     ctx.body = setError({}, errorMessage);
     return;
@@ -21,33 +17,24 @@ function set400(ctx, message = '') {
 
   ctx.type = 'text';
   ctx.body = errorMessage;
+}
+
+function set400(ctx, message = '') {
+  const errorMessage = message ? `Bad request: ${message}` : 'Bad request';
+  ctx.status = 400;
+  setMessage(ctx, errorMessage);
 }
 
 function set404(ctx, message = '') {
   const errorMessage = message ? `Not found: ${message}` : 'Not found';
   ctx.status = 404;
-
-  if (ctx.accepts('json')) {
-    ctx.body = setError({}, errorMessage);
-    return;
-  }
-
-  ctx.type = 'text';
-  ctx.body = errorMessage;
+  setMessage(ctx, errorMessage);
 }
 
 function set415(ctx, message = '') {
   const errorMessage = message ? `Unsupported media type: ${message}` : 'Unsupported media type';
-
   ctx.status = 415;
-
-  if (ctx.accepts('json')) {
-    ctx.body = setError({}, errorMessage);
-    return;
-  }
-
-  ctx.type = 'text';
-  ctx.body = errorMessage;
+  setMessage(ctx, errorMessage);
 }
 
 function handleError(err, ctx) {
