@@ -30,7 +30,6 @@ module.exports = {
   WEB_API_PATH_REQUEST: '/request',
 
   DEFAULT_RADIUS: 1000,
-  TELEGRAM_MODERATION_CHAT_ID: '433445035',
   PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
   EVENT_REGISTRATION_MENU: 'registrationMenu',
