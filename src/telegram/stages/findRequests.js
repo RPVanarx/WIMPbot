@@ -1,12 +1,9 @@
 const WizardScene = require('telegraf/scenes/wizard');
 
 const {
-  GET_INFO_RADIUS_MESSAGE,
+  FIND_REQUESTS_MESSAGES,
   EVENT_FIND_REQUESTS,
-  GET_INFO_DAYS_MESSAGE,
-  GET_INFO_ERROR,
   PLATFORM_TYPE_TELEGRAM,
-  GET_INFO_NO_REQUESTS,
 } = require('../../config');
 const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
@@ -17,23 +14,23 @@ const { getRequests } = require('../../services');
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(GET_INFO_RADIUS_MESSAGE);
+    ctx.reply(FIND_REQUESTS_MESSAGES.RADIUS);
     ctx.session.userMessage = {};
     return ctx.wizard.next();
   },
   ctx => {
     if (!ctx.message || !ctx.message.text || !/^\d+$/.test(ctx.message.text)) {
-      ctx.reply(GET_INFO_ERROR, mainMenu);
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
     ctx.session.userMessage.newRadius = Number.parseInt(ctx.message.text, 10);
-    ctx.reply(GET_INFO_DAYS_MESSAGE);
+    ctx.reply(FIND_REQUESTS_MESSAGES.DAYS);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.text || !/^\d+$/.test(ctx.message.text)) {
-      ctx.reply(GET_INFO_ERROR, mainMenu);
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
@@ -45,7 +42,7 @@ const scene = new WizardScene(
         days: Number.parseInt(ctx.message.text, 10),
       });
       if (requests.length === 0) {
-        ctx.reply(GET_INFO_NO_REQUESTS, mainMenu);
+        ctx.reply(FIND_REQUESTS_MESSAGES.NO_REQUESTS, mainMenu);
         return ctx.scene.leave();
       }
       await requests.forEach(req => {
@@ -54,7 +51,7 @@ const scene = new WizardScene(
       });
       setTimeout(() => ctx.reply('Вибірка завершена', mainMenu), 2000);
     } catch (error) {
-      ctx.reply(GET_INFO_ERROR, mainMenu);
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
       console.log(`getInfoScene ${error}`);
     }
     return ctx.scene.leave();

@@ -1,10 +1,8 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  CLOSE_REQUEST_MESSAGE,
+  CLOSE_OWN_REQUESTS_MESSAGES,
   EVENT_DELETE_PET,
   PLATFORM_TYPE_TELEGRAM,
-  REQUEST_CLOSE,
-  CLOSE_OWN_REQUEST_END,
 } = require('../../config');
 const { userRequests } = require('../../services');
 const { mainMenu } = require('../menu');
@@ -18,18 +16,20 @@ const scene = new WizardScene(name, async ctx => {
       platformType: PLATFORM_TYPE_TELEGRAM,
     });
     if (requests.length === 0) {
-      ctx.reply(CLOSE_REQUEST_MESSAGE, mainMenu);
+      ctx.reply(CLOSE_OWN_REQUESTS_MESSAGES.NO_REQUESTS, mainMenu);
       return ctx.scene.leave();
     }
     requests.forEach(req => {
       ctx.replyWithPhoto(req.photo, {
         reply_markup: {
-          inline_keyboard: [[{ text: REQUEST_CLOSE, callback_data: `deleteRequest:${req.id}` }]],
+          inline_keyboard: [
+            [{ text: CLOSE_OWN_REQUESTS_MESSAGES.CLOSE, callback_data: `deleteRequest:${req.id}` }],
+          ],
         },
         caption: req.message,
       });
     });
-    setTimeout(() => ctx.reply(CLOSE_OWN_REQUEST_END, mainMenu), 2000);
+    setTimeout(() => ctx.reply(CLOSE_OWN_REQUESTS_MESSAGES.SAMPLE_END, mainMenu), 2000);
   } catch (error) {
     console.log(`deletePetScene ${error}`);
   }

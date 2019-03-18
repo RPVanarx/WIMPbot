@@ -1,25 +1,23 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  CHANGE_LOCATION_MESSAGE,
-  UPDATE_LOCATION_ENTER,
-  UPDATE_LOCATION_ERROR,
-  UPDATE_LOCATION,
+  UPDATE_LOCATION_MESSAGES,
+  EVENT_UPDATE_LOCATION,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
 const { mainMenu } = require('../menu');
 const { registerUser } = require('../../services');
 
-const name = UPDATE_LOCATION;
+const name = EVENT_UPDATE_LOCATION;
 
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(CHANGE_LOCATION_MESSAGE);
+    ctx.reply(UPDATE_LOCATION_MESSAGES.UPDATE);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.location) {
-      ctx.reply(UPDATE_LOCATION_ERROR, mainMenu);
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
     try {
@@ -30,9 +28,9 @@ const scene = new WizardScene(
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
       });
-      ctx.reply(UPDATE_LOCATION_ENTER, mainMenu);
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
-      ctx.reply(UPDATE_LOCATION_ERROR, mainMenu);
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
       console.log(`updateScene ${error}`);
     }
     return ctx.scene.leave();
