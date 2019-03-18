@@ -1,8 +1,6 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  REGISTRATION_MESSAGE,
-  REGISTRATION_ERROR,
-  REGISTRATION_ENTER,
+  REGISTRATION_MESSAGES,
   EVENT_REGISTRATION_USER,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
@@ -14,12 +12,12 @@ const name = EVENT_REGISTRATION_USER;
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(REGISTRATION_MESSAGE);
+    ctx.reply(REGISTRATION_MESSAGES.CREATE);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.location) {
-      ctx.reply(REGISTRATION_ERROR, startRegistrationButton);
+      ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
       return ctx.scene.leave();
     }
     try {
@@ -29,9 +27,9 @@ const scene = new WizardScene(
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
       });
-      ctx.reply(REGISTRATION_ENTER, mainMenu);
+      ctx.reply(REGISTRATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
-      ctx.reply(REGISTRATION_ERROR, startRegistrationButton);
+      ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
       console.log(`registrationScene ${error}`);
     }
     return ctx.scene.leave();

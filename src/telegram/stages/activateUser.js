@@ -1,11 +1,5 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const {
-  ACTIVATE_USER_TRUE,
-  ACTIVATE_USER_FALSE,
-  ACTIVATE_USER_QUESTION,
-  EVENT_ACTIVATE_USER,
-  PLATFORM_TYPE_TELEGRAM,
-} = require('../../config');
+const { ACTIVATE_USER, EVENT_ACTIVATE_USER, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
 const { changeUserActivity } = require('../../services');
 
@@ -14,12 +8,12 @@ const name = EVENT_ACTIVATE_USER;
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(ACTIVATE_USER_QUESTION, yesNoQuestion);
+    ctx.reply(ACTIVATE_USER.QUESTION, yesNoQuestion);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!(ctx.update && ctx.update.callback_query && ctx.update.callback_query.data === 'yes')) {
-      ctx.reply(ACTIVATE_USER_FALSE, mainMenu);
+      ctx.reply(ACTIVATE_USER.FALSE, mainMenu);
       return ctx.scene.leave();
     }
     try {
@@ -28,9 +22,9 @@ const scene = new WizardScene(
         platformType: PLATFORM_TYPE_TELEGRAM,
         value: true,
       });
-      ctx.reply(ACTIVATE_USER_TRUE, mainMenu);
+      ctx.reply(ACTIVATE_USER.TRUE, mainMenu);
     } catch (error) {
-      ctx.reply(ACTIVATE_USER_FALSE, mainMenu);
+      ctx.reply(ACTIVATE_USER.FALSE, mainMenu);
       console.log(`deleteUserScene ${error}`);
     }
     return ctx.scene.leave();
