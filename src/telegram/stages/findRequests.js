@@ -30,7 +30,7 @@ const scene = new WizardScene(
     }
     const radius = Number.parseInt(ctx.message.text, 10);
     if (radius < DEFAULT_RADIUS_MIN || radius > DEFAULT_RADIUS_MAX) {
-      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_RADIUS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
@@ -46,7 +46,7 @@ const scene = new WizardScene(
     }
     const days = Number.parseInt(ctx.message.text, 10);
     if (days < DEFAULT_DAYS_MIN || days > DEFAULT_DAYS_MAX) {
-      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
+      ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_DAYS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
