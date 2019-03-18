@@ -31,6 +31,12 @@ function set404(ctx, message = '') {
   setMessage(ctx, errorMessage);
 }
 
+function set405(ctx, message = '') {
+  const errorMessage = message ? `Method not allowed: ${message}` : 'Method not allowed';
+  ctx.status = 405;
+  setMessage(ctx, errorMessage);
+}
+
 function set415(ctx, message = '') {
   const errorMessage = message ? `Unsupported media type: ${message}` : 'Unsupported media type';
   ctx.status = 415;
@@ -45,6 +51,9 @@ function handleError(err, ctx) {
     case 404:
       set404(ctx, err.message);
       ctx.app.emit('error', err.error, ctx);
+      return true;
+    case 405:
+      set405(ctx, err.message);
       return true;
     case 415:
       set415(ctx, err.message);
