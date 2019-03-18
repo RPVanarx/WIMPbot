@@ -9,7 +9,7 @@ function addError(obj, errorMessage = '') {
   return obj;
 }
 
-function setMessage(ctx, errorMessage, status) {
+function setMessage(ctx, status, errorMessage) {
   ctx.status = status;
 
   if (ctx.accepts('json')) {
