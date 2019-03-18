@@ -1,5 +1,27 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
 
+// HACK: TODO: Remove next block when
+// https://github.com/oussamahamdaoui/forgJs/issues/65
+// and
+// https://github.com/oussamahamdaoui/forgJs/issues/66
+// are fixed
+function removeBugsDecorator(func) {
+  // eslint-disable-next-line func-names
+  return function(...args) {
+    // Changes null & undefined to {} to avoid errors
+    args.forEach(obj => {
+      const keys = Object.keys(obj);
+      keys.forEach(key => {
+        if (obj[key] == null) obj[key] = {};
+      });
+    });
+    // Removes duplicates from array
+    return [...new Set(func.apply(this, args))];
+  };
+}
+Validator.prototype.getErrors = removeBugsDecorator(Validator.prototype.getErrors);
+// block end -----
+
 // TODO: move contants to config
 const WEB_USER_TOKEN_LENGTH = 64;
 const WEB_PHOTO_UPLOAD_SIZE_MAX = 1024 * 1024 * 16; // 16 MiB
@@ -8,26 +30,17 @@ const WEB_PHOTO_UPLOAD_SIZE_MIN = 1024; // 1 KiB
 const location = new Validator({
   lon: new Rule(
     { type: 'string-float|string-int', min: -180, max: 180 },
-    'Longitude must be number in range -180 to 180!',
+    'Longitude must be a number in range -180 to 180!',
   ),
   lat: new Rule(
     { type: 'string-float|string-int', min: -90, max: 90 },
-    'Latitude must be number in range -90 to 90!',
+    'Latitude must be a number in range -90 to 90!',
   ),
 });
 
-// HACK, TODO: Remove next block when
-// https://github.com/oussamahamdaoui/forgJs/issues/65
-// is fixed
-function removeDuplicatesDecorator(func) {
-  return (...args) => [...new Set(func.apply(location, args))];
-}
-location.getErrors = removeDuplicatesDecorator(location.getErrors);
-// block end -----
-
 const daysAndRadius = new Validator({
-  r: new Rule({ type: 'string-int', min: 0 }, 'Radius must be integer bigger than 0!'),
-  d: new Rule({ type: 'string-int', min: 0 }, 'Days must be integer bigger than 0!'),
+  r: new Rule({ type: 'string-int', min: 0 }, 'Radius must be an integer bigger than 0!'),
+  d: new Rule({ type: 'string-int', min: 0 }, 'Days must be an integer bigger than 0!'),
 });
 
 const requestMessage = new Validator({
@@ -71,6 +84,8 @@ module.exports = {
   },
 
   photoUpload({ photo }) {
-    return photoUpload.getErrors({ size: photo.size, type: photo.type });
+    if (!photo) return ["File field 'photo' must not be empty"];
+    const { size, type } = photo;
+    return photoUpload.getErrors({ size, type });
   },
 };
