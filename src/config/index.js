@@ -16,7 +16,7 @@ module.exports = {
   WEB_PORT: process.env.WEB_PORT || 3003,
 
   WEB_USER_TOKEN_LENGTH: 64,
-  WEB_PHOTO_FILE_SIZE_MAX: 16 * 1024 * 1024, // 16 MiB
+  WEB_PHOTO_FILE_SIZE_MAX: 10 * 1024 * 1024, // 10 MiB (10 MB is telegram API limit)
   WEB_PHOTO_FILE_SIZE_MIN: 1024, // 1 KiB
 
   WEB_UPLOAD_TMP_DIR: process.env.WEB_TMPDIR || os.tmpdir(),
