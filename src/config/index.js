@@ -1,4 +1,5 @@
 require('dotenv').config();
+const os = require('os');
 
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
@@ -13,9 +14,16 @@ module.exports = {
 
   WEB_AUTH_MAX_AUTH_PERIOD: process.env.WEB_AUTH_MAX_AUTH_PERIOD,
   WEB_PORT: process.env.WEB_PORT || 3003,
-  WEB_API_V1_PREFIX: '/api/v1',
+
+  WEB_USER_TOKEN_LENGTH: 64,
+  WEB_PHOTO_FILE_SIZE_MAX: 16 * 1024 * 1024, // 16 MiB
+  WEB_PHOTO_FILE_SIZE_MIN: 1024, // 1 KiB
+
+  WEB_UPLOAD_TMP_DIR: process.env.WEB_TMPDIR || os.tmpdir(),
+
   WEB_API_JSON_ERROR_NAME: 'error',
 
+  WEB_API_V1_PREFIX: '/api/v1',
   WEB_API_PATH_PHOTO: '/photo',
   WEB_API_PATH_REQUESTS: '/requests',
   WEB_API_PATH_LIST: '/list',

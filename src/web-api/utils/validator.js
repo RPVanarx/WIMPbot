@@ -1,4 +1,9 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
+const {
+  WEB_USER_TOKEN_LENGTH,
+  WEB_PHOTO_FILE_SIZE_MIN,
+  WEB_PHOTO_FILE_SIZE_MAX,
+} = require('../../config');
 
 // HACK: TODO: Remove next block when
 // https://github.com/oussamahamdaoui/forgJs/issues/65
@@ -21,11 +26,6 @@ function removeBugsDecorator(func) {
 }
 Validator.prototype.getErrors = removeBugsDecorator(Validator.prototype.getErrors);
 // block end -----
-
-// TODO: move contants to config
-const WEB_USER_TOKEN_LENGTH = 64;
-const WEB_PHOTO_UPLOAD_SIZE_MAX = 1024 * 1024 * 16; // 16 MiB
-const WEB_PHOTO_UPLOAD_SIZE_MIN = 1024; // 1 KiB
 
 const location = new Validator({
   lon: new Rule(
@@ -56,8 +56,8 @@ const webToken = new Validator({
 
 const photoUpload = new Validator({
   size: new Rule(
-    { type: 'int', min: WEB_PHOTO_UPLOAD_SIZE_MIN, max: WEB_PHOTO_UPLOAD_SIZE_MAX },
-    `Photo size must be in range ${WEB_PHOTO_UPLOAD_SIZE_MIN} to ${WEB_PHOTO_UPLOAD_SIZE_MAX} bytes`,
+    { type: 'int', min: WEB_PHOTO_FILE_SIZE_MIN, max: WEB_PHOTO_FILE_SIZE_MAX },
+    `Photo size must be in range ${WEB_PHOTO_FILE_SIZE_MIN} to ${WEB_PHOTO_FILE_SIZE_MAX} bytes`,
   ),
   type: new Rule({ type: 'string', match: /^image\/.+/ }, `Photo must be of type 'image/*'`),
 });
