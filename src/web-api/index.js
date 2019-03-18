@@ -14,13 +14,14 @@ app.use(async (ctx, next) => {
     if (handleError(err, ctx)) return;
 
     ctx.status = err.status || 500;
-    ctx.body = err.message;
+    ctx.body = !err.error ? 'Internal server error' : err.message;
 
     ctx.app.emit('error', err, ctx);
   }
 });
 
 app.on('error', (err, ctx) => {
+  console.error('------ !!! ERRORR !!! ------');
   console.error(err);
   console.log(`Path: ${ctx.path}`);
 });
