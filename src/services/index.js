@@ -1,6 +1,7 @@
 const { user, request } = require('../db');
 const { sendPhotoMessage } = require('../telegram/addFunctions');
 const bot = require('../telegram/bot');
+const { MODERATOR_GROUP_ID } = require('../config');
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
   user.create({ platformId, platformType, latitude, longitude });
@@ -70,6 +71,10 @@ function getFileLink(id) {
   return bot.telegram.getFileLink(id);
 }
 
+function sendPhoto(filePath) {
+  return bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: filePath });
+}
+
 module.exports = {
   registerUser,
   changeUserActivity,
@@ -83,4 +88,5 @@ module.exports = {
   getBadRequestCount,
   startModerateRequest,
   getFileLink,
+  sendPhoto,
 };
