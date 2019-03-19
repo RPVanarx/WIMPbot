@@ -33,7 +33,7 @@ const registrationMenu = isActive =>
     ]),
   );
 
-const applyMenu = Extra.HTML().markup(message =>
+const requestMenu = Extra.HTML().markup(message =>
   message.inlineKeyboard([
     [message.callbackButton(REQUESTS_BUTTONS.CREATE_REQUEST, EVENT_NAMES.CREATE_REQUEST)],
     [message.callbackButton(REQUESTS_BUTTONS.DELETE_REQUEST, EVENT_NAMES.DELETE_REQUEST)],
@@ -57,7 +57,7 @@ const searchFoundMenu = Extra.HTML().markup(message =>
 module.exports = {
   mainMenu,
   registrationMenu,
-  applyMenu,
+  requestMenu,
   yesNoQuestion,
   startRegistrationButton,
   searchFoundMenu,

@@ -9,7 +9,7 @@ const {
 const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
 
-const { getRequests } = require('../../services');
+const { getRequestsInRegLocation } = require('../../services');
 
 const scene = new WizardScene(
   name,
@@ -47,7 +47,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     try {
-      const requests = await getRequests({
+      const requests = await getRequestsInRegLocation({
         platformId: ctx.message.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
         radius: ctx.session.userMessage.newRadius,
