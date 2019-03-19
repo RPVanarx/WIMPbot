@@ -4,11 +4,11 @@ const bot = require('../telegram/bot');
 const { SERVICES_MESSAGES } = require('../config');
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
-  user.create({ platformId, platformType, latitude, longitude });
+  return user.create({ platformId, platformType, latitude, longitude });
 }
 
 function changeUserActivity({ platformId, platformType, value }) {
-  user.changeActivity({ platformId, platformType, value });
+  return user.changeActivity({ platformId, platformType, value });
 }
 
 function createRequest(req) {
@@ -16,34 +16,34 @@ function createRequest(req) {
 }
 
 function getUserRequests({ platformId, platformType }) {
-  return request.findToDelete({ platformId, platformType });
+  return request.getRequestsToDelete({ platformId, platformType });
 }
 
 function deleteRequest(id) {
-  request.deleteRequest(id);
+  return request.deleteRequest(id);
 }
 
-function userActivity({ platformId, platformType }) {
-  return user.activeValue({ platformId, platformType });
+function getUserActivity({ platformId, platformType }) {
+  return user.getActivityStatus({ platformId, platformType });
 }
 
-function getRequests({ platformId, platformType, radius, days }) {
-  return request.search(platformId, platformType, radius, days);
+function getRequestsInRegLocation({ platformId, platformType, radius, days }) {
+  return request.search({ platformId, platformType, radius, days });
 }
 
 function getRequestsInArea({ longitude, latitude, radius, days }) {
-  return request.searchInArea(longitude, latitude, radius, days);
+  return request.searchInArea({ longitude, latitude, radius, days });
 }
 
-function usersInRequestRadius(location) {
-  return user.usersInRequestRadius(location);
+function getUsersInRequestRadius(location) {
+  return user.findUsersInRequestRadius(location);
 }
 
 function getBadRequestCount({ platformId, platformType }) {
   return user.badRequestCount({ platformId, platformType });
 }
 
-async function startModerateRequest({ reqId, statusString, moderatorId }) {
+async function processModerationRequest({ reqId, statusString, moderatorId }) {
   try {
     const status = JSON.parse(statusString);
     const userRequest = await request.changeActiveStatus({ reqId, status, moderatorId });
@@ -52,7 +52,7 @@ async function startModerateRequest({ reqId, statusString, moderatorId }) {
       return;
     }
     bot.telegram.sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
-    const users = await usersInRequestRadius(userRequest.location);
+    const users = await getUsersInRequestRadius(userRequest.location);
     users.forEach(element =>
       sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
     );
@@ -70,12 +70,12 @@ module.exports = {
   changeUserActivity,
   createRequest,
   getUserRequests,
-  getRequests,
+  getRequestsInRegLocation,
   getRequestsInArea,
   deleteRequest,
-  userActivity,
-  usersInRequestRadius,
+  getUserActivity,
+  getUsersInRequestRadius,
   getBadRequestCount,
-  startModerateRequest,
+  processModerationRequest,
   getFileLink,
 };

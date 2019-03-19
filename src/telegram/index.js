@@ -10,8 +10,8 @@ const {
 } = require('../config');
 
 const { stage, stagesArray } = require('./stages');
-const { startRegistrationButton, registrationMenu, applyMenu } = require('./menu');
-const { deleteRequest, userActivity, startModerateRequest } = require('../services');
+const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
+const { deleteRequest, getUserActivity, processModerationRequest } = require('../services');
 
 bot.use(session());
 bot.use(stage.middleware());
@@ -24,7 +24,7 @@ bot.action(REGISTRATION_MENU, async ctx => {
   ctx.reply(
     REGISTRATION_MENU_MESSAGE,
     registrationMenu(
-      await userActivity({
+      await getUserActivity({
         platformId: ctx.update.callback_query.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
       }),
@@ -32,7 +32,7 @@ bot.action(REGISTRATION_MENU, async ctx => {
   );
 });
 
-bot.action(REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, applyMenu));
+bot.action(REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, requestMenu));
 
 const callbackHandler = new Router(({ callbackQuery }) => {
   if (!callbackQuery.data) {
@@ -70,7 +70,7 @@ callbackHandler.on('deleteRequest', async ctx => {
 // });
 
 callbackHandler.on('moderate', async ctx => {
-  startModerateRequest({
+  processModerationRequest({
     reqId: ctx.state.reqId,
     statusString: ctx.state.status,
     moderatorId: ctx.update.callback_query.from.id,

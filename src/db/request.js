@@ -34,7 +34,7 @@ async function create(request) {
   )).rows[0].id;
 }
 
-async function findToDelete({ platformId, platformType }) {
+async function getRequestsToDelete({ platformId, platformType }) {
   return (await client.query(
     `SELECT id, photo, message FROM requests 
     WHERE user_id = (SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2) 
@@ -44,10 +44,11 @@ async function findToDelete({ platformId, platformType }) {
 }
 
 async function deleteRequest(id) {
-  client.query('UPDATE requests SET is_active = false WHERE id = $1', [id]);
+  await client.query('UPDATE requests SET is_active = false WHERE id = $1', [id]);
+  return true;
 }
 
-async function search(platformId, platformType, radius, days) {
+async function search({ platformId, platformType, radius, days }) {
   return (await client.query(
     `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, u.user_name, u.platform_type 
     FROM requests AS r, users AS u 
@@ -59,7 +60,7 @@ async function search(platformId, platformType, radius, days) {
   )).rows;
 }
 
-async function searchInArea(longitude, latitude, radius, days) {
+async function searchInArea({ longitude, latitude, radius, days }) {
   return (await client.query(
     `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, u.user_name, u.platform_type 
     FROM requests AS r, users AS u 
@@ -93,7 +94,7 @@ async function changeActiveStatus({ reqId, status, moderatorId }) {
 
 module.exports = {
   create,
-  findToDelete,
+  getRequestsToDelete,
   deleteRequest,
   search,
   searchInArea,
