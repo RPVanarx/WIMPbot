@@ -1,6 +1,10 @@
 const { user, request } = require('../db');
-const { sendPhotoMessage } = require('../telegram/addFunctions');
-const bot = require('../telegram/bot');
+const {
+  sendPhotoMessage,
+  sendMessage,
+  getFileLink,
+  sendPhotoStream,
+} = require('../telegram/addFunctions');
 const { SERVICES_MESSAGES } = require('../config');
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
@@ -48,10 +52,10 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
     const status = JSON.parse(statusString);
     const userRequest = await request.changeActiveStatus({ reqId, status, moderatorId });
     if (!status) {
-      bot.telegram.sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_FALSE);
+      sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_FALSE);
       return;
     }
-    bot.telegram.sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
+    sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
     const users = await getUsersInRequestRadius(userRequest.location);
     users.forEach(element =>
       sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
@@ -59,10 +63,6 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
   } catch (error) {
     console.error(`moderate ${error}`);
   }
-}
-
-function getFileLink(id) {
-  return bot.telegram.getFileLink(id);
 }
 
 module.exports = {
@@ -78,4 +78,5 @@ module.exports = {
   getBadRequestCount,
   processModerationRequest,
   getFileLink,
+  sendPhotoStream,
 };
