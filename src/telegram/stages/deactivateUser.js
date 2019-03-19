@@ -1,9 +1,11 @@
 const WizardScene = require('telegraf/scenes/wizard');
-const { DEACTIVATE_USER, EVENT_DEACTIVATE_USER, PLATFORM_TYPE_TELEGRAM } = require('../../config');
+const {
+  DEACTIVATE_USER,
+  EVENT_NAMES: { DEACTIVATE_USER: name },
+  PLATFORM_TYPE_TELEGRAM,
+} = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
 const { changeUserActivity } = require('../../services');
-
-const name = EVENT_DEACTIVATE_USER;
 
 const scene = new WizardScene(
   name,

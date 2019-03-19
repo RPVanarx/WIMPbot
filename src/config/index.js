@@ -20,22 +20,28 @@ module.exports = {
   WEB_API_PATH_REQUESTS: '/requests',
   WEB_API_PATH_LIST: '/list',
 
-  DEFAULT_RADIUS: 1000,
-  DEFAULT_DAYS_MIN: 1,
-  DEFAULT_DAYS_MAX: 30,
-  DEFAULT_RADIUS_MIN: 50,
-  DEFAULT_RADIUS_MAX: 10000,
+  DEFAULT_VALUES: {
+    RADIUS: 1000,
+    DAYS_MIN: 1,
+    DAYS_MAX: 30,
+    RADIUS_MIN: 50,
+    RADIUS_MAX: 10000,
+  },
 
   PLATFORM_TYPE_TELEGRAM: 'telegram',
-  EVENT_REGISTRATION_MENU: 'registrationMenu',
-  EVENT_REQUEST_MENU: 'requestMenu',
-  EVENT_FIND_REQUESTS: 'findRequests',
-  EVENT_REGISTRATION_USER: 'registrateUser',
-  EVENT_UPDATE_LOCATION: 'updateLocation',
-  EVENT_DEACTIVATE_USER: 'deactivateUser',
-  EVENT_CREATE_REQUEST: 'createRequest',
-  EVENT_DELETE_PET: 'closeOwnRequest',
-  EVENT_ACTIVATE_USER: 'activateUser',
+
+  EVENT_NAMES: {
+    REGISTRATION_MENU: 'registrationMenu',
+    REQUEST_MENU: 'requestMenu',
+    FIND_REQUESTS: 'findRequests',
+    REGISTRATION_USER: 'registrateUser',
+    UPDATE_LOCATION: 'updateLocation',
+    DEACTIVATE_USER: 'deactivateUser',
+    CREATE_REQUEST: 'createRequest',
+    DELETE_REQUEST: 'closeOwnRequest',
+    ACTIVATE_USER: 'activateUser',
+  },
+
   WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
 https://www.youtube.com/watch?v=vASw0m6YdWs`,
   WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
@@ -58,10 +64,12 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     ENTER: 'Ваш запит на реєстрацію прийнято',
   },
 
-  YES: 'Так',
-  NO: 'Ні',
-  SEARCH: 'Я загубив улюбленця',
-  FOUND: 'Я знайшов/бачив чийогось улюбленця',
+  BUTTON_MESSAGES: {
+    SEARCH: 'Я загубив улюбленця',
+    FOUND: 'Я знайшов/бачив чийогось улюбленця',
+    YES: 'Так',
+    NO: 'Ні',
+  },
 
   REQUESTS_BUTTONS: {
     CREATE_REQUEST: 'Створити заявку',
@@ -111,14 +119,45 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     ERROR_DAYS: 'Кількість днів має бути в межах від 1 до 30',
     ERROR_RADIUS: 'Кількість метрів має бути в межах від 50 до 10000',
     NO_REQUESTS: 'Заявок для показу не знайдено',
+    SAMPLE_END: 'Вибірка завершена',
+    TIMEOUT: 2000,
   },
 
   CLOSE_OWN_REQUESTS_MESSAGES: {
     NO_REQUESTS: 'Ви не маєте активних заявок',
     CLOSE: 'Закрити заявку',
     SAMPLE_END: 'Вибірка завершена',
+    TIMEOUT: 2000,
   },
 
-  REQUEST_TYPE_FOUND: 'found',
-  REQUEST_TYPE_SEARCH: 'search',
+  SERVICES_MESSAGES: {
+    MODERATION_FALSE: 'Ваша заявка не пройшла модерацію і була відхилена',
+    MODERATION_TRUE: 'Ваша заявка пройшла модерацію і була опублінована в системі',
+  },
+
+  BUTTON_EVENT: {
+    YES: 'yes',
+    NO: 'no',
+    SEARCH: 'search',
+    FOUND: 'found',
+  },
+
+  CREATE_MESSAGE_TEXTS: {
+    TYPE: 'Тип заявки:',
+    ANSWER_SEARCH: 'пошук',
+    ANSWER_FOUND: 'знайшли',
+    PLATFORM: 'Месенджер:',
+    PLATFORM_TELEGRAM: 'telegram',
+    PLATFORM_VIBER: 'viber',
+    SENDER: 'Відправник:',
+    DATE: 'Час створення:',
+    MESSAGE_FROM_USER: 'Повідомлення від користувача:',
+  },
+  MODER_BUTTON: {
+    APPROVE: 'підтвердити',
+    DECLINE: 'відмовити',
+    CB_MODERATE: 'moderate:',
+    CB_TRUE: ':true',
+    CB_FALSE: ':false',
+  },
 };

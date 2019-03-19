@@ -2,8 +2,7 @@ const session = require('telegraf/session');
 const Router = require('telegraf/router');
 const bot = require('./bot');
 const {
-  EVENT_REGISTRATION_MENU,
-  EVENT_REQUEST_MENU,
+  EVENT_NAMES: { REGISTRATION_MENU, REQUEST_MENU },
   WELCOME_MESSAGE,
   REGISTRATION_MENU_MESSAGE,
   REQUEST_MENU_MESSAGE,
@@ -21,7 +20,7 @@ stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene
 
 bot.start(ctx => ctx.reply(WELCOME_MESSAGE, startRegistrationButton));
 
-bot.action(EVENT_REGISTRATION_MENU, async ctx => {
+bot.action(REGISTRATION_MENU, async ctx => {
   ctx.reply(
     REGISTRATION_MENU_MESSAGE,
     registrationMenu(
@@ -33,7 +32,7 @@ bot.action(EVENT_REGISTRATION_MENU, async ctx => {
   );
 });
 
-bot.action(EVENT_REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, applyMenu));
+bot.action(REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, applyMenu));
 
 const callbackHandler = new Router(({ callbackQuery }) => {
   if (!callbackQuery.data) {
@@ -43,37 +42,37 @@ const callbackHandler = new Router(({ callbackQuery }) => {
   return {
     route: value[0],
     state: {
-      data: value[1],
-      req: value[2],
+      reqId: value[1],
+      status: value[2],
     },
   };
 });
 
 callbackHandler.on('deleteRequest', async ctx => {
   try {
-    await deleteRequest(ctx.state.data);
+    await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
   } catch (error) {
     console.error(`deleteRequest ${error}`);
   }
 });
 
-callbackHandler.on('comment', async ctx => {
-  try {
-    const a = await ctx.telegram.sendPhoto(
-      433445035,
-      'http://static1.banki.ru/ugc/62/b3/09/df/7255314.jpg',
-    );
-    console.log(a);
-  } catch (error) {
-    console.error(`comment ${error}`);
-  }
-});
+// callbackHandler.on('comment', async ctx => {
+//   try {
+//     const a = await ctx.telegram.sendPhoto(
+//       433445035,
+//       'http://static1.banki.ru/ugc/62/b3/09/df/7255314.jpg',
+//     );
+//     console.log(a);
+//   } catch (error) {
+//     console.error(`comment ${error}`);
+//   }
+// });
 
 callbackHandler.on('moderate', async ctx => {
   startModerateRequest({
-    reqId: ctx.state.req,
-    value: ctx.state.data,
+    reqId: ctx.state.reqId,
+    statusString: ctx.state.status,
     moderatorId: ctx.update.callback_query.from.id,
   });
   ctx.deleteMessage();

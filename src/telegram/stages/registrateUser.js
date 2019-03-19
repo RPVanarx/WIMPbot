@@ -1,13 +1,11 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
   REGISTRATION_MESSAGES,
-  EVENT_REGISTRATION_USER,
+  EVENT_NAMES: { REGISTRATION_USER: name },
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
 const { mainMenu, startRegistrationButton } = require('../menu');
 const { registerUser } = require('../../services');
-
-const name = EVENT_REGISTRATION_USER;
 
 const scene = new WizardScene(
   name,

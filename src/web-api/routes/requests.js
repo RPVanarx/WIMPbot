@@ -2,7 +2,7 @@ const path = require('path');
 const { getRequestsInArea } = require('../../services');
 const {
   WEB_API_V1_PREFIX,
-  DEFAULT_RADIUS,
+  DEFAULT_VALUES: { RADIUS },
   WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
   WEB_API_PATH_LIST: LIST_SUFFIX,
 } = require('../../config');
@@ -15,7 +15,7 @@ const routeList = path.join(routeRequests, LIST_SUFFIX);
 function validateQuery(ctx) {
   const inRange = (number, min, max) => number >= min && number <= max;
 
-  const { r = DEFAULT_RADIUS, d, lon, lat } = ctx.request.query;
+  const { r = RADIUS, d, lon, lat } = ctx.request.query;
 
   const radius = Number.parseInt(r, 10);
   ctx.assert(!Number.isNaN(radius) && radius >= 1, 400, "Radius 'r' must be a positive number!");

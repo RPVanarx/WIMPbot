@@ -1,13 +1,11 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
   UPDATE_LOCATION_MESSAGES,
-  EVENT_UPDATE_LOCATION,
+  EVENT_NAMES: { UPDATE_LOCATION: name },
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
 const { mainMenu } = require('../menu');
 const { registerUser } = require('../../services');
-
-const name = EVENT_UPDATE_LOCATION;
 
 const scene = new WizardScene(
   name,
