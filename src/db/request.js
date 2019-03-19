@@ -34,7 +34,7 @@ async function create(request) {
   )).rows[0].id;
 }
 
-async function findToDelete(platformId, platformType) {
+async function findToDelete({ platformId, platformType }) {
   return (await client.query(
     `SELECT id, photo, message FROM requests 
     WHERE user_id = (SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2) 

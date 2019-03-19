@@ -4,12 +4,12 @@ const {
   EVENT_NAMES: { DELETE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
-const { userRequests } = require('../../services');
+const { getUserRequests } = require('../../services');
 const { mainMenu } = require('../menu');
 
 const scene = new WizardScene(name, async ctx => {
   try {
-    const requests = await userRequests({
+    const requests = await getUserRequests({
       platformId: ctx.update.callback_query.from.id,
       platformType: PLATFORM_TYPE_TELEGRAM,
     });

@@ -15,8 +15,8 @@ function createRequest(req) {
   return request.create(req);
 }
 
-function userRequests({ platformId, platformType }) {
-  return request.findToDelete(platformId, platformType);
+function getUserRequests({ platformId, platformType }) {
+  return request.findToDelete({ platformId, platformType });
 }
 
 function deleteRequest(id) {
@@ -69,7 +69,7 @@ module.exports = {
   registerUser,
   changeUserActivity,
   createRequest,
-  userRequests,
+  getUserRequests,
   getRequests,
   getRequestsInArea,
   deleteRequest,
