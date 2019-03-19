@@ -12,6 +12,7 @@ const { sendPhotoMessageToModerate } = require('../addFunctions');
 const scene = new WizardScene(
   name,
   async ctx => {
+    delete ctx.session.mediaFlag;
     if (!ctx.update.callback_query.from.username) {
       ctx.reply(CREATE_REQUEST_MESSAGES.NO_USER_NAME, mainMenu);
       return ctx.scene.leave();
@@ -44,14 +45,18 @@ const scene = new WizardScene(
     return ctx.scene.leave();
   },
   ctx => {
-    if (ctx.message && ctx.message.photo) {
-      ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
-      ctx.reply(CREATE_REQUEST_MESSAGES.LOCATION);
-      return ctx.wizard.next();
+    if (ctx.session.mediaFlag) {
+      return ctx.scene.leave();
     }
-    ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-    delete ctx.session.userMessage;
-    return ctx.scene.leave();
+    if (!ctx.message || !ctx.message.photo || ctx.message.media_group_id) {
+      ctx.session.mediaFlag = true;
+      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
+      delete ctx.session.userMessage;
+      return ctx.scene.leave();
+    }
+    ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+    ctx.reply(CREATE_REQUEST_MESSAGES.LOCATION);
+    return ctx.wizard.next();
   },
   ctx => {
     if (ctx.message && ctx.message.location) {
@@ -88,6 +93,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       console.log(`createPetScene ${error}`);
     }
+    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
 );
