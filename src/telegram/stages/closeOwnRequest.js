@@ -1,17 +1,15 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
   CLOSE_OWN_REQUESTS_MESSAGES,
-  EVENT_DELETE_PET,
+  EVENT_NAMES: { DELETE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
 } = require('../../config');
-const { userRequests } = require('../../services');
+const { getUserRequests } = require('../../services');
 const { mainMenu } = require('../menu');
-
-const name = EVENT_DELETE_PET;
 
 const scene = new WizardScene(name, async ctx => {
   try {
-    const requests = await userRequests({
+    const requests = await getUserRequests({
       platformId: ctx.update.callback_query.from.id,
       platformType: PLATFORM_TYPE_TELEGRAM,
     });
@@ -29,7 +27,10 @@ const scene = new WizardScene(name, async ctx => {
         caption: req.message,
       });
     });
-    setTimeout(() => ctx.reply(CLOSE_OWN_REQUESTS_MESSAGES.SAMPLE_END, mainMenu), 2000);
+    setTimeout(
+      () => ctx.reply(CLOSE_OWN_REQUESTS_MESSAGES.SAMPLE_END, mainMenu),
+      CLOSE_OWN_REQUESTS_MESSAGES.TIMEOUT,
+    );
   } catch (error) {
     console.log(`deletePetScene ${error}`);
   }

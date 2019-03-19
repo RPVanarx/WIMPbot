@@ -1,6 +1,8 @@
 const dbconnect = require('../dbconnect');
 
-const { DEFAULT_RADIUS } = require('../config');
+const {
+  DEFAULT_VALUES: { RADIUS },
+} = require('../config');
 
 let client;
 dbconnect.then(res => {
@@ -33,7 +35,7 @@ async function usersInRequestRadius(location) {
     `SELECT platform_id FROM users 
     WHERE is_active = true 
     AND location <@> point($1, $2) <= $3/1609.34`,
-    [location.x, location.y, DEFAULT_RADIUS],
+    [location.x, location.y, RADIUS],
   )).rows;
 }
 

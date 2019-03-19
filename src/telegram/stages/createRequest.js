@@ -1,15 +1,13 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
   CREATE_REQUEST_MESSAGES,
-  EVENT_CREATE_REQUEST,
+  EVENT_NAMES: { CREATE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
   MODERATOR_GROUP_ID,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, getBadRequestCount } = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
-
-const name = EVENT_CREATE_REQUEST;
 
 const scene = new WizardScene(
   name,

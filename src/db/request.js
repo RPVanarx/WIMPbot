@@ -34,7 +34,7 @@ async function create(request) {
   )).rows[0].id;
 }
 
-async function findToDelete(platformId, platformType) {
+async function findToDelete({ platformId, platformType }) {
   return (await client.query(
     `SELECT id, photo, message FROM requests 
     WHERE user_id = (SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2) 
@@ -71,18 +71,18 @@ async function searchInArea(longitude, latitude, radius, days) {
   )).rows;
 }
 
-async function changeActiveStatus({ reqId, data, moderatorId }) {
+async function changeActiveStatus({ reqId, status, moderatorId }) {
   const request = (await client.query(
     `UPDATE requests SET is_approved = $2, is_active = $2, status_changed_by = $3 
     WHERE id = $1 RETURNING *`,
-    [reqId, data, moderatorId],
+    [reqId, status, moderatorId],
   )).rows[0];
   const userReq = (await client.query(
     `SELECT user_name, platform_type, platform_id FROM users 
     WHERE id = $1`,
     [request.user_id],
   )).rows[0];
-  if (!data) return Object.assign(request, userReq);
+  if (!status) return Object.assign(request, userReq);
   await client.query(
     `UPDATE users SET bad_request_count = bad_request_count - 1 
     WHERE id = $1`,

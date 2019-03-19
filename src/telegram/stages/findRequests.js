@@ -2,17 +2,13 @@ const WizardScene = require('telegraf/scenes/wizard');
 
 const {
   FIND_REQUESTS_MESSAGES,
-  EVENT_FIND_REQUESTS,
+  EVENT_NAMES: { FIND_REQUESTS: name },
   PLATFORM_TYPE_TELEGRAM,
-  DEFAULT_DAYS_MIN,
-  DEFAULT_DAYS_MAX,
-  DEFAULT_RADIUS_MIN,
-  DEFAULT_RADIUS_MAX,
+  DEFAULT_VALUES,
 } = require('../../config');
 const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
 
-const name = EVENT_FIND_REQUESTS;
 const { getRequests } = require('../../services');
 
 const scene = new WizardScene(
@@ -29,7 +25,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     const radius = Number.parseInt(ctx.message.text, 10);
-    if (radius < DEFAULT_RADIUS_MIN || radius > DEFAULT_RADIUS_MAX) {
+    if (radius < DEFAULT_VALUES.RADIUS_MIN || radius > DEFAULT_VALUES.RADIUS_MAX) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_RADIUS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
@@ -45,7 +41,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     const days = Number.parseInt(ctx.message.text, 10);
-    if (days < DEFAULT_DAYS_MIN || days > DEFAULT_DAYS_MAX) {
+    if (days < DEFAULT_VALUES.DAYS_MIN || days > DEFAULT_VALUES.DAYS_MAX) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_DAYS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
@@ -65,7 +61,10 @@ const scene = new WizardScene(
         req.reqId = req.id;
         sendPhotoMessage({ ctx, request: req, chatId: ctx.message.from.id });
       });
-      setTimeout(() => ctx.reply('Вибірка завершена', mainMenu), 2000);
+      setTimeout(
+        () => ctx.reply(FIND_REQUESTS_MESSAGES.SAMPLE_END, mainMenu),
+        FIND_REQUESTS_MESSAGES.TIMEOUT,
+      );
     } catch (error) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
       console.log(`getInfoScene ${error}`);
