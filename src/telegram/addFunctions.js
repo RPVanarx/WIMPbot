@@ -54,7 +54,7 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
   });
 }
 
-function sendMessage({ id, message }) {
+function sendMessage(id, message) {
   return bot.telegram.sendMessage(id, message);
 }
 
