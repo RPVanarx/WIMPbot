@@ -6,6 +6,7 @@ const {
 } = require('../../config');
 const { getUserRequests } = require('../../services');
 const { mainMenu } = require('../menu');
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(name, async ctx => {
   try {
@@ -32,7 +33,7 @@ const scene = new WizardScene(name, async ctx => {
       CLOSE_OWN_REQUESTS_MESSAGES.TIMEOUT,
     );
   } catch (error) {
-    console.log(`deletePetScene ${error}`);
+    log.error({ err: error.message, from: ctx.from.id }, 'closeOwnRequest');
   }
   return ctx.scene.leave();
 });

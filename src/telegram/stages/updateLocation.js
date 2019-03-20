@@ -6,6 +6,7 @@ const {
 } = require('../../config');
 const { mainMenu } = require('../menu');
 const { registerUser } = require('../../services');
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
@@ -29,7 +30,7 @@ const scene = new WizardScene(
       ctx.reply(UPDATE_LOCATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
-      console.log(`updateScene ${error}`);
+      log.error({ err: error.message, from: ctx.from.id }, 'UpdateLocationScene');
     }
     return ctx.scene.leave();
   },

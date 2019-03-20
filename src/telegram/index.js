@@ -8,6 +8,7 @@ const {
   REQUEST_MENU_MESSAGE,
   PLATFORM_TYPE_TELEGRAM,
 } = require('../config');
+const log = require('../logger')(__filename);
 
 const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
@@ -50,10 +51,14 @@ const callbackHandler = new Router(({ callbackQuery }) => {
 
 callbackHandler.on('deleteRequest', async ctx => {
   try {
+    // throw new Error('qwe');
     await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
   } catch (error) {
-    console.error(`deleteRequest ${error}`);
+    log.error(
+      { err: error.message, from: ctx.from.id, reqId: ctx.state.reqId },
+      'callbackHandler deleteRequest',
+    );
   }
 });
 

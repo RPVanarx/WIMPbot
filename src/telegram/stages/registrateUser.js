@@ -6,6 +6,7 @@ const {
 } = require('../../config');
 const { mainMenu, startRegistrationButton } = require('../menu');
 const { registerUser } = require('../../services');
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
@@ -28,7 +29,7 @@ const scene = new WizardScene(
       ctx.reply(REGISTRATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
-      console.log(`registrationScene ${error}`);
+      log.error({ err: error.message, from: ctx.from.id }, 'registrateUserScene');
     }
     return ctx.scene.leave();
   },

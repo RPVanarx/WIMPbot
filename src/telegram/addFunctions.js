@@ -1,5 +1,6 @@
 const bot = require('./bot');
 const { CREATE_MESSAGE_TEXTS, MODER_BUTTON, MODERATOR_GROUP_ID } = require('../config');
+const log = require('../logger')(__filename);
 
 function createMessage(request) {
   return `${CREATE_MESSAGE_TEXTS.TYPE} ${
@@ -63,9 +64,14 @@ function getFileLink(id) {
 }
 
 async function sendPhotoStream(readStream) {
-  const newPhotoId = await bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: readStream });
-  bot.telegram.deleteMessage(MODERATOR_GROUP_ID, newPhotoId.message_id);
-  return newPhotoId.photo[newPhotoId.photo.length - 1].file_id;
+  try {
+    const newPhotoId = await bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: readStream });
+    bot.telegram.deleteMessage(MODERATOR_GROUP_ID, newPhotoId.message_id);
+    return newPhotoId.photo[newPhotoId.photo.length - 1].file_id;
+  } catch (error) {
+    log.error({ err: error.message }, 'sendPhotoStream');
+    return false;
+  }
 }
 
 module.exports = {

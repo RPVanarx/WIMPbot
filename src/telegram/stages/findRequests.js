@@ -8,7 +8,7 @@ const {
 } = require('../../config');
 const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu } = require('../menu');
-
+const log = require('../../logger')(__filename);
 const { getRequestsInRegLocation } = require('../../services');
 
 const scene = new WizardScene(
@@ -67,7 +67,7 @@ const scene = new WizardScene(
       );
     } catch (error) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
-      console.log(`getInfoScene ${error}`);
+      log.error({ err: error.message, from: ctx.from.id }, 'findRequests Scene');
     }
     return ctx.scene.leave();
   },
