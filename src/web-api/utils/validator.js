@@ -1,16 +1,13 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
-const {
-  WEB_USER_TOKEN_LENGTH,
-  WEB_PHOTO_FILE_SIZE_MIN,
-  WEB_PHOTO_FILE_SIZE_MAX,
-} = require('../../config');
+const { WEB_USER_TOKEN_LENGTH } = require('../../config');
 
-// HACK: TODO: Remove next block when
+// HACK: Valid for 1.1.9 forgjs
+// TODO: Remove next block when
 // https://github.com/oussamahamdaoui/forgJs/issues/65
 // and
 // https://github.com/oussamahamdaoui/forgJs/issues/66
 // are fixed
-function removeBugsDecorator(func) {
+/*function removeBugsDecorator(func) {
   // eslint-disable-next-line func-names
   return function(...args) {
     // Changes null & undefined to {} to avoid errors
@@ -26,7 +23,7 @@ function removeBugsDecorator(func) {
 }
 Validator.prototype.getErrors = removeBugsDecorator(Validator.prototype.getErrors);
 // block end -----
-
+*/
 const location = new Validator({
   lon: new Rule(
     { type: 'string-float|string-int', min: -180, max: 180 },
@@ -43,23 +40,44 @@ const daysAndRadius = new Validator({
   d: new Rule({ type: 'string-int', min: 0 }, 'Days must be an integer bigger than 0!'),
 });
 
-const requestMessage = new Validator({
-  msg: new Rule({ type: 'string', minLength: 1, optional: true }, 'Message must not be empty!'),
-});
-
 const webToken = new Validator({
   token: new Rule(
-    { type: 'string', custom: token => token.length === WEB_USER_TOKEN_LENGTH },
+    { type: 'string', minLength: WEB_USER_TOKEN_LENGTH, maxLength: WEB_USER_TOKEN_LENGTH },
     'Invalid token!',
   ),
 });
 
 const photoUpload = new Validator({
-  size: new Rule(
-    { type: 'int', min: WEB_PHOTO_FILE_SIZE_MIN, max: WEB_PHOTO_FILE_SIZE_MAX },
-    `Photo size must be in range ${WEB_PHOTO_FILE_SIZE_MIN} to ${WEB_PHOTO_FILE_SIZE_MAX} bytes`,
+  type: new Rule({ type: 'string', match: /^image\/.+/ }, `Photo must be of type 'image/*'!`),
+  fieldName: new Rule({ type: 'string', equal: 'photo' }, 'Unexpected field name of file!'),
+});
+
+const requestFieldsOptional = new Validator({
+  msg: new Rule({ type: 'string', minLength: 1, optional: true }, 'Message must not be empty!'),
+  lon: new Rule(
+    { type: 'string-float|string-int', min: -180, max: 180, optional: true },
+    'Longitude must be a number in range -180 to 180!',
   ),
-  type: new Rule({ type: 'string', match: /^image\/.+/ }, `Photo must be of type 'image/*'`),
+  lat: new Rule(
+    { type: 'string-float|string-int', min: -90, max: 90, optional: true },
+    'Latitude must be a number in range -90 to 90!',
+  ),
+  token: new Rule(
+    {
+      type: 'string',
+      minLength: WEB_USER_TOKEN_LENGTH,
+      maxLength: WEB_USER_TOKEN_LENGTH,
+      optional: true,
+    },
+    'Invalid token!',
+  ),
+});
+
+const requestFieldsPresense = new Validator({
+  lon: new Rule({ type: 'string' }, `'longitude' field not found!`),
+  lat: new Rule({ type: 'string' }, `'latitude' field not found!`),
+  msg: new Rule({ type: 'string' }, `'message' field not found!`),
+  token: new Rule({ type: 'string' }, `'token' field not found!`),
 });
 
 module.exports = {
@@ -75,19 +93,19 @@ module.exports = {
     ];
   },
 
-  requestQuery({ body }) {
-    if (!body) return ['POST body must not be empty!'];
-    const { msg, lon, lat, token } = body;
-    return [
-      ...location.getErrors({ lon, lat }),
-      ...webToken.getErrors({ token }),
-      ...requestMessage.getErrors({ msg }),
-    ];
+  requestFieldsOptional({ msg, lon, lat, token }) {
+    return requestFieldsOptional.getErrors({ msg, lon, lat, token });
   },
 
-  photoUpload({ files }) {
-    if (!files || !files.photo) return ["File field 'photo' must not be empty"];
-    const { size, type } = files.photo;
-    return photoUpload.getErrors({ size, type });
+  photoUpload({ fieldName, type }) {
+    return photoUpload.getErrors({ fieldName, type });
+  },
+
+  requestFormData({ photoUploadPromise, msg, lon, lat, token }) {
+    const errors = [];
+    if (!(photoUploadPromise instanceof Promise)) {
+      errors.push('No photo provided!');
+    }
+    return [...errors, ...requestFieldsPresense.getErrors({ msg, token, lon, lat })];
   },
 };
