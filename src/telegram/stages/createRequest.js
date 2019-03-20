@@ -1,80 +1,77 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  CREATE_REQUEST_PHOTO_MESSAGE,
-  CREATE_REQUEST_LOCATION_MESSAGE,
-  CREATE_REQUEST_DESCRIPTION_MESSAGE,
-  CREATE_REQUEST_ERROR,
-  CREATE_REQUEST_ENTER,
-  EVENT_CREATE_REQUEST,
+  CREATE_REQUEST_MESSAGES,
+  EVENT_NAMES: { CREATE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
-  CREATE_REQUEST_CHOICE_TYPE,
   MODERATOR_GROUP_ID,
-  CREATE_REQUEST_NO_USER_NAME,
-  CREATE_REQUEST_MANY_BAD_REQUESTS,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, getBadRequestCount } = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
-
-const name = EVENT_CREATE_REQUEST;
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
   async ctx => {
+    delete ctx.session.mediaFlag;
     if (!ctx.update.callback_query.from.username) {
-      ctx.reply(CREATE_REQUEST_NO_USER_NAME, mainMenu);
+      ctx.reply(CREATE_REQUEST_MESSAGES.NO_USER_NAME, mainMenu);
       return ctx.scene.leave();
     }
-    let bad;
+    let badRequestCount;
     try {
-      bad = await getBadRequestCount({
+      badRequestCount = await getBadRequestCount({
         platformId: ctx.update.callback_query.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      log.error({ err: error.message, from: ctx.from.id }, 'await badRequestCount');
     }
-    if (bad >= 5) {
-      ctx.reply(CREATE_REQUEST_MANY_BAD_REQUESTS, mainMenu);
+    if (badRequestCount >= 5) {
+      ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
       return ctx.scene.leave();
     }
-    ctx.reply(CREATE_REQUEST_CHOICE_TYPE, searchFoundMenu);
+    ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
     ctx.session.userMessage = {};
     return ctx.wizard.next();
   },
   ctx => {
     if (ctx.update && ctx.update.callback_query) {
       ctx.session.userMessage.requestType = ctx.update.callback_query.data;
-      ctx.reply(CREATE_REQUEST_PHOTO_MESSAGE);
+      ctx.reply(CREATE_REQUEST_MESSAGES.PHOTO);
       return ctx.wizard.next();
     }
-    ctx.reply(CREATE_REQUEST_ERROR, mainMenu);
+    ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
     delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   ctx => {
-    if (ctx.message && ctx.message.photo) {
-      ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
-      ctx.reply(CREATE_REQUEST_LOCATION_MESSAGE);
-      return ctx.wizard.next();
+    if (ctx.session.mediaFlag) {
+      return ctx.scene.leave();
     }
-    ctx.reply(CREATE_REQUEST_ERROR, mainMenu);
-    delete ctx.session.userMessage;
-    return ctx.scene.leave();
+    if (!ctx.message || !ctx.message.photo || ctx.message.media_group_id) {
+      ctx.session.mediaFlag = true;
+      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
+      delete ctx.session.userMessage;
+      return ctx.scene.leave();
+    }
+    ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+    ctx.reply(CREATE_REQUEST_MESSAGES.LOCATION);
+    return ctx.wizard.next();
   },
   ctx => {
     if (ctx.message && ctx.message.location) {
       ctx.session.userMessage.location = ctx.message.location;
-      ctx.reply(CREATE_REQUEST_DESCRIPTION_MESSAGE);
+      ctx.reply(CREATE_REQUEST_MESSAGES.DESCRIPTION);
       return ctx.wizard.next();
     }
-    ctx.reply(CREATE_REQUEST_ERROR, mainMenu);
+    ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
     delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.text) {
-      ctx.reply(CREATE_REQUEST_ERROR, mainMenu);
+      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
@@ -91,12 +88,13 @@ const scene = new WizardScene(
         creationDate: new Date(),
       };
       request.reqId = await createRequest(request);
-      sendPhotoMessageToModerate({ ctx, request, moderatorId: MODERATOR_GROUP_ID });
-      ctx.reply(CREATE_REQUEST_ENTER, mainMenu);
+      sendPhotoMessageToModerate({ request, moderatorId: MODERATOR_GROUP_ID });
+      ctx.reply(CREATE_REQUEST_MESSAGES.ENTER, mainMenu);
     } catch (error) {
-      ctx.reply(CREATE_REQUEST_ERROR, mainMenu);
-      console.log(`createPetScene ${error}`);
+      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
+      log.error({ err: error.message, from: ctx.from.id }, 'createRequestScene');
     }
+    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
 );

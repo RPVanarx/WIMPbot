@@ -1,92 +1,83 @@
 const { user, request } = require('../db');
-const { sendPhotoMessage } = require('../telegram/addFunctions');
-const bot = require('../telegram/bot');
-const { MODERATOR_GROUP_ID } = require('../config');
+const {
+  sendPhotoMessage,
+  sendMessage,
+  getFileLink,
+  sendPhotoStream,
+} = require('../telegram/addFunctions');
+const { SERVICES_MESSAGES } = require('../config');
+const log = require('../logger')(__filename);
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
-  user.create({ platformId, platformType, latitude, longitude });
+  return user.create({ platformId, platformType, latitude, longitude });
 }
 
 function changeUserActivity({ platformId, platformType, value }) {
-  user.changeActivity({ platformId, platformType, value });
+  return user.changeActivity({ platformId, platformType, value });
 }
 
 function createRequest(req) {
   return request.create(req);
 }
 
-function userRequests({ platformId, platformType }) {
-  return request.findToDelete(platformId, platformType);
+function getUserRequests({ platformId, platformType }) {
+  return request.getRequestsToDelete({ platformId, platformType });
 }
 
 function deleteRequest(id) {
-  request.deleteRequest(id);
+  return request.deleteRequest(id);
 }
 
-function userActivity({ platformId, platformType }) {
-  return user.activeValue({ platformId, platformType });
+function getUserActivity({ platformId, platformType }) {
+  return user.getActivityStatus({ platformId, platformType });
 }
 
-function getRequests({ platformId, platformType, radius, days }) {
-  return request.search(platformId, platformType, radius, days);
+function getRequestsInRegLocation({ platformId, platformType, radius, days }) {
+  return request.search({ platformId, platformType, radius, days });
 }
 
 function getRequestsInArea({ longitude, latitude, radius, days }) {
-  return request.searchInArea(longitude, latitude, radius, days);
+  return request.searchInArea({ longitude, latitude, radius, days });
 }
 
-function usersInRequestRadius(location) {
-  return user.usersInRequestRadius(location);
+function getUsersInRequestRadius(location) {
+  return user.findUsersInRequestRadius(location);
 }
 
 function getBadRequestCount({ platformId, platformType }) {
   return user.badRequestCount({ platformId, platformType });
 }
 
-async function startModerateRequest({ reqId, value, moderatorId }) {
+async function processModerationRequest({ reqId, statusString, moderatorId }) {
   try {
-    const data = JSON.parse(value);
-    const userRequest = await request.changeActiveStatus({ reqId, data, moderatorId });
-    if (!data) {
-      bot.telegram.sendMessage(
-        userRequest.platform_id,
-        'Ваша заявка не пройшла модерацію і була відхилена',
-      );
+    const status = JSON.parse(statusString);
+    const userRequest = await request.changeActiveStatus({ reqId, status, moderatorId });
+    if (!status) {
+      sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_FALSE);
       return;
     }
-    bot.telegram.sendMessage(
-      userRequest.platform_id,
-      'Ваша заявка пройшла модерацію і була опублінована в системі',
-    );
-    const users = await usersInRequestRadius(userRequest.location);
+    sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
+    const users = await getUsersInRequestRadius(userRequest.location);
     users.forEach(element =>
       sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
     );
   } catch (error) {
-    console.error(`moderate ${error}`);
+    log.error({ err: error.message, reqId, statusString }, 'deleteUserScene');
   }
-}
-
-function getFileLink(id) {
-  return bot.telegram.getFileLink(id);
-}
-
-function sendPhotoStream(readStream) {
-  return bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: readStream });
 }
 
 module.exports = {
   registerUser,
   changeUserActivity,
   createRequest,
-  userRequests,
-  getRequests,
+  getUserRequests,
+  getRequestsInRegLocation,
   getRequestsInArea,
   deleteRequest,
-  userActivity,
-  usersInRequestRadius,
+  getUserActivity,
+  getUsersInRequestRadius,
   getBadRequestCount,
-  startModerateRequest,
+  processModerationRequest,
   getFileLink,
   sendPhotoStream,
 };

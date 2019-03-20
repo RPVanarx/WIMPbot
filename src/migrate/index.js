@@ -26,4 +26,4 @@ const createTableRequests = `CREATE TABLE IF NOT EXISTS requests(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );`;
 
-module.exports = { cube, earthdistance, createTableUser, createTableRequests };
+module.exports = [cube, earthdistance, createTableUser, createTableRequests];

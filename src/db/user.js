@@ -1,6 +1,8 @@
 const dbconnect = require('../dbconnect');
 
-const { DEFAULT_RADIUS } = require('../config');
+const {
+  DEFAULT_VALUES: { RADIUS },
+} = require('../config');
 
 let client;
 dbconnect.then(res => {
@@ -12,6 +14,7 @@ async function create({ platformId, platformType, longitude, latitude }) {
     'INSERT INTO users VALUES(DEFAULT, $1, $2, DEFAULT, (point($3, $4))) ON CONFLICT (platform_id, platform_type) DO UPDATE SET location = (point($3, $4))',
     [platformId, platformType, longitude, latitude],
   );
+  return true;
 }
 
 async function changeActivity({ platformId, platformType, value }) {
@@ -19,21 +22,22 @@ async function changeActivity({ platformId, platformType, value }) {
     'UPDATE users SET is_active = $1 WHERE platform_id = $2 AND platform_type = $3',
     [value, platformId, platformType],
   );
+  return true;
 }
 
-async function activeValue({ platformId, platformType }) {
+async function getActivityStatus({ platformId, platformType }) {
   return (await client.query(
     'SELECT is_active FROM users WHERE platform_id = $1 AND platform_type = $2',
     [platformId, platformType],
   )).rows[0].is_active;
 }
 
-async function usersInRequestRadius(location) {
+async function findUsersInRequestRadius(location) {
   return (await client.query(
     `SELECT platform_id FROM users 
     WHERE is_active = true 
     AND location <@> point($1, $2) <= $3/1609.34`,
-    [location.x, location.y, DEFAULT_RADIUS],
+    [location.x, location.y, RADIUS],
   )).rows;
 }
 
@@ -47,7 +51,7 @@ async function badRequestCount({ platformId, platformType }) {
 module.exports = {
   create,
   changeActivity,
-  activeValue,
-  usersInRequestRadius,
+  getActivityStatus,
+  findUsersInRequestRadius,
   badRequestCount,
 };

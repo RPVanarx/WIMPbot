@@ -4,11 +4,13 @@ const os = require('os');
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
   db: {
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
+    USER: process.env.PGUSER,
+    HOST: process.env.PGHOST,
+    DATABASE: process.env.PGDATABASE,
+    PASSWORD: process.env.PGPASSWORD,
+    PORT: process.env.PGPORT,
+    RETRIES: 5,
+    DELAY: 3000,
   },
   MODERATOR_GROUP_ID: process.env.MODERATORSID,
 
@@ -29,85 +31,149 @@ module.exports = {
   WEB_API_PATH_LIST: '/list',
   WEB_API_PATH_REQUEST: '/request',
 
-  DEFAULT_RADIUS: 1000,
+  DEFAULT_RADIUS: 1000, // TODO: update web-api
+  
+  DEFAULT_VALUES: {
+    RADIUS: 1000,
+    DAYS_MIN: 1,
+    DAYS_MAX: 30,
+    RADIUS_MIN: 50,
+    RADIUS_MAX: 10000,
+  },
+
   PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
-  EVENT_REGISTRATION_MENU: 'registrationMenu',
-  EVENT_REQUEST_MENU: 'requestMenu',
-  EVENT_FIND_REQUESTS: 'findRequests',
-  EVENT_REGISTRATION_USER: 'registrateUser',
-  UPDATE_LOCATION: 'updateLocation',
-  EVENT_DEACTIVATE_USER: 'deactivateUser',
-  EVENT_CREATE_REQUEST: 'createRequest',
-  EVENT_DELETE_PET: 'closeOwnRequest',
-  EVENT_ACTIVATE_USER: 'activateUser',
+
+  EVENT_NAMES: {
+    REGISTRATION_MENU: 'registrationMenu',
+    REQUEST_MENU: 'requestMenu',
+    FIND_REQUESTS: 'findRequests',
+    REGISTRATION_USER: 'registrateUser',
+    UPDATE_LOCATION: 'updateLocation',
+    DEACTIVATE_USER: 'deactivateUser',
+    CREATE_REQUEST: 'createRequest',
+    DELETE_REQUEST: 'closeOwnRequest',
+    ACTIVATE_USER: 'activateUser',
+  },
+
   WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
 https://www.youtube.com/watch?v=vASw0m6YdWs`,
   WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
-  MAIN_MENU_BUTTON_REGISTRATION: 'Панель керування користувача',
-  MAIN_MENU_BUTTON_REQUEST: 'Створити або закрити заявку',
-  MAIN_MENU_BUTTON_SAMPLE: 'Переглянути загублених улюбленців ',
 
-  REGISTRATION_MENU_BUTTON_CHANGE_LOCATION: 'Змінити свої координати',
-  REGISTRATION_MENU_BUTTON_DEACTIVATE_USER: 'Не хочу отримувати повідомлення',
-  REGISTRATION_MENU_BUTTON_ACTIVATE_USER: 'Хочу знову отримувати повідомлення',
+  MAIN_BUTTONS: {
+    REGISTRATION: 'Панель керування користувача',
+    REQUEST: 'Створити або закрити заявку',
+    SAMPLE: 'Переглянути загублених улюбленців ',
+  },
 
-  REGISTRATION_MESSAGE: 'Відправте Вашу локацію використовуючи функцію месенджера',
-  REGISTRATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+  REGISTRATION_BUTTONS: {
+    CHANGE_LOCATION: 'Змінити свої координати',
+    DEACTIVATE_USER: 'Не хочу отримувати заявки на пошук',
+    ACTIVATE_USER: 'Хочу знову отримувати заявки на пошук',
+  },
 
-  UPDATE_LOCATION_ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+  REGISTRATION_MESSAGES: {
+    CREATE:
+      'Включіть GPS на Вашому телефоні та відправте свої координати, використовуючи функцію телеграма - Location',
+    ERROR: 'Локація була введена невірно, спробуйте зареєструватися знову',
+    ENTER: 'Вітаю! Тепер Ви зареєстрований користувач WIMP!',
+  },
 
-  YES: 'Так',
-  NO: 'Ні',
-  SEARCH: 'Я загубив улюбленця',
-  FOUND: 'Я знайшов/бачив чийогось улюбленця',
+  BUTTON_MESSAGES: {
+    SEARCH: 'Я загубив улюбленця',
+    FOUND: 'Я знайшов/бачив чийогось улюбленця',
+    YES: 'Так',
+    NO: 'Ні',
+  },
 
-  REGISTRATION_ENTER: 'Ваш запит на реєстрацію прийнято',
+  REQUESTS_BUTTONS: {
+    CREATE_REQUEST: 'Створити заявку',
+    DELETE_REQUEST: 'Закрити власну заявку',
+  },
 
-  UPDATE_LOCATION_ENTER: 'Ваш запит на зміну локації прийнято',
+  DEACTIVATE_USER: {
+    QUESTION: 'Ви впевнені що не бажаєте більше отримувати повідомлення про пошук?',
+    TRUE: 'Ваш запит на відписку від повідомлень прийнято',
+    FALSE: 'Відміна',
+  },
 
-  APPLY_MENU_CREATE_REQUEST: 'Створити заявку',
-  APPLY_MENU_DELETE: 'Закрити власну заявку',
-
-  DEACTIVATE_USER_QUESTION: 'Ви впевнені що не бажаєте більше отримувати повідомлення про пошук?',
-  DEACTIVATE_USER_TRUE: 'Ваш запит на відписку від повідомлень прийнято',
-  DEACTIVATE_USER_FALSE: 'Відміна',
-
-  ACTIVATE_USER_QUESTION: 'Ви впевнені що бажаєте знову отримувати повідомлення про пошук?',
-  ACTIVATE_USER_TRUE: 'Ваш запит на отримання повідомлень прийнято',
-  ACTIVATE_USER_FALSE: 'Відміна',
+  ACTIVATE_USER: {
+    QUESTION: 'Ви впевнені що бажаєте знову отримувати повідомлення про пошук?',
+    TRUE: 'Ваш запит на отримання повідомлень прийнято',
+    FALSE: 'Відміна',
+  },
 
   REGISTRATION_MENU_MESSAGE: 'Ви в панелі управління, виберіть один із пунктів',
 
   REQUEST_MENU_MESSAGE: 'Ви в меню подачі заявки, виберіть один із пунктів',
 
-  CHANGE_LOCATION_MESSAGE: 'Введіть ваші нові координати',
+  UPDATE_LOCATION_MESSAGES: {
+    UPDATE: 'Введіть ваші нові координати (не забудьте увімкнути GPS на телефоні)',
+    ENTER: 'Ваш запит на зміну локації прийнято',
+    ERROR: 'Локація була введена невірно, спробуйте змінити координати знову',
+  },
 
-  CLOSE_REQUEST_MESSAGE: 'Ви не маєте активних заявок',
+  CREATE_REQUEST_MESSAGES: {
+    PHOTO: 'Завантажте 1 фотографію улюбленця',
+    LOCATION: 'Включіть GPS та відправте локацію де улюбленець загубився/знайшовся',
+    DESCRIPTION: 'Введіть невеликий опис улюбленця одним повідомленням',
+    ERROR: 'Помилка введення, спробуйте знову',
+    ENTER: 'Ваша заявка відправлена на модерацію',
+    CHOICE_TYPE: 'Виберіть один із пунктів',
+    NO_USER_NAME:
+      'Для того щоб відправити заявку, у вашому телеграм-профілі має бути вказаний Username. Створіть власний Username та спробуйте відправити заявку знову',
+    MANY_BAD_REQUESTS: 'Перевищено ліміт непідтверджених заявок',
+  },
 
-  CREATE_REQUEST_PHOTO_MESSAGE: 'Завантажте фотографію улюбленця',
-  CREATE_REQUEST_LOCATION_MESSAGE: 'Відправте локацію де улюбленець загубився/знайшовся',
-  CREATE_REQUEST_DESCRIPTION_MESSAGE: 'Введіть невеликий опис одним повідомленням',
-  CREATE_REQUEST_ERROR: 'Помилка введення, спробуйте знову',
-  CREATE_REQUEST_ENTER: 'Ваша заявка відправлена на модерацію',
-  CREATE_REQUEST_CHOICE_TYPE: 'Виберіть один із пунктів',
-  CREATE_REQUEST_NO_USER_NAME:
-    'Для того щоб відправити заявку, у вашому профілі має бути вказаний Username. Створіть власний Username та спробуйте відправити заявку знову',
-  CREATE_REQUEST_MANY_BAD_REQUESTS: 'Перевищено ліміт непідтверджених заявок',
+  FIND_REQUESTS_MESSAGES: {
+    RADIUS:
+      'В якому радіусі від зареєстрованих координат ви бажаєте отримати вибірку заявок? Напишіть одне значення в метрах від 50 до 10000 (приклад: 2150 1233 3548)',
+    DAYS:
+      'На скільки старі заявки ви бажаєте побачити? Напишіть одне значення кількості днів від 1 до 30(приклади: 3, 12, 27)',
+    ERROR: 'Помилка введення, спробуйте знову',
+    ERROR_DAYS: 'Кількість днів має бути в межах від 1 до 30',
+    ERROR_RADIUS: 'Кількість метрів має бути в межах від 50 до 10000',
+    NO_REQUESTS: 'Заявок для показу не знайдено',
+    SAMPLE_END: 'Вибірка заявок завершена',
+    TIMEOUT: 2000,
+  },
 
-  FIND_PET_PHOTO_MESSAGE: 'Завантажте фотографію знайденого улюбленця',
-  FIND_PET_LOCATION_MESSAGE: 'Завантажте місце (локацію) де улюбленець був знайдений',
-  FIND_PET_DESCRIPTION_MESSAGE: 'Введіть невеликий опис улюбленця одним повідомленням',
+  CLOSE_OWN_REQUESTS_MESSAGES: {
+    NO_REQUESTS: 'Ви не маєте активних заявок',
+    CLOSE: 'Закрити заявку',
+    SAMPLE_END: 'Вибірка власних заявок завершена',
+    TIMEOUT: 2000,
+  },
 
-  GET_INFO_RADIUS_MESSAGE:
-    'В якому радіусі ви хочете отримати вибірку заявок (значення в метрах)? Приклади: 2000, 1200, 3500',
-  GET_INFO_DAYS_MESSAGE:
-    'На скільки старі заявки ви бажаєте отримати? (введіть кількість днів до 30-ти) Приклади: 5, 12, 25',
-  GET_INFO_ERROR: 'Помилка введення, спробуйте знову',
-  GET_INFO_NO_REQUESTS: 'Заявок для показу не знайдено',
+  SERVICES_MESSAGES: {
+    MODERATION_FALSE: 'Ваша заявка не пройшла модерацію і була відхилена',
+    MODERATION_TRUE: 'Ваша заявка пройшла модерацію і була опублінована в системі',
+  },
 
-  REQUEST_TYPE_FOUND: 'found',
-  REQUEST_TYPE_SEARCH: 'search',
-  REQUEST_CLOSE: 'Закрити заявку',
-  CLOSE_OWN_REQUEST_END: 'Вибірка завершена',
+  BUTTON_EVENT: {
+    YES: 'yes',
+    NO: 'no',
+    SEARCH: 'search',
+    FOUND: 'found',
+  },
+
+  CREATE_MESSAGE_TEXTS: {
+    TYPE: 'Тип заявки:',
+    ANSWER_SEARCH: 'пошук',
+    ANSWER_FOUND: 'знайшли',
+    PLATFORM: 'Месенджер:',
+    PLATFORM_TELEGRAM: 'telegram',
+    PLATFORM_VIBER: 'viber',
+    SENDER: 'Відправник:',
+    DATE: 'Час створення:',
+    MESSAGE_FROM_USER: 'Опис від користувача:',
+  },
+
+  MODER_BUTTON: {
+    APPROVE: 'підтвердити',
+    DECLINE: 'відмовити',
+    CB_MODERATE: 'moderate:',
+    CB_TRUE: ':true',
+    CB_FALSE: ':false',
+  },
 };
