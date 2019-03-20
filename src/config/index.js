@@ -19,7 +19,7 @@ module.exports = {
   WEB_PHOTO_FILE_SIZE_MAX: 10 * 1024 * 1024, // 10 MiB (10 MB is telegram API limit)
   WEB_PHOTO_FILE_SIZE_MIN: 1024, // 1 KiB
 
-  WEB_UPLOAD_TMP_DIR: process.env.WEB_TMPDIR || os.tmpdir(),
+  WEB_POST_FIELD_LENGTH_MAX: 1024,
 
   WEB_API_JSON_ERROR_NAME: 'error',
 
