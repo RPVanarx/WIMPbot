@@ -1,5 +1,6 @@
 const path = require('path');
-const { createRequest } = require('../../services');
+const busboy = require('busboy');
+const { createRequest, sendPhotoStream } = require('../../services');
 const validator = require('../utils/validator');
 
 const {
@@ -8,62 +9,20 @@ const {
   PLATFORM_TYPE_TELEGRAM,
   REQUEST_TYPE_SEARCH,
   WEB_PHOTO_FILE_SIZE_MAX,
-  WEB_UPLOAD_TMP_DIR,
+  WEB_POST_FIELD_LENGTH_MAX,
 } = require('../../config');
 
+const POST_FIELDS_MAX = 4;
+const POST_FILES_MAX = 1;
 const route = path.join(WEB_API_V1_PREFIX, SUFFIX);
 
-function onKoaBodyError(err, ctx) {
-  ctx.assert(
-    !err.message && !err.message.includes('maxFileSize exceeded'),
-    400,
-    `File is too large! Must be less that ${WEB_PHOTO_FILE_SIZE_MAX} bytes!`,
-  );
+function createCustomError(status, message, originalError = null) {
+  const error = new Error(message);
+  error.status = status;
 
-  ctx.throw(500, 'Cannot parse POST body', { error: err });
-}
+  if (originalError === null) error.originalError = originalError;
 
-// function onPhotoUlpoad(name, file) {
-// }
-
-// eslint-disable-next-line import/order
-const koaBody = require('koa-body')({
-  multipart: true,
-  onError: onKoaBodyError,
-  formidable: {
-    maxFileSize: WEB_PHOTO_FILE_SIZE_MAX,
-    uploadDir: WEB_UPLOAD_TMP_DIR,
-    // onFileBegin: onPhotoUlpoad,
-  },
-});
-
-function validatePost(ctx) {
-  let errors = [];
-  try {
-    errors = validator.requestQuery(ctx.request);
-  } catch (err) {
-    ctx.throw(500, 'POST body validation failed!', { error: err });
-  }
-
-  try {
-    errors = [...errors, ...validator.photoUpload(ctx.request)];
-  } catch (err) {
-    ctx.throw(500, 'POST file validation failed!', { error: err });
-  }
-  // TODO: remove photo if uploaded with errors
-  ctx.assert(!errors.length, 400, errors.join(' '));
-}
-
-async function getUser({ token }) {
-  // TODO: get user data
-  const { userId, userName } = { userId: 1, userName: 'Vasya' }//getOwner(token);
-  return { userId, userName };
-}
-
-async function getPhotoId({ path }) {
-  // TODO: get photo id
-  // return //some fancy method to get id
-  return path;
+  return error;
 }
 
 function formRequest(body, userName, platformId, photo) {
@@ -79,19 +38,156 @@ function formRequest(body, userName, platformId, photo) {
   };
 }
 
-async function handlePost(ctx) {
-  validatePost(ctx);
+async function getUser({ token }) {
+  // TODO: get user data
+  return { userId: 1, userName: 'Vasya' };
+  // const { userId, userName } = getOwner(token);
+  // return { userId, userName };
+}
 
-  const { userName, userId } = getUser(ctx.request.body);
+function validateFields(reject, { msg, lon, lat, token }) {
+  try {
+    const errors = validator.requestFieldsOptional({ msg, lon, lat, token });
+
+    if (errors.length) reject(createCustomError(400, errors.join(' ')));
+  } catch (err) {
+    reject(createCustomError(500, 'POST field validation failed!', err));
+  }
+}
+
+function validateFilePhoto(reject, { fieldName, type }) {
+  try {
+    const errors = validator.photoUpload({ fieldName, type });
+
+    if (errors.length) reject(createCustomError(400, errors.join(' ')));
+  } catch (err) {
+    reject(createCustomError(500, 'POST file validation failed!', err));
+  }
+}
+
+function validateFormData(ctx, formData) {
+  let errors = [];
+  try {
+    errors = validator.requestFormData(formData);
+  } catch (err) {
+    ctx.throw(500, 'POST file validation failed!', { error: err });
+  }
+
+  ctx.assert(!errors.length, 400, errors.join(' '));
+}
+
+function readPostForm(ctx) {
+  const contentType = ctx.request.header['content-type'] || '';
+  ctx.assert(
+    contentType.startsWith('multipart/form-data'),
+    400,
+    `Wrong 'content-type'! Expected 'multipart/form-data'`,
+  );
+
+  // TODO: move busboy promise to a file
+  return new Promise((resolve, rej) => {
+    const fields = {};
+    let photoUploadPromise = null;
+    let uploader = null;
+
+    function reject(error) {
+      if (photoUploadPromise !== null) {
+        // TODO: move photo upload to a service
+        photoUploadPromise
+          .then(id => console.log(`Rejected file uploaded: ${id}`))
+          .catch(err => console.log(`Cannot upload rejected file ${err.message}`));
+      }
+      rej(error);
+    }
+
+    try {
+      uploader = busboy({
+        headers: ctx.req.headers,
+        limits: {
+          fieldSize: WEB_POST_FIELD_LENGTH_MAX,
+          fields: POST_FIELDS_MAX,
+          fileSize: WEB_PHOTO_FILE_SIZE_MAX,
+          files: POST_FILES_MAX,
+          parts: POST_FIELDS_MAX + POST_FILES_MAX,
+        },
+      });
+    } catch (err) {
+      reject(createCustomError(400, err.message));
+    }
+
+    uploader.on('error', err => reject(createCustomError(500, 'Cannot parse POST!', err)));
+
+    uploader.on('field', (fieldName, value) => {
+      validateFields(reject, { [fieldName]: value });
+      fields[fieldName] = value;
+    });
+
+    uploader.on('file', (fieldName, readableStream, fileName, encoding, mimeType) => {
+      validateFilePhoto(reject, { fieldName, type: mimeType });
+
+      if (photoUploadPromise !== null) {
+        readableStream.resume(); // Flush stream
+        reject(createCustomError(500, 'Cannot upload twice! Photo is already uploadind!'));
+      }
+
+      fields.fileStream = readableStream;
+      photoUploadPromise = sendPhotoStream(readableStream);
+    });
+
+    uploader.on('partsLimit', () =>
+      reject(
+        createCustomError(400, `Too many body parts! Expected ${POST_FILES_MAX + POST_FIELDS_MAX}`),
+      ),
+    );
+
+    uploader.on('filesLimit', () =>
+      reject(createCustomError(400, `Too many files! Expected ${POST_FILES_MAX}`)),
+    );
+
+    uploader.on('fieldsLimit', () =>
+      reject(createCustomError(400, `Too many fields! Expected: ${POST_FIELDS_MAX}`)),
+    );
+
+    uploader.on('finish', () => resolve({ ...fields, photoUploadPromise }));
+
+    ctx.req.pipe(uploader);
+  });
+}
+
+async function getRequest(ctx) {
+  let formData = null;
+  try {
+    formData = await readPostForm(ctx);
+  } catch (err) {
+    ctx.throw(err.status, err.message, { error: err.error });
+  }
+
+  validateFormData(ctx, formData);
+  const { userName, userId } = await getUser(formData);
 
   let photoId = null;
   try {
-    photoId = await getPhotoId(ctx.request.files.photo);
+    // TODO: move to photo upload service
+    const result = await formData.photoUploadPromise;
+    photoId = result.message_id;
   } catch (err) {
-    ctx.throw(500, 'Server error: Cannot upload photo!', { error: err });
+    if (err.code === 400) {
+      if (err.message && err.message.endsWith('IMAGE_PROCESS_FAILED')) {
+        ctx.throw(
+          err.code,
+          `Too big image or invalid image data! Maximum image size: ${WEB_PHOTO_FILE_SIZE_MAX} bytes`,
+          { error: err },
+        );
+      }
+      ctx.throw(err.code, err.message, { error: err });
+    }
+    ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
+  return formRequest(formData, userName, userId, photoId);
+}
 
-  const request = formRequest(ctx.request.body, userName, userId, photoId);
+async function handlePost(ctx) {
+  const request = await getRequest(ctx);
 
   let requestId;
   try {
@@ -101,10 +197,8 @@ async function handlePost(ctx) {
   }
 
   ctx.body = { request: requestId.toString() };
-
-  // ctx.body = JSON.stringify({ body: ctx.request.body, files: ctx.request.files }, null, 2);
 }
 
 module.exports = ({ router }) => {
-  router.post(route, koaBody, async ctx => handlePost(ctx));
+  router.post(route, async ctx => handlePost(ctx));
 };
