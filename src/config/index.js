@@ -3,11 +3,13 @@ require('dotenv').config();
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
   db: {
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
+    USER: process.env.PGUSER,
+    HOST: process.env.PGHOST,
+    DATABASE: process.env.PGDATABASE,
+    PASSWORD: process.env.PGPASSWORD,
+    PORT: process.env.PGPORT,
+    RETRIES: 5,
+    DELAY: 3000,
   },
   MODERATOR_GROUP_ID: process.env.MODERATORSID,
 
