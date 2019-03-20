@@ -6,6 +6,7 @@ const {
 } = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
 const { changeUserActivity } = require('../../services');
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
@@ -27,7 +28,7 @@ const scene = new WizardScene(
       ctx.reply(ACTIVATE_USER.TRUE, mainMenu);
     } catch (error) {
       ctx.reply(ACTIVATE_USER.FALSE, mainMenu);
-      console.log(`deleteUserScene ${error}`);
+      log.error({ err: error.message, from: ctx.from.id }, 'deleteUserScene');
     }
     return ctx.scene.leave();
   },

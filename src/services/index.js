@@ -6,6 +6,7 @@ const {
   sendPhotoStream,
 } = require('../telegram/addFunctions');
 const { SERVICES_MESSAGES } = require('../config');
+const log = require('../logger')(__filename);
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
   return user.create({ platformId, platformType, latitude, longitude });
@@ -61,7 +62,7 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
       sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
     );
   } catch (error) {
-    console.error(`moderate ${error}`);
+    log.error({ err: error.message, reqId, statusString }, 'deleteUserScene');
   }
 }
 

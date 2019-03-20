@@ -8,6 +8,7 @@ const {
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, getBadRequestCount } = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
+const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
@@ -17,16 +18,16 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.NO_USER_NAME, mainMenu);
       return ctx.scene.leave();
     }
-    let bad;
+    let badRequestCount;
     try {
-      bad = await getBadRequestCount({
+      badRequestCount = await getBadRequestCount({
         platformId: ctx.update.callback_query.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      log.error({ err: error.message, from: ctx.from.id }, 'await badRequestCount');
     }
-    if (bad >= 5) {
+    if (badRequestCount >= 5) {
       ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
       return ctx.scene.leave();
     }
@@ -91,7 +92,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-      console.log(`createPetScene ${error}`);
+      log.error({ err: error.message, from: ctx.from.id }, 'createRequestScene');
     }
     delete ctx.session.userMessage;
     return ctx.scene.leave();
