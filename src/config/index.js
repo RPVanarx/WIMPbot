@@ -1,5 +1,4 @@
 require('dotenv').config();
-const os = require('os');
 
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
