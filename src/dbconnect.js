@@ -1,6 +1,7 @@
 const { Client } = require('pg');
 const { db } = require('./config');
 const migrate = require('./migrate');
+const log = require('./logger')(__filename);
 
 const connection = () => {
   return new Promise(async res => {
@@ -10,27 +11,27 @@ const connection = () => {
         await client.query(req);
       });
     };
-    let retries = 5;
+    let retries = db.RETRIES;
     while (retries) {
       try {
         client = new Client({
-          user: db.user,
-          host: db.host,
-          database: db.database,
-          password: db.password,
-          port: db.port,
+          user: db.USER,
+          host: db.HOST,
+          database: db.DATABASE,
+          password: db.PASSWORD,
+          port: db.PORT,
         });
         await client.connect();
         await dbInit();
-        console.log('database connected');
+        log.info('database connected');
         break;
-      } catch (err) {
+      } catch (error) {
         retries -= 1;
         if (!retries) {
           process.exit(1);
         }
-        console.log(`retries left ${retries} ${err}`);
-        await new Promise(res => setTimeout(res, 3000));
+        log.error({ err: error.message }, `retries left ${retries}`);
+        await new Promise(res => setTimeout(res, db.DELAY));
       }
     }
     res(client);
