@@ -71,8 +71,8 @@ function getFileLink(id) {
   return bot.telegram.getFileLink(id);
 }
 
-function sendPhoto(filePath) {
-  return bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: filePath });
+function sendPhotoStream(readStream) {
+  return bot.telegram.sendPhoto(MODERATOR_GROUP_ID, { source: readStream });
 }
 
 module.exports = {
@@ -88,5 +88,5 @@ module.exports = {
   getBadRequestCount,
   startModerateRequest,
   getFileLink,
-  sendPhoto,
+  sendPhotoStream,
 };
