@@ -14,13 +14,14 @@ app.use(async (ctx, next) => {
     if (handleError(err, ctx)) return;
 
     ctx.status = err.status || 500;
-    ctx.body = err.message;
+    ctx.body = !err.error ? 'Internal server error' : err.message;
 
     ctx.app.emit('error', err, ctx);
   }
 });
 
 app.on('error', (err, ctx) => {
+  console.error('------ !!! ERRORR !!! ------');
   console.error(err);
   console.log(`Path: ${ctx.path}`);
 });
@@ -35,8 +36,9 @@ function createRouter(route, KoaRouter = Router, koaApp = app) {
   return router;
 }
 createRouter(require('./routes/root'));
-createRouter(require('./routes/requests'));
 createRouter(require('./routes/photo'));
+createRouter(require('./routes/requests'));
+createRouter(require('./routes/request'));
 
 const server = app.listen(WEB_PORT, () => {
   console.log(`Web API is listening on port ${WEB_PORT}`);

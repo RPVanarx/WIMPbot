@@ -1,4 +1,5 @@
 require('dotenv').config();
+const os = require('os');
 
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
@@ -15,13 +16,23 @@ module.exports = {
 
   WEB_AUTH_MAX_AUTH_PERIOD: process.env.WEB_AUTH_MAX_AUTH_PERIOD,
   WEB_PORT: process.env.WEB_PORT || 3003,
-  WEB_API_V1_PREFIX: '/api/v1',
+
+  WEB_USER_TOKEN_LENGTH: 64,
+  WEB_PHOTO_FILE_SIZE_MAX: 10 * 1024 * 1024, // 10 MiB (10 MB is telegram API limit)
+  WEB_PHOTO_FILE_SIZE_MIN: 1024, // 1 KiB
+
+  WEB_POST_FIELD_LENGTH_MAX: 1024,
+
   WEB_API_JSON_ERROR_NAME: 'error',
 
+  WEB_API_V1_PREFIX: '/api/v1',
   WEB_API_PATH_PHOTO: '/photo',
   WEB_API_PATH_REQUESTS: '/requests',
   WEB_API_PATH_LIST: '/list',
+  WEB_API_PATH_REQUEST: '/request',
 
+  DEFAULT_RADIUS: 1000, // TODO: update web-api
+  
   DEFAULT_VALUES: {
     RADIUS: 1000,
     DAYS_MIN: 1,
@@ -30,6 +41,7 @@ module.exports = {
     RADIUS_MAX: 10000,
   },
 
+  PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
 
   EVENT_NAMES: {

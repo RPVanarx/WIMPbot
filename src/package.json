@@ -25,8 +25,9 @@
         "supertest": "^3.4.2"
     },
     "dependencies": {
-        "@cesium133/forgjs": "1.1.9",
+        "@cesium133/forgjs": "1.1.8",
         "axios": "^0.18.0",
+        "busboy": "^0.3.0",
         "dotenv": "^6.2.0",
         "koa": "^2.7.0",
         "koa-multer": "^1.0.2",
