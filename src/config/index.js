@@ -41,6 +41,7 @@ module.exports = {
     RADIUS: 1000,
     RADIUS_MIN: 50,
     RADIUS_MAX: 10000,
+    REQUEST_MESSAGE_MAX: 1000, // symbols (aka String.length)
   },
 
   PLATFORM_TYPE_WEB: 'web',
