@@ -22,7 +22,6 @@ const connection = () => {
           port: db.PORT,
         });
         await client.connect();
-        await dbInit();
         log.info('database connected');
         break;
       } catch (error) {
@@ -31,9 +30,10 @@ const connection = () => {
           process.exit(1);
         }
         log.error({ err: error.message }, `retries left ${retries}`);
-        await new Promise(res => setTimeout(res, db.DELAY));
+        await new Promise(resolve => setTimeout(resolve, db.DELAY));
       }
     }
+    await dbInit();
     res(client);
   });
 };

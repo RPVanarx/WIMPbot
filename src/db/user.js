@@ -48,10 +48,30 @@ async function badRequestCount({ platformId, platformType }) {
   )).rows[0].bad_request_count;
 }
 
+async function getTimeOfLastRequest({ platformId, platformType }) {
+  return (await client.query(
+    `SELECT creation_date FROM requests 
+    WHERE user_id = (SELECT id FROM users WHERE platform_id = $1 and platform_type = $2)
+    ORDER BY creation_date DESC`,
+    [platformId, platformType],
+  )).rows[0].creation_date;
+}
+
+async function updateBadRequestCountToZero({ platformId, platformType }) {
+  await client.query(
+    `UPDATE users SET bad_request_count = 0 
+    WHERE platform_id = $1 and platform_type = $2`,
+    [platformId, platformType],
+  );
+  return true;
+}
+
 module.exports = {
   create,
   changeActivity,
   getActivityStatus,
   findUsersInRequestRadius,
   badRequestCount,
+  getTimeOfLastRequest,
+  updateBadRequestCountToZero,
 };

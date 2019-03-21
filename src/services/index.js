@@ -66,6 +66,14 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
   }
 }
 
+function getTimeOfLastRequestFromUser({ platformId, platformType }) {
+  return user.getTimeOfLastRequest({ platformId, platformType });
+}
+
+function setBadRequestCountZero({ platformId, platformType }) {
+  return user.updateBadRequestCountToZero({ platformId, platformType });
+}
+
 module.exports = {
   registerUser,
   changeUserActivity,
@@ -80,4 +88,6 @@ module.exports = {
   processModerationRequest,
   getFileLink,
   sendPhotoStream,
+  getTimeOfLastRequestFromUser,
+  setBadRequestCountZero,
 };
