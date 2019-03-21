@@ -5,7 +5,7 @@ const {
   getFileLink,
   sendPhotoStream,
 } = require('../telegram/addFunctions');
-const { SERVICES_MESSAGES } = require('../config');
+const { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES } = require('../config');
 const log = require('../logger')(__filename);
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
@@ -74,6 +74,19 @@ function setBadRequestCountZero({ platformId, platformType }) {
   return user.updateBadRequestCountToZero({ platformId, platformType });
 }
 
+async function isUserCanCreateRequest({ platformId, platformType }) {
+  const badRequestCount = await getBadRequestCount({ platformId, platformType });
+  if (badRequestCount < 5) {
+    return true;
+  }
+  const lastRequestTime = await getTimeOfLastRequestFromUser({ platformId, platformType });
+  if (new Date() - lastRequestTime < CREATE_REQUEST_MESSAGES.BLOCK_INTERVAL) {
+    return false;
+  }
+  await setBadRequestCountZero({ platformId, platformType });
+  return true;
+}
+
 module.exports = {
   registerUser,
   changeUserActivity,
@@ -90,4 +103,5 @@ module.exports = {
   sendPhotoStream,
   getTimeOfLastRequestFromUser,
   setBadRequestCountZero,
+  isUserCanCreateRequest,
 };
