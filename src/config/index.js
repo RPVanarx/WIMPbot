@@ -111,6 +111,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     NO_USER_NAME:
       'Для того щоб відправити заявку, у вашому телеграм-профілі має бути вказаний Username. Створіть власний Username та спробуйте відправити заявку знову',
     MANY_BAD_REQUESTS: 'Перевищено ліміт непідтверджених заявок',
+    BLOCK_INTERVAL: 86400000,
   },
 
   FIND_REQUESTS_MESSAGES: {

@@ -6,7 +6,12 @@ const {
   MODERATOR_GROUP_ID,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
-const { createRequest, getBadRequestCount } = require('../../services');
+const {
+  createRequest,
+  getBadRequestCount,
+  getTimeOfLastRequestFromUser,
+  setBadRequestCountZero,
+} = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
 const log = require('../../logger')(__filename);
 
@@ -24,16 +29,31 @@ const scene = new WizardScene(
         platformId: ctx.update.callback_query.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
       });
+      if (badRequestCount < 5) {
+        ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
+        ctx.session.userMessage = {};
+        return ctx.wizard.next();
+      }
+      const lastRequestTime = await getTimeOfLastRequestFromUser({
+        platformId: ctx.update.callback_query.from.id,
+        platformType: PLATFORM_TYPE_TELEGRAM,
+      });
+      if (new Date() - lastRequestTime < CREATE_REQUEST_MESSAGES.BLOCK_INTERVAL) {
+        ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
+        return ctx.scene.leave();
+      }
+      await setBadRequestCountZero({
+        platformId: ctx.update.callback_query.from.id,
+        platformType: PLATFORM_TYPE_TELEGRAM,
+      });
+      ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
+      ctx.session.userMessage = {};
+      return ctx.wizard.next();
     } catch (error) {
       log.error({ err: error.message, from: ctx.from.id }, 'await badRequestCount');
-    }
-    if (badRequestCount >= 5) {
-      ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
+      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
-    ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
-    ctx.session.userMessage = {};
-    return ctx.wizard.next();
   },
   ctx => {
     if (ctx.update && ctx.update.callback_query) {
