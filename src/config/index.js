@@ -28,6 +28,8 @@ module.exports = {
   WEB_API_PATH_REQUESTS: '/requests',
   WEB_API_PATH_LIST: '/list',
   WEB_API_PATH_REQUEST: '/request',
+  WEB_API_PATH_SIGNIN: '/signin',
+  WEB_API_PATH_SIGNUP: '/signun',
 
   DEFAULT_VALUES: {
     RADIUS: 1000,
