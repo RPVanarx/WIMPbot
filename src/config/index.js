@@ -29,12 +29,16 @@ module.exports = {
   WEB_API_PATH_LIST: '/list',
   WEB_API_PATH_REQUEST: '/request',
   WEB_API_PATH_SIGNIN: '/signin',
-  WEB_API_PATH_SIGNUP: '/signun',
+  WEB_API_PATH_SIGNUP: '/signup',
 
   DEFAULT_VALUES: {
-    RADIUS: 1000,
     DAYS_MIN: 1,
     DAYS_MAX: 30,
+    LATITUDE_MIN: -90,
+    LATITUDE_MAX: 90,
+    LONGITUDE_MIN: -180,
+    LONGITUDE_MAX: 180,
+    RADIUS: 1000,
     RADIUS_MIN: 50,
     RADIUS_MAX: 10000,
   },
