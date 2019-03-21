@@ -23,6 +23,7 @@ const connection = () => {
         });
         await client.connect();
         log.info('database connected');
+        await dbInit();
         break;
       } catch (error) {
         retries -= 1;
@@ -33,7 +34,6 @@ const connection = () => {
         await new Promise(resolve => setTimeout(resolve, db.DELAY));
       }
     }
-    await dbInit();
     res(client);
   });
 };
