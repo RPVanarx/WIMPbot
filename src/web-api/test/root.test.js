@@ -5,17 +5,17 @@ const server = koaApp.callback();
 
 describe('root route test', () => {
   test('should response with body and status 200 on GET /', async () => {
-    const response = await request(koaApp.callback()).get('/');
+    const response = await request(server).get('/');
     expect(response.status).toEqual(200);
     expect(response.text).toBeTruthy();
   });
   test('should response with body and status 200 on GET /api', async () => {
-    const response = await request(koaApp.callback()).get('/api');
+    const response = await request(server).get('/api');
     expect(response.status).toEqual(200);
     expect(response.text).toBeTruthy();
   });
   test('should response with body and status 200 on GET /api/v1', async () => {
-    const response = await request(koaApp.callback()).get('/api/v1');
+    const response = await request(server).get('/api/v1');
     expect(response.status).toEqual(200);
     expect(response.text).toBeTruthy();
   });
