@@ -66,6 +66,18 @@ async function updateBadRequestCountToZero({ platformId, platformType }) {
   return true;
 }
 
+async function getId({ platformId, platformType }) {
+  const response = await client.query(
+    `SELECT id FROM users
+    WHERE platform_id = $1 AND platform_type = $2`,
+    [platformId, platformType],
+  );
+
+  if (!response.rows.length) return undefined;
+
+  return response.rows[0].id;
+}
+
 module.exports = {
   create,
   changeActivity,
@@ -74,4 +86,5 @@ module.exports = {
   badRequestCount,
   getTimeOfLastRequest,
   updateBadRequestCountToZero,
+  getId,
 };
