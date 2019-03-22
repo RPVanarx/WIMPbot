@@ -1,16 +1,14 @@
 const request = require('supertest');
+const { koaApp } = require('../index.js');
 
-const server = require('../index.js');
+const server = koaApp.callback();
+
 const { WEB_API_V1_PREFIX } = require('../../config');
 
 jest.mock('../../services');
 const { getFileLink } = require('../../services');
 
 const route = `${WEB_API_V1_PREFIX}/photo`;
-
-afterAll(async () => {
-  await server.close();
-});
 
 describe('/photo route test', () => {
   describe('Error test', () => {
