@@ -1,14 +1,18 @@
 const { createHash, createHmac } = require('crypto');
-const { TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../config');
+const { TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../../config');
 
 const SHA_256_HASH_LENGTH = 64;
 
 function validatePayload(data) {
-  if (!data) throw new TypeError('Empty payload or invalid payload type');
+  if (!data) throw new TypeError('Empty data!');
 
-  if (!data.hash || !data.hash.length || data.hash.length !== SHA_256_HASH_LENGTH) {
-    throw new Error('Invalid hash property');
+  const { hash, ...rest } = data;
+
+  if (!hash || !hash.length || hash.length !== SHA_256_HASH_LENGTH) {
+    throw new Error('Invalid hash property!');
   }
+
+  if (!Object.keys(rest).length) throw new TypeError('Invalid data!');
 }
 
 // Data-check-string is a concatenation of all received fields, sorted in
@@ -42,15 +46,15 @@ function validateAuthDate({ auth_date: dateInSeconds }) {
   if (Date.now() - date > WEB_AUTH_MAX_AUTH_PERIOD) throw new Error('Authentication expired');
 }
 
-module.exports = function authorize(data) {
+module.exports = function authorize(telegramAuthData) {
   try {
-    validatePayload(data);
-    checkSignature(data);
-    validateAuthDate(data);
+    validatePayload(telegramAuthData);
+    checkSignature(telegramAuthData);
+    // validateAuthDate(telegramAuthData);
   } catch (err) {
-    throw new Error(`Authorization failed: ${err.message}`);
+    throw new Error(`Authentication failed: ${err.message}`);
   }
-  return data;
+  return telegramAuthData;
 };
 
 // Sample
@@ -63,7 +67,7 @@ module.exports = function authorize(data) {
 //   username: 'username',
 //   photo_url: 'https://t.me/i/userpic/320/username.jpg',
 //   auth_date: '1519400000',
-//   hash: 'fd99f6545c6bda17b8d85ce11d3393dbbf12713f338f420673c9bf4fd4256cc7',
+//   hash: '2e1c00320c36f60782c8dda335a6b747c152a15d7d734636a6471256bbd982ed',
 // };
 
 // async function as() {
