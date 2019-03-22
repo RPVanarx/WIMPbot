@@ -22,6 +22,9 @@ async function handlePhotoRoute(ctx) {
     const response = await getPhoto(photoURL);
 
     ctx.type = response.headers['content-type'];
+    // TODO: some elegant way to shiff file type
+    if (ctx.type === 'application/octet-stream') ctx.type = 'image/jpeg';
+
     ctx.body = response;
   } catch (err) {
     if (err.code === 404) ctx.throw(404, 'Photo not found', { error: err });
