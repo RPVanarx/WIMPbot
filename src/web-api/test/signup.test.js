@@ -6,7 +6,7 @@ const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNUP}`;
 
 const server = require('../index.js');
 
-jest.mock('../utils/webToken');
+jest.mock('../utils/web-token');
 const { getUserCredentials } = require('../utils/web-token');
 
 afterAll(async () => {
