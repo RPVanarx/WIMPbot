@@ -40,8 +40,13 @@ createRouter(require('./routes/photo'));
 createRouter(require('./routes/requests'));
 createRouter(require('./routes/request'));
 
-const server = app.listen(WEB_PORT, () => {
-  console.log(`Web API is listening on port ${WEB_PORT}`);
-});
+function listen() {
+  return app.listen(WEB_PORT, () => {
+    console.log(`Web API is listening on port ${WEB_PORT}`);
+  });
+}
 
-module.exports = server;
+module.exports = {
+  listen,
+  koaApp: app,
+};
