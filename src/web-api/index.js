@@ -41,8 +41,13 @@ createRouter(require('./routes/requests'));
 createRouter(require('./routes/request'));
 createRouter(require('./routes/signup'));
 
-const server = app.listen(WEB_PORT, () => {
-  console.log(`Web API is listening on port ${WEB_PORT}`);
-});
+function listen() {
+  return app.listen(WEB_PORT, () => {
+    console.log(`Web API is listening on port ${WEB_PORT}`);
+  });
+}
 
-module.exports = server;
+module.exports = {
+  listen,
+  koaApp: app,
+};

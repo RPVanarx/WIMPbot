@@ -5,8 +5,8 @@
     "main": "index.js",
     "scripts": {
         "start": "node app.js",
-        "test-web-api": "jest /web-api --runInBand",
-        "test-web-api-watch": "jest --watchAll --runInBand /web-api"
+        "test-web-api": "jest /web-api",
+        "test-web-api-watch": "jest --watchAll /web-api"
     },
     "keywords": [
         "telegram",
@@ -70,6 +70,8 @@
         }
     },
     "jest": {
-        "verbose": true
+        "verbose": true,
+        "collectCoverage": true,
+        "testEnvironment": "node"
     }
 }
