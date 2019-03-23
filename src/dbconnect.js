@@ -34,21 +34,24 @@ async function init(dbPool, triesLeft) {
     return;
   }
 
-  try {
-    if (!client) throw new Error('Cannot init! Client not ready!');
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const request of migrate) {
-      try {
-        await client.query(request);
-      } catch (error) {
-        log.error({ err: error.message }, `Cannot execute request: ${request}`);
-      }
-    }
-  } catch (error) {
-    log.error({ err: error.message }, `DB init: Cannot init!`);
-  } finally {
-    if (client) client.release();
+  if (!client) {
+    const err = new Error('DB init: Cannot init! DB client not ready!');
+    log.error({ err: err.message }, err.message);
+    process.exit(1);
   }
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const request of migrate) {
+    try {
+      await client.query(request);
+    } catch (error) {
+      if (client) client.release();
+
+      log.error({ err: error.message }, `DB init: Cannot execute request: ${request}`);
+      process.exit(1);
+    }
+  }
+
+  if (client) client.release();
 }
 
 init(pool, db.RETRIES);
