@@ -4,51 +4,32 @@ const {
   EVENT_NAMES: { CREATE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
   MODERATOR_GROUP_ID,
+  BUTTON_EVENT,
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
-const {
-  createRequest,
-  getBadRequestCount,
-  getTimeOfLastRequestFromUser,
-  setBadRequestCountZero,
-} = require('../../services');
+const { createRequest, isUserCanCreateRequest } = require('../../services');
 const { sendPhotoMessageToModerate } = require('../addFunctions');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
   async ctx => {
-    delete ctx.session.mediaFlag;
     if (!ctx.update.callback_query.from.username) {
       ctx.reply(CREATE_REQUEST_MESSAGES.NO_USER_NAME, mainMenu);
       return ctx.scene.leave();
     }
-    let badRequestCount;
     try {
-      badRequestCount = await getBadRequestCount({
+      const status = await isUserCanCreateRequest({
         platformId: ctx.update.callback_query.from.id,
         platformType: PLATFORM_TYPE_TELEGRAM,
       });
-      if (badRequestCount < 5) {
+      if (status) {
         ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
         ctx.session.userMessage = {};
         return ctx.wizard.next();
       }
-      const lastRequestTime = await getTimeOfLastRequestFromUser({
-        platformId: ctx.update.callback_query.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
-      });
-      if (new Date() - lastRequestTime < CREATE_REQUEST_MESSAGES.BLOCK_INTERVAL) {
-        ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
-        return ctx.scene.leave();
-      }
-      await setBadRequestCountZero({
-        platformId: ctx.update.callback_query.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
-      });
-      ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
-      ctx.session.userMessage = {};
-      return ctx.wizard.next();
+      ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
+      return ctx.scene.leave();
     } catch (error) {
       log.error({ err: error.message, from: ctx.from.id }, 'await badRequestCount');
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
@@ -56,28 +37,29 @@ const scene = new WizardScene(
     }
   },
   ctx => {
-    if (ctx.update && ctx.update.callback_query) {
+    if (
+      ctx.update &&
+      ctx.update.callback_query &&
+      [BUTTON_EVENT.SEARCH, BUTTON_EVENT.FOUND].includes(ctx.update.callback_query.data)
+    ) {
       ctx.session.userMessage.requestType = ctx.update.callback_query.data;
       ctx.reply(CREATE_REQUEST_MESSAGES.PHOTO);
       return ctx.wizard.next();
     }
+
     ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
     delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   ctx => {
-    if (ctx.session.mediaFlag) {
-      return ctx.scene.leave();
+    if (ctx.message && ctx.message.photo) {
+      ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+      ctx.reply(CREATE_REQUEST_MESSAGES.LOCATION);
+      return ctx.wizard.next();
     }
-    if (!ctx.message || !ctx.message.photo || ctx.message.media_group_id) {
-      ctx.session.mediaFlag = true;
-      ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-      delete ctx.session.userMessage;
-      return ctx.scene.leave();
-    }
-    ctx.session.userMessage.photo = ctx.message.photo[ctx.message.photo.length - 1].file_id;
-    ctx.reply(CREATE_REQUEST_MESSAGES.LOCATION);
-    return ctx.wizard.next();
+    ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
+    delete ctx.session.userMessage;
+    return ctx.scene.leave();
   },
   ctx => {
     if (ctx.message && ctx.message.location) {

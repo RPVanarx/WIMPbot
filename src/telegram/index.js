@@ -14,7 +14,21 @@ const { stage, stagesArray } = require('./stages');
 const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
 const { deleteRequest, getUserActivity, processModerationRequest } = require('../services');
 
+const mediaAlbumCheckMiddleware = (ctx, next) => {
+  if (ctx.message && ctx.message.media_group_id) {
+    if (ctx.session.mediaFlag) {
+      return false;
+    }
+    ctx.session.mediaFlag = true;
+    delete ctx.message.photo;
+    return next();
+  }
+  delete ctx.session.mediaFlag;
+  return next();
+};
+
 bot.use(session());
+bot.use(mediaAlbumCheckMiddleware);
 bot.use(stage.middleware());
 
 stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene.name)));
@@ -51,7 +65,6 @@ const callbackHandler = new Router(({ callbackQuery }) => {
 
 callbackHandler.on('deleteRequest', async ctx => {
   try {
-    // throw new Error('qwe');
     await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
   } catch (error) {
@@ -85,4 +98,4 @@ callbackHandler.on('moderate', async ctx => {
 
 bot.on('callback_query', callbackHandler);
 
-bot.startPolling();
+bot.launch();

@@ -1,10 +1,7 @@
 const request = require('supertest');
+const { koaApp } = require('../index.js');
 
-const server = require('../index.js');
-
-afterAll(async () => {
-  await server.close();
-});
+const server = koaApp.callback();
 
 describe('root route test', () => {
   test('should response with body and status 200 on GET /', async () => {
