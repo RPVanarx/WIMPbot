@@ -39,6 +39,7 @@ createRouter(require('./routes/root'));
 createRouter(require('./routes/photo'));
 createRouter(require('./routes/requests'));
 createRouter(require('./routes/request'));
+createRouter(require('./routes/signup'));
 
 const server = app.listen(WEB_PORT, () => {
   console.log(`Web API is listening on port ${WEB_PORT}`);

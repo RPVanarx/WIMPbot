@@ -26,6 +26,11 @@ function set400(ctx, message = '') {
   setMessage(ctx, 400, errorMessage);
 }
 
+function set401(ctx, message = '') {
+  const errorMessage = message ? `Unauthorized request: ${message}` : 'Unauthorized request';
+  setMessage(ctx, 401, errorMessage);
+}
+
 function set404(ctx, message = '') {
   const errorMessage = message ? `Not found: ${message}` : 'Not found';
   setMessage(ctx, 404, errorMessage);
@@ -45,6 +50,10 @@ function handleError(err, ctx) {
   switch (err.status) {
     case 400:
       set400(ctx, err.message);
+      return true;
+    case 401:
+      set401(ctx, err.message);
+      ctx.app.emit('error', err.error, ctx);
       return true;
     case 404:
       set404(ctx, err.message);

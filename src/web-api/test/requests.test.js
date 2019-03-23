@@ -1,8 +1,8 @@
 const request = require('supertest');
 
-const { WEB_API_V1_PREFIX } = require('../../config');
+const { WEB_API_V1_PREFIX, WEB_API_PATH_REQUESTS } = require('../../config');
 
-const route = `${WEB_API_V1_PREFIX}/requests`;
+const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_REQUESTS}`;
 
 const server = require('../index.js');
 
