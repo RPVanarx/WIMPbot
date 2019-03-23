@@ -16,6 +16,10 @@ function changeUserActivity({ platformId, platformType, value }) {
   return user.changeActivity({ platformId, platformType, value });
 }
 
+function getUserId({ platformId, platformType }) {
+  return user.getId({ platformId, platformType });
+}
+
 function createRequest(req) {
   return request.create(req);
 }
@@ -90,6 +94,7 @@ async function isUserCanCreateRequest({ platformId, platformType }) {
 module.exports = {
   registerUser,
   changeUserActivity,
+  getUserId,
   createRequest,
   getUserRequests,
   getRequestsInRegLocation,
