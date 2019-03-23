@@ -39,6 +39,7 @@ createRouter(require('./routes/root'));
 createRouter(require('./routes/photo'));
 createRouter(require('./routes/requests'));
 createRouter(require('./routes/request'));
+createRouter(require('./routes/signup'));
 
 function listen() {
   return app.listen(WEB_PORT, () => {

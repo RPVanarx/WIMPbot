@@ -1,43 +1,54 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
-const { WEB_USER_TOKEN_LENGTH } = require('../../config');
+const { WEB_USER_TOKEN_LENGTH, DEFAULT_VALUES } = require('../../config');
 
-// HACK: Valid for 1.1.9 forgjs
+// HACK: Valid for 1.1.8 forgjs
 // TODO: Remove next block when
 // https://github.com/oussamahamdaoui/forgJs/issues/65
-// and
-// https://github.com/oussamahamdaoui/forgJs/issues/66
-// are fixed
-/*function removeBugsDecorator(func) {
+// is fixed
+function removeBugsDecorator(func) {
   // eslint-disable-next-line func-names
   return function(...args) {
-    // Changes null & undefined to {} to avoid errors
-    args.forEach(obj => {
-      const keys = Object.keys(obj);
-      keys.forEach(key => {
-        if (obj[key] == null) obj[key] = {};
-      });
-    });
     // Removes duplicates from array
     return [...new Set(func.apply(this, args))];
   };
 }
 Validator.prototype.getErrors = removeBugsDecorator(Validator.prototype.getErrors);
 // block end -----
-*/
+
 const location = new Validator({
   lon: new Rule(
-    { type: 'string-float|string-int', min: -180, max: 180 },
-    'Longitude must be a number in range -180 to 180!',
+    {
+      type: 'string-float|string-int',
+      min: DEFAULT_VALUES.LONGITUDE_MIN,
+      max: DEFAULT_VALUES.LONGITUDE_MAX,
+    },
+    `Longitude must be a number in range ${DEFAULT_VALUES.LONGITUDE_MIN} to ${
+      DEFAULT_VALUES.LONGITUDE_MAX
+    }!`,
   ),
   lat: new Rule(
-    { type: 'string-float|string-int', min: -90, max: 90 },
-    'Latitude must be a number in range -90 to 90!',
+    {
+      type: 'string-float|string-int',
+      min: DEFAULT_VALUES.LATITUDE_MIN,
+      max: DEFAULT_VALUES.LATITUDE_MAX,
+    },
+    `Latitude must be a number in range ${DEFAULT_VALUES.LATITUDE_MIN} to ${
+      DEFAULT_VALUES.LATITUDE_MAX
+    }!`,
   ),
 });
 
 const daysAndRadius = new Validator({
-  r: new Rule({ type: 'string-int', min: 0 }, 'Radius must be an integer bigger than 0!'),
-  d: new Rule({ type: 'string-int', min: 0 }, 'Days must be an integer bigger than 0!'),
+  r: new Rule(
+    { type: 'string-int', min: DEFAULT_VALUES.RADIUS_MIN, max: DEFAULT_VALUES.RADIUS_MAX },
+    `Radius must be an integer in range ${DEFAULT_VALUES.RADIUS_MIN} to ${
+      DEFAULT_VALUES.RADIUS_MAX
+    }!`,
+  ),
+  d: new Rule(
+    { type: 'string-int', min: DEFAULT_VALUES.DAYS_MIN, max: DEFAULT_VALUES.DAYS_MAX },
+    `Days must be an integer in range ${DEFAULT_VALUES.DAYS_MIN} to ${DEFAULT_VALUES.DAYS_MAX}!`,
+  ),
 });
 
 const webToken = new Validator({
@@ -53,7 +64,10 @@ const photoUpload = new Validator({
 });
 
 const requestFieldsOptional = new Validator({
-  msg: new Rule({ type: 'string', minLength: 1, optional: true }, 'Message must not be empty!'),
+  msg: new Rule(
+    { type: 'string', minLength: 1, maxLength: DEFAULT_VALUES.REQUEST_MESSAGE_MAX, optional: true },
+    `Message must not be empty, must not exceed ${DEFAULT_VALUES.REQUEST_MESSAGE_MAX} symbols!`,
+  ),
   lon: new Rule(
     { type: 'string-float|string-int', min: -180, max: 180, optional: true },
     'Longitude must be a number in range -180 to 180!',
@@ -85,12 +99,8 @@ module.exports = {
     return [...location.getErrors({ lon, lat }), ...daysAndRadius.getErrors({ d, r })];
   },
 
-  signupQuery({ d, r, lon, lat, token }) {
-    return [
-      ...location.getErrors({ lon, lat }),
-      ...daysAndRadius.getErrors({ d, r }),
-      ...webToken.getErrors({ token }),
-    ];
+  signupQuery({ lon, lat, token }) {
+    return [...location.getErrors({ lon, lat }), ...webToken.getErrors({ token })];
   },
 
   requestFieldsOptional({ msg, lon, lat, token }) {
@@ -107,5 +117,9 @@ module.exports = {
       errors.push('No photo provided!');
     }
     return [...errors, ...requestFieldsPresense.getErrors({ msg, token, lon, lat })];
+  },
+
+  webToken({ token }) {
+    return webToken.getErrors({ token });
   },
 };

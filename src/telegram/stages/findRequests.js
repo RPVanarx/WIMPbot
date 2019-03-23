@@ -58,8 +58,7 @@ const scene = new WizardScene(
         return ctx.scene.leave();
       }
       await requests.forEach(req => {
-        req.reqId = req.id;
-        sendPhotoMessage({ ctx, request: req, chatId: ctx.message.from.id });
+        sendPhotoMessage({ request: req, chatId: ctx.message.from.id });
       });
       setTimeout(
         () => ctx.reply(FIND_REQUESTS_MESSAGES.SAMPLE_END, mainMenu),

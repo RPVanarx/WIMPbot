@@ -3,12 +3,12 @@ const { koaApp } = require('../index.js');
 
 const server = koaApp.callback();
 
-const { WEB_API_V1_PREFIX } = require('../../config');
+const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO } = require('../../config');
 
 jest.mock('../../services');
 const { getFileLink } = require('../../services');
 
-const route = `${WEB_API_V1_PREFIX}/photo`;
+const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_PHOTO}`;
 
 describe('/photo route test', () => {
   describe('Error test', () => {
