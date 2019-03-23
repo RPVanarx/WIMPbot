@@ -1,17 +1,12 @@
 const request = require('supertest');
-
+const { koaApp } = require('../index.js');
 const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP, WEB_USER_TOKEN_LENGTH } = require('../../config');
 
+const server = koaApp.callback();
 const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNUP}`;
-
-const server = require('../index.js');
 
 jest.mock('../utils/web-token');
 const { getUserCredentials } = require('../utils/web-token');
-
-afterAll(async () => {
-  await server.close();
-});
 
 describe('/reqests route test', () => {
   describe('JSON test', () => {
