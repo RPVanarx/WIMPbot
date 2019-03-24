@@ -2,6 +2,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const { WEB_PORT } = require('../config');
 const { set404, handleError } = require('./utils/error-handling');
+const log = require('../logger')(__filename);
 
 const app = new Koa();
 
@@ -21,9 +22,8 @@ app.use(async (ctx, next) => {
 });
 
 app.on('error', (err, ctx) => {
-  console.error('------ !!! ERRORR !!! ------');
-  console.error(err);
-  console.log(`Path: ${ctx.path}`);
+  // console.error('------ !!! ERRORR !!! ------');
+  log.error({ err }, `Path: ${ctx.path}`);
 });
 
 function createRouter(route, KoaRouter = Router, koaApp = app) {
@@ -44,7 +44,7 @@ createRouter(require('./routes/signup'));
 
 function listen() {
   return app.listen(WEB_PORT, () => {
-    console.log(`Web API is listening on port ${WEB_PORT}`);
+    log.info(`Web API is listening on port ${WEB_PORT}`);
   });
 }
 
