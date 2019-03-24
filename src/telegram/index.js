@@ -98,4 +98,6 @@ callbackHandler.on('moderate', async ctx => {
 
 bot.on('callback_query', callbackHandler);
 
-bot.launch();
+module.exports = {
+  launch: () => bot.launch(),
+};
