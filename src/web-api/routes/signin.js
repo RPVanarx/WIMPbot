@@ -1,10 +1,9 @@
 const path = require('path');
-const validator = require('../utils/validator');
 const { getUserId } = require('../../services');
 const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 const { setError } = require('../utils/error-handling');
 const authorize = require('../utils/telegram-authorization');
-// const { getUserCredentials } = require('../utils/web-token');
+const { create: createToken } = require('../utils/web-token');
 
 const route = path.join(WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN);
 
@@ -30,9 +29,9 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot get user ID!', { error: err });
   }
 
-  // const webToken = createToken(payload.id, payload.username);
+  const token = createToken(payload.id);
 
-  ctx.body = formBody({ registered: !!userId, token: 'webToken' });
+  ctx.body = formBody({ registered: !!userId, token });
 }
 
 module.exports = ({ router }) => {

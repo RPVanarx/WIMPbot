@@ -1,9 +1,9 @@
 const path = require('path');
 const validator = require('../utils/validator');
 const { registerUser } = require('../../services');
-const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 const { setError } = require('../utils/error-handling');
-const { getUserCredentials } = require('../utils/web-token');
+const { getUserCredentials, isExpired } = require('../utils/web-token');
+const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 
 const route = path.join(WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP);
 
@@ -24,10 +24,24 @@ function validateQuery(ctx) {
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
+function validateToken(ctx, token) {
+  let isTokenExpired = null;
+  try {
+    isTokenExpired = isExpired(token);
+  } catch (err) {
+    ctx.throw(401, 'Invalid token!', { error: err });
+  }
+
+  if (isTokenExpired) ctx.throw(401, 'Token expired! Please sign in again!');
+}
+
 function getPayload(ctx) {
   validateQuery(ctx);
-  // TODO: validate token
+
   const { token, lat, lon } = ctx.request.query;
+
+  validateToken(ctx, token);
+
   return {
     latitude: Number.parseFloat(lat),
     longitude: Number.parseFloat(lon),
@@ -38,10 +52,9 @@ function getPayload(ctx) {
 async function handleRoute(ctx) {
   const { longitude, latitude, webToken } = getPayload(ctx);
 
-  const { userId: platformId } = getUserCredentials({ webToken });
+  const { id: platformId } = getUserCredentials(webToken);
 
   let isRegistered = false;
-
   try {
     isRegistered = await registerUser({
       platformId,
