@@ -14,10 +14,10 @@ function formBody({ registered, token }) {
 function validateQuery(ctx) {
   ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
 
-  const { token, lat, lon } = ctx.request.query;
+  const { lat, lon } = ctx.request.query;
   let errors = [];
   try {
-    errors = validator.signupQuery({ lon, lat, token });
+    errors = validator.signupQuery({ lon, lat });
   } catch (err) {
     ctx.throw(500, 'POST field validation failed!', { error: err });
   }
@@ -26,7 +26,7 @@ function validateQuery(ctx) {
 
 function getPayload(ctx) {
   validateQuery(ctx);
-
+  // TODO: validate token
   const { token, lat, lon } = ctx.request.query;
   return {
     latitude: Number.parseFloat(lat),

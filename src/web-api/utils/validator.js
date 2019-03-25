@@ -1,5 +1,5 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
-const { WEB_USER_TOKEN_LENGTH, DEFAULT_VALUES } = require('../../config');
+const { DEFAULT_VALUES } = require('../../config');
 
 // HACK: Valid for 1.1.8 forgjs
 // TODO: Remove next block when
@@ -51,13 +51,6 @@ const daysAndRadius = new Validator({
   ),
 });
 
-const webToken = new Validator({
-  token: new Rule(
-    { type: 'string', minLength: WEB_USER_TOKEN_LENGTH, maxLength: WEB_USER_TOKEN_LENGTH },
-    'Invalid token!',
-  ),
-});
-
 const photoUpload = new Validator({
   type: new Rule({ type: 'string', match: /^image\/.+/ }, `Photo must be of type 'image/*'!`),
   fieldName: new Rule({ type: 'string', equal: 'photo' }, 'Unexpected field name of file!'),
@@ -76,15 +69,6 @@ const requestFieldsOptional = new Validator({
     { type: 'string-float|string-int', min: -90, max: 90, optional: true },
     'Latitude must be a number in range -90 to 90!',
   ),
-  token: new Rule(
-    {
-      type: 'string',
-      minLength: WEB_USER_TOKEN_LENGTH,
-      maxLength: WEB_USER_TOKEN_LENGTH,
-      optional: true,
-    },
-    'Invalid token!',
-  ),
 });
 
 const requestFieldsPresense = new Validator({
@@ -99,8 +83,8 @@ module.exports = {
     return [...location.getErrors({ lon, lat }), ...daysAndRadius.getErrors({ d, r })];
   },
 
-  signupQuery({ lon, lat, token }) {
-    return [...location.getErrors({ lon, lat }), ...webToken.getErrors({ token })];
+  signupQuery({ lon, lat }) {
+    return [...location.getErrors({ lon, lat })];
   },
 
   requestFieldsOptional({ msg, lon, lat, token }) {
@@ -111,15 +95,11 @@ module.exports = {
     return photoUpload.getErrors({ fieldName, type });
   },
 
-  requestFormData({ photoUploadPromise, msg, lon, lat, token }) {
+  requestFormData({ photoUploadPromise, msg, lon, lat }) {
     const errors = [];
     if (!(photoUploadPromise instanceof Promise)) {
       errors.push('No photo provided!');
     }
-    return [...errors, ...requestFieldsPresense.getErrors({ msg, token, lon, lat })];
-  },
-
-  webToken({ token }) {
-    return webToken.getErrors({ token });
+    return [...errors, ...requestFieldsPresense.getErrors({ msg, lon, lat })];
   },
 };
