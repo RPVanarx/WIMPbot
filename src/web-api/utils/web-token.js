@@ -1,12 +1,12 @@
 const crypto = require('crypto');
-const { WEB_TOKEN_KEY } = require('../../config');
+const { WEB_TOKEN_KEY, WEB_AUTH_MAX_AUTH_PERIOD } = require('../../config');
 
 const algorithm = 'aes-256-cbc';
 
 const ivSize = 16; // aes-256 = 256b = 16B
 const idMaxLength = 64; // 18 - Telegram's max
 
-function getKey() {
+function getKeyHash() {
   const hash = crypto.createHash('sha256');
   hash.update(WEB_TOKEN_KEY.toString());
   return hash.digest();
@@ -15,7 +15,7 @@ function getKey() {
 function encrypt(decryptedToken) {
   const iv = crypto.randomBytes(ivSize);
 
-  const cipher = crypto.createCipheriv(algorithm, getKey(), iv);
+  const cipher = crypto.createCipheriv(algorithm, getKeyHash(), iv);
   const dataBuf = cipher.update(decryptedToken, 'utf8');
   const finalBuf = cipher.final();
 
@@ -29,11 +29,21 @@ function decrypt(encryptedToken) {
   const iv = encrypted.slice(encrypted.length - ivSize);
   const encryptedData = encrypted.slice(0, encrypted.length - ivSize);
 
-  const decipher = crypto.createDecipheriv(algorithm, getKey(), iv);
+  const decipher = crypto.createDecipheriv(algorithm, getKeyHash(), iv);
   return decipher.update(encryptedData, 'utf8') + decipher.final('utf8');
 }
 
-function createToken({ id, date }) {
+function packToken({ id, date }) {
+  return JSON.stringify({ id, date: date.getTime() });
+}
+
+function unpackToken(packedToken) {
+  const token = JSON.parse(packedToken);
+  token.date = new Date(token.date); // ms to Date object
+  return token;
+}
+
+function create(id, date = new Date()) {
   if (typeof id !== 'string') {
     throw new TypeError('WEB-token: ID must be a string!');
   }
@@ -41,17 +51,35 @@ function createToken({ id, date }) {
     throw new Error(`WEB-token: ID is too long! Max: ${idMaxLength} characters`);
   }
 
-  const decryptedToken = JSON.stringify({ id, date });
-  return encrypt(decryptedToken);
+  const packedToken = packToken({ id, date });
+  return encrypt(packedToken);
 }
 
-function getUserCredentials(webToken) {
-  const decryptedToken = decrypt(webToken);
-  const token = JSON.parse(decryptedToken);
+function isDateExpired({ date }) {
+  const age = Date.now() - date.getTime();
+
+  if (age > WEB_AUTH_MAX_AUTH_PERIOD) return true;
+
+  return false;
+}
+
+function getUserCredentials(encryptedToken) {
+  const packedToken = decrypt(encryptedToken);
+  const token = unpackToken(packedToken);
+
+  if (isDateExpired(token)) throw new Error('WEB-token: token expired!');
+
   return token;
 }
 
+function isExpired(encryptedToken) {
+  const packedToken = decrypt(encryptedToken);
+  const token = unpackToken(packedToken);
+  return isDateExpired(token);
+}
+
 module.exports = {
+  create,
   getUserCredentials,
-  createToken,
+  isExpired,
 };
