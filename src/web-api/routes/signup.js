@@ -19,7 +19,7 @@ function validateQuery(ctx) {
   try {
     errors = validator.signupQuery({ lon, lat });
   } catch (err) {
-    ctx.throw(500, 'POST field validation failed!', { error: err });
+    ctx.throw(500, 'Signup query validation failed!', { error: err });
   }
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
