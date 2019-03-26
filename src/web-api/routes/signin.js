@@ -19,9 +19,9 @@ async function handleRoute(ctx) {
     ctx.throw(401, `Authentication failed: ${err.message}`);
   }
 
-  let userId = null;
+  let wimpUserId = null;
   try {
-    userId = await getUserId({
+    wimpUserId = await getUserId({
       platformId: payload.id,
       platformType: PLATFORM_TYPE_TELEGRAM,
     });
@@ -36,7 +36,7 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot create token!', { error: err });
   }
 
-  ctx.body = formBody({ registered: !!userId, token });
+  ctx.body = formBody({ registered: !!wimpUserId, token });
 }
 
 module.exports = ({ router }) => {
