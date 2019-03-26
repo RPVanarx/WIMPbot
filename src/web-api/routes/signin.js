@@ -16,7 +16,7 @@ async function handleRoute(ctx) {
   try {
     authorize(payload);
   } catch (err) {
-    ctx.throw(401, `Authorization failed: ${err.message}`);
+    ctx.throw(401, `Authentication failed: ${err.message}`);
   }
 
   let userId = null;
@@ -29,7 +29,12 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot get user ID!', { error: err });
   }
 
-  const token = createToken(payload.id);
+  let token = null;
+  try {
+    token = createToken(payload.id);
+  } catch (err) {
+    ctx.throw(500, 'Cannot create token!', { error: err });
+  }
 
   ctx.body = formBody({ registered: !!userId, token });
 }
