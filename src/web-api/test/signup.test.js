@@ -6,13 +6,12 @@ const webToken = require('../utils/web-token');
 const server = koaApp.callback();
 const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNUP}`;
 
-describe('/reqests route test', () => {
+describe('/signup route test', () => {
   describe('JSON test', () => {
     const fakeToken = webToken.create('0');
     const validFakeRequest = `${route}?lon=2&lat=3&token=${fakeToken}`;
     test(`should response with status 200 and proper JSON on valid request`, async () => {
       const response = await request(server).get(validFakeRequest);
-      console.log(response);
       expect(response.status).toEqual(200);
       expect(response.headers['content-type']).toContain('application/json');
 
