@@ -38,7 +38,7 @@ function checkSignature({ hash, ...data }) {
 
   if (hmac !== hash) throw new Error('Invalid data signature');
 }
-
+// TODO: validate authentication date
 function validateAuthDate({ auth_date: dateInSeconds }) {
   const date = new Date(0);
   date.setSeconds(dateInSeconds);
@@ -47,13 +47,10 @@ function validateAuthDate({ auth_date: dateInSeconds }) {
 }
 
 module.exports = function authorize(telegramAuthData) {
-  try {
-    validatePayload(telegramAuthData);
-    checkSignature(telegramAuthData);
-    // validateAuthDate(telegramAuthData);
-  } catch (err) {
-    throw new Error(`Authentication failed: ${err.message}`);
-  }
+  validatePayload(telegramAuthData);
+  checkSignature(telegramAuthData);
+  // validateAuthDate(telegramAuthData);
+
   return telegramAuthData;
 };
 
