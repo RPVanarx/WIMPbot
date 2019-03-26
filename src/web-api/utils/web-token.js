@@ -52,7 +52,8 @@ function create(id, date = new Date()) {
   }
 
   const packedToken = packToken({ id, date });
-  return encrypt(packedToken);
+  const encryptedToken = encrypt(packedToken);
+  return encodeURIComponent(encryptedToken);
 }
 
 function isDateExpired({ date }) {
@@ -63,7 +64,8 @@ function isDateExpired({ date }) {
   return false;
 }
 
-function getUserCredentials(encryptedToken) {
+function getUserCredentials(encodedToken) {
+  const encryptedToken = decodeURIComponent(encodedToken);
   const packedToken = decrypt(encryptedToken);
   const token = unpackToken(packedToken);
 
