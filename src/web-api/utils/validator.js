@@ -95,11 +95,11 @@ module.exports = {
     return photoUpload.getErrors({ fieldName, type });
   },
 
-  requestFormData({ photoUploadPromise, msg, lon, lat }) {
+  requestFormData({ photoUploadPromise, msg, lon, lat, token }) {
     const errors = [];
     if (!(photoUploadPromise instanceof Promise)) {
       errors.push('No photo provided!');
     }
-    return [...errors, ...requestFieldsPresense.getErrors({ msg, lon, lat })];
+    return [...errors, ...requestFieldsPresense.getErrors({ msg, lon, lat, token })];
   },
 };
