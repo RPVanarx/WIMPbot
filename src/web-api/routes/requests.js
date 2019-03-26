@@ -1,41 +1,32 @@
 const path = require('path');
 const { getRequestsInArea } = require('../../services');
+const { setError } = require('../utils/error-handling');
+const { idToUrl } = require('../utils/photo');
+const validator = require('../utils/validator');
+
 const {
   WEB_API_V1_PREFIX,
   DEFAULT_VALUES,
   WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
   WEB_API_PATH_LIST: LIST_SUFFIX,
 } = require('../../config');
-const { setError } = require('../utils/error-handling');
-const { idToUrl } = require('../utils/photo');
 
 const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
 const routeList = path.join(routeRequests, LIST_SUFFIX);
 
 function validateQuery(ctx) {
-  const inRange = (number, min, max) => number >= min && number <= max;
+  ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
 
   const { r = DEFAULT_VALUES.RADIUS, d, lon, lat } = ctx.request.query;
 
-  const radius = Number.parseInt(r, 10);
-  ctx.assert(!Number.isNaN(radius) && radius >= 1, 400, "Radius 'r' must be a positive number!");
+  let errors = [];
+  try {
+    errors = validator.listQuery({ r, d, lon, lat });
+  } catch (err) {
+    ctx.throw(500, 'List query validation failed!', { error: err });
+  }
 
-  const days = Number.parseInt(d, 10);
-  ctx.assert(!Number.isNaN(days) && days >= 1, 400, "Days 'd' must be a positive number!");
-
-  const longitude = Number.parseFloat(lon);
-  ctx.assert(
-    !Number.isNaN(longitude) && inRange(longitude, -180, 180),
-    400,
-    "Longitude 'lon' must be a number in range -180 to 180!",
-  );
-
-  const latitude = Number.parseFloat(lat);
-  ctx.assert(
-    !Number.isNaN(latitude) && inRange(latitude, -90, 90),
-    400,
-    "Latitude 'lat' must be a number in range -90 to 90!",
-  );
+  ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
 function getPhotoUrl(photoId, ctx) {

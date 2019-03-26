@@ -26,8 +26,8 @@ describe('/reqests route test', () => {
 
 describe('/requests/list route test', () => {
   describe('JSON test', () => {
-    test(`should response with status 200 on GET ${route}/list?r=10&d=10&lon=1&lat=2`, async () => {
-      const response = await request(server).get(`${route}/list?r=10&d=10&lon=1&lat=2`);
+    test(`should response with status 200 on GET ${route}/list?r=100&d=10&lon=1&lat=2`, async () => {
+      const response = await request(server).get(`${route}/list?r=100&d=10&lon=1&lat=2`);
       expect(response.status).toEqual(200);
     });
     test(`should response with proper JSON`, async () => {

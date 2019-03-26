@@ -39,9 +39,9 @@ async function formRequest(body, platformId, photo) {
   };
 }
 
-function validateFields(reject, { msg, lon, lat, token }) {
+function validateFields(reject, { msg, lon, lat }) {
   try {
-    const errors = validator.requestFieldsOptional({ msg, lon, lat, token });
+    const errors = validator.requestFormFieldsOptional({ msg, lon, lat });
 
     if (errors.length) reject(createCustomError(400, errors.join(' ')));
   } catch (err) {
@@ -62,7 +62,7 @@ function validateFilePhoto(reject, { fieldName, type }) {
 function validateFormData(ctx, formData) {
   let errors = [];
   try {
-    errors = validator.requestFormData(formData);
+    errors = validator.requestFormPresence(formData);
   } catch (err) {
     ctx.throw(500, 'POST file validation failed!', { error: err });
   }
