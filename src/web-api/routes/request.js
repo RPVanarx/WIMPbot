@@ -1,7 +1,8 @@
 const path = require('path');
 const busboy = require('busboy');
-const { createRequest, sendPhotoStream } = require('../../services');
+const { createRequest, sendPhotoStream /* getTelegramUserName */ } = require('../../services');
 const validator = require('../utils/validator');
+const { isExpired, getUserCredentials } = require('../utils/web-token');
 
 const {
   WEB_API_V1_PREFIX,
@@ -25,9 +26,9 @@ function createCustomError(status, message, originalError = null) {
   return error;
 }
 
-function formRequest(body, userName, platformId, photo) {
+async function formRequest(body, platformId, photo) {
   return {
-    userName,
+    userName: 'fixme', // await getTelegramUserName(platformId),
     platformId,
     platformType: PLATFORM_TYPE_TELEGRAM,
     requestType: REQUEST_TYPE_SEARCH,
@@ -36,13 +37,6 @@ function formRequest(body, userName, platformId, photo) {
     photo,
     message: body.msg,
   };
-}
-
-async function getUser({ token }) {
-  // TODO: get user data
-  return { userId: 1, userName: 'Vasya' };
-  // const { userId, userName } = getOwner(token);
-  // return { userId, userName };
 }
 
 function validateFields(reject, { msg, lon, lat, token }) {
@@ -163,13 +157,20 @@ async function getRequest(ctx) {
   }
 
   validateFormData(ctx, formData);
-  const { userName, userId } = await getUser(formData);
+  let isTokenExpired = null;
+  try {
+    isTokenExpired = isExpired(formData.token);
+  } catch (err) {
+    ctx.throw(401, 'Invalid token!', { error: err });
+  }
+  if (isTokenExpired) ctx.throw(401, 'Token expired!');
+
+  const { id: userId } = getUserCredentials(formData.token);
 
   let photoId = null;
   try {
     // TODO: move to photo upload service
-    const result = await formData.photoUploadPromise;
-    photoId = result.message_id;
+    photoId = await formData.photoUploadPromise;
   } catch (err) {
     if (err.code === 400) {
       if (err.message && err.message.endsWith('IMAGE_PROCESS_FAILED')) {
@@ -183,7 +184,7 @@ async function getRequest(ctx) {
     }
     ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
-  return formRequest(formData, userName, userId, photoId);
+  return formRequest(formData, userId, photoId);
 }
 
 async function handlePost(ctx) {
@@ -195,7 +196,7 @@ async function handlePost(ctx) {
   } catch (err) {
     ctx.throw(500, 'Cannot create request!', { error: err });
   }
-
+  // TODO: start moderation process
   ctx.body = { request: requestId.toString() };
 }
 
