@@ -165,7 +165,7 @@ async function getRequest(ctx) {
   }
   if (isTokenExpired) ctx.throw(401, 'Token expired!');
 
-  const { id: userId } = getUserCredentials(formData.token);
+  const { id: platformId } = getUserCredentials(formData.token);
 
   let photoId = null;
   try {
@@ -184,7 +184,7 @@ async function getRequest(ctx) {
     }
     ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
-  return formRequest(formData, userId, photoId);
+  return formRequest(formData, platformId, photoId);
 }
 
 async function handlePost(ctx) {
