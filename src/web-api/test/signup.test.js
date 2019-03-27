@@ -9,17 +9,17 @@ const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNUP}`;
 describe('/signup route test', () => {
   describe('JSON test', () => {
     const fakeToken = webToken.create('0');
-    const validFakeRequest = `${route}?lon=2&lat=3&token=${fakeToken}`;
+    const validFakeRequest = `${route}?lon=2&lat=3`;
 
     test(`should response with status 200 and proper JSON on valid request`, async () => {
-      const response = await request(server).get(validFakeRequest);
+      const response = await request(server)
+        .get(validFakeRequest)
+        .set('Cookie', [`token=${fakeToken}`]);
       expect(response.status).toEqual(200);
       expect(response.headers['content-type']).toContain('application/json');
 
       const json = JSON.parse(response.text);
-      expect(json).toHaveProperty('token');
       expect(json).toHaveProperty('registered');
-      expect(encodeURIComponent(json.token)).toEqual(fakeToken);
       expect(json.registered).toBeTruthy();
     });
   });

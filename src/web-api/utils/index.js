@@ -3,6 +3,7 @@ const photo = require('./photo');
 const validator = require('./validator');
 const webToken = require('./web-token');
 const authTelegram = require('./telegram-authorization');
+const cookies = require('./cookies');
 
 module.exports = {
   errorResponse,
@@ -10,4 +11,5 @@ module.exports = {
   validator,
   webToken,
   authTelegram,
+  cookies,
 };

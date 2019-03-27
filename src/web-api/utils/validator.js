@@ -22,7 +22,6 @@ const requestFieldsPresenсeValidator = new Validator({
   lon: new Rule({ type: 'string' }, `'longitude' field not found!`),
   lat: new Rule({ type: 'string' }, `'latitude' field not found!`),
   msg: new Rule({ type: 'string' }, `'message' field not found!`),
-  token: new Rule({ type: 'string' }, `'token' field not found!`),
 });
 
 module.exports = {
@@ -51,12 +50,12 @@ module.exports = {
     return errors;
   },
 
-  requestFormPresence({ photoUploadPromise, msg, lon, lat, token }) {
+  requestFormPresence({ photoUploadPromise, msg, lon, lat }) {
     const errors = [];
     if (!(photoUploadPromise instanceof Promise)) {
       errors.push('No photo provided!');
     }
-    return [...errors, ...requestFieldsPresenсeValidator.getErrors({ msg, lon, lat, token })];
+    return [...errors, ...requestFieldsPresenсeValidator.getErrors({ msg, lon, lat })];
   },
 
   photoUpload({ fieldName, type }) {

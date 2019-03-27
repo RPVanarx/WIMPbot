@@ -1,8 +1,8 @@
 const path = require('path');
+const validator = require('../utils/validator');
 const { getRequestsInArea } = require('../../services');
 const { setError } = require('../utils/error-handling');
 const { idToUrl } = require('../utils/photo');
-const validator = require('../utils/validator');
 
 const {
   WEB_API_V1_PREFIX,
