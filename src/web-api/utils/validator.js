@@ -40,13 +40,13 @@ module.exports = {
   requestFormFieldsOptional({ msg, lon, lat }) {
     let errors = [];
     if (msg != null) {
-      errors = [...errors, globalValidator.messageRequest({ message: msg })];
+      errors = [...errors, ...globalValidator.messageRequest({ message: msg })];
     }
     if (lon != null) {
-      errors = [...errors, globalValidator.longitude({ lon })];
+      errors = [...errors, ...globalValidator.longitude({ lon })];
     }
     if (lat != null) {
-      errors = [...errors, globalValidator.latitude({ lat })];
+      errors = [...errors, ...globalValidator.latitude({ lat })];
     }
     return errors;
   },
