@@ -4,12 +4,13 @@ const cookies = require('../utils/cookies');
 const { registerUser } = require('../../services');
 const { setError } = require('../utils/error-handling');
 const { getUserCredentials, isExpired } = require('../utils/web-token');
+
 const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 
 const route = path.join(WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP);
 
-function formBody({ registered, token }) {
-  return { ...setError(), registered, token };
+function formBody({ registered }) {
+  return { ...setError(), registered };
 }
 
 function validateQuery(ctx) {
@@ -68,7 +69,7 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot register user!', { error: err });
   }
 
-  ctx.body = formBody({ registered: isRegistered, token: webToken });
+  ctx.body = formBody({ registered: isRegistered });
 }
 
 module.exports = ({ router }) => {
