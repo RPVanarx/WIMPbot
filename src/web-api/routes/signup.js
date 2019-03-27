@@ -1,5 +1,6 @@
 const path = require('path');
 const validator = require('../utils/validator');
+const cookies = require('../utils/cookies');
 const { registerUser } = require('../../services');
 const { setError } = require('../utils/error-handling');
 const { getUserCredentials, isExpired } = require('../utils/web-token');
@@ -38,8 +39,9 @@ function validateToken(ctx, token) {
 function getPayload(ctx) {
   validateQuery(ctx);
 
-  const { token, lat, lon } = ctx.request.query;
+  const { lat, lon } = ctx.request.query;
 
+  const token = cookies.getToken(ctx);
   validateToken(ctx, token);
 
   return {
