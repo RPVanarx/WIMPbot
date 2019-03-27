@@ -13,7 +13,7 @@ module.exports = {
   },
   MODERATOR_GROUP_ID: process.env.MODERATORSID,
 
-  WEB_AUTH_MAX_AUTH_PERIOD: process.env.WEB_AUTH_MAX_AUTH_PERIOD,
+  WEB_AUTH_AGE: process.env.WEB_AUTH_AGE || 1000 * 60 * 60, // 60 min by default
   WEB_PORT: process.env.WEB_PORT || 3003,
 
   WEB_TOKEN_KEY: process.env.WEB_TOKEN_KEY,

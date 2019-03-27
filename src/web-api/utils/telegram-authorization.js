@@ -1,5 +1,5 @@
 const { createHash, createHmac } = require('crypto');
-const { TELEGRAM_TOKEN, WEB_AUTH_MAX_AUTH_PERIOD } = require('../../config');
+const { TELEGRAM_TOKEN, WEB_AUTH_AGE } = require('../../config');
 
 const SHA_256_HASH_LENGTH = 64;
 
@@ -43,7 +43,7 @@ function validateAuthDate({ auth_date: dateInSeconds }) {
   const date = new Date(0);
   date.setSeconds(dateInSeconds);
 
-  if (Date.now() - date > WEB_AUTH_MAX_AUTH_PERIOD) throw new Error('Authentication expired');
+  if (Date.now() - date > WEB_AUTH_AGE) throw new Error('Authentication expired');
 }
 
 module.exports = function authorize(telegramAuthData) {

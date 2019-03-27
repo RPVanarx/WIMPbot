@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { WEB_TOKEN_KEY, WEB_AUTH_MAX_AUTH_PERIOD } = require('../../config');
+const { WEB_TOKEN_KEY, WEB_AUTH_AGE } = require('../../config');
 
 const algorithm = 'aes-256-cbc';
 
@@ -58,7 +58,7 @@ function create(id, date = new Date()) {
 function isDateExpired({ date }) {
   const age = Date.now() - date.getTime();
 
-  if (age > WEB_AUTH_MAX_AUTH_PERIOD) return true;
+  if (age > WEB_AUTH_AGE) return true;
 
   return false;
 }
