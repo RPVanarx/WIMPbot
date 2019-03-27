@@ -1,7 +1,8 @@
 const path = require('path');
 const busboy = require('busboy');
-const { createRequest, sendPhotoStream /* getTelegramUserName */ } = require('../../services');
+const cookies = require('../utils/cookies');
 const validator = require('../utils/validator');
+const { createRequest, sendPhotoStream /* getTelegramUserName */ } = require('../../services');
 const { isExpired, getUserCredentials } = require('../utils/web-token');
 
 const {
@@ -13,7 +14,7 @@ const {
   WEB_POST_FIELD_LENGTH_MAX,
 } = require('../../config');
 
-const POST_FIELDS_MAX = 4;
+const POST_FIELDS_MAX = 3;
 const POST_FILES_MAX = 1;
 const route = path.join(WEB_API_V1_PREFIX, SUFFIX);
 
@@ -24,19 +25,6 @@ function createCustomError(status, message, originalError = null) {
   if (originalError === null) error.originalError = originalError;
 
   return error;
-}
-
-async function formRequest(body, platformId, photo) {
-  return {
-    userName: 'fixme', // await getTelegramUserName(platformId),
-    platformId,
-    platformType: PLATFORM_TYPE_TELEGRAM,
-    requestType: REQUEST_TYPE_SEARCH,
-    longitude: body.lon,
-    latitude: body.lat,
-    photo,
-    message: body.msg,
-  };
 }
 
 function validateFields(reject, { msg, lon, lat }) {
@@ -68,6 +56,30 @@ function validateFormData(ctx, formData) {
   }
 
   ctx.assert(!errors.length, 400, errors.join(' '));
+}
+
+function validateToken(ctx, token) {
+  let isTokenExpired = null;
+  try {
+    isTokenExpired = isExpired(token);
+  } catch (err) {
+    ctx.throw(401, 'Invalid token!', { error: err });
+  }
+
+  if (isTokenExpired) ctx.throw(401, 'Token expired! Please sign in again!');
+}
+
+async function formRequest(body, platformId, photo) {
+  return {
+    userName: 'fixme', // await getTelegramUserName(platformId),
+    platformId,
+    platformType: PLATFORM_TYPE_TELEGRAM,
+    requestType: REQUEST_TYPE_SEARCH,
+    longitude: body.lon,
+    latitude: body.lat,
+    photo,
+    message: body.msg,
+  };
 }
 
 function readPostForm(ctx) {
@@ -149,23 +161,18 @@ function readPostForm(ctx) {
 }
 
 async function getRequest(ctx) {
+  const token = cookies.getToken(ctx);
+  validateToken(ctx, token);
+
+  const { id: platformId } = getUserCredentials(token);
+
   let formData = null;
   try {
     formData = await readPostForm(ctx);
   } catch (err) {
     ctx.throw(err.status, err.message, { error: err.error });
   }
-
   validateFormData(ctx, formData);
-  let isTokenExpired = null;
-  try {
-    isTokenExpired = isExpired(formData.token);
-  } catch (err) {
-    ctx.throw(401, 'Invalid token!', { error: err });
-  }
-  if (isTokenExpired) ctx.throw(401, 'Token expired!');
-
-  const { id: platformId } = getUserCredentials(formData.token);
 
   let photoId = null;
   try {
