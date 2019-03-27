@@ -1,14 +1,16 @@
 const path = require('path');
 const { getUserId } = require('../../services');
-const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 const { setError } = require('../utils/error-handling');
 const authorize = require('../utils/telegram-authorization');
 const { create: createToken } = require('../utils/web-token');
+const cookies = require('../utils/cookies');
+
+const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN, PLATFORM_TYPE_TELEGRAM } = require('../../config');
 
 const route = path.join(WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN);
 
-function formBody({ registered, token }) {
-  return { ...setError(), registered, token };
+function formBody({ registered }) {
+  return { ...setError(), registered };
 }
 
 async function handleRoute(ctx) {
@@ -36,7 +38,8 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot create token!', { error: err });
   }
 
-  ctx.body = formBody({ registered: !!wimpUserId, token });
+  cookies.setToken(ctx, token, true);
+  ctx.body = formBody({ registered: !!wimpUserId });
 }
 
 module.exports = ({ router }) => {
