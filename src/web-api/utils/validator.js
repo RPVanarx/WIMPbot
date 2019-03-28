@@ -50,9 +50,9 @@ module.exports = {
     return errors;
   },
 
-  requestFormPresence({ photoUploadPromise, msg, lon, lat }) {
+  requestFormPresence({ photo, msg, lon, lat }) {
     const errors = [];
-    if (!(photoUploadPromise instanceof Promise)) {
+    if (!(photo instanceof Promise)) {
       errors.push('No photo provided!');
     }
     return [...errors, ...requestFieldsPresenсeValidator.getErrors({ msg, lon, lat })];
