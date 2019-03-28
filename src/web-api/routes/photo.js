@@ -1,31 +1,17 @@
 const path = require('path');
-const { get } = require('https');
-const { getFileLink } = require('../../services');
+const photo = require('../../utils/photo');
 const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO: SUFFIX } = require('../../config');
-const { urlToId } = require('../utils/photo');
 
 const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
-
-function getPhoto(url) {
-  return new Promise((resolve, reject) => {
-    get(url, res => resolve(res)).on('error', error => reject(error));
-  });
-}
 
 async function handlePhotoRoute(ctx) {
   ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
 
-  const photoId = urlToId(ctx.href);
+  const photoId = path.basename(ctx.path);
 
   try {
-    const photoURL = await getFileLink(photoId);
-    const response = await getPhoto(photoURL);
-
-    ctx.type = response.headers['content-type'];
-    // TODO: some elegant way to shiff file type
-    if (ctx.type === 'application/octet-stream') ctx.type = 'image/jpeg';
-
-    ctx.body = response;
+    ctx.body = await photo.getPhotoStream(photoId);
+    ctx.type = 'image/jpeg';
   } catch (err) {
     if (err.code === 404) ctx.throw(404, 'Photo not found', { error: err });
 
