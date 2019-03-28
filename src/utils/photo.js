@@ -7,7 +7,7 @@ function getResponse(url) {
   });
 }
 
-async function getPhoto(photoId) {
+async function getPhotoStream(photoId) {
   const photoURL = await getFileLink(photoId);
   return getResponse(photoURL);
 }
@@ -18,6 +18,6 @@ async function sendPhotoStream(readStream) {
 }
 
 module.exports = {
-  getPhoto,
+  getPhotoStream,
   sendPhotoStream,
 };

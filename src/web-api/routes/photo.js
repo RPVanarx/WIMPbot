@@ -1,5 +1,6 @@
 const path = require('path');
 const photo = require('../../utils/photo');
+const { urlToId } = require('../utils/photo');
 const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO: SUFFIX } = require('../../config');
 
 const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
@@ -7,7 +8,7 @@ const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
 async function handlePhotoRoute(ctx) {
   ctx.assert(ctx.accepts('image/*'), 415, 'Client is not able to accept images!');
 
-  const photoId = path.basename(ctx.path);
+  const photoId = urlToId(ctx.href);
 
   try {
     ctx.body = await photo.getPhotoStream(photoId);
