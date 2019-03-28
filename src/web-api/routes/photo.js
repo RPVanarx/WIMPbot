@@ -1,6 +1,6 @@
 const path = require('path');
 const photo = require('../../utils/photo');
-const { urlToId } = require('../utils/photo');
+const { urlToId } = require('../utils/photo-url');
 const { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO: SUFFIX } = require('../../config');
 
 const routePhoto = path.join(WEB_API_V1_PREFIX, SUFFIX);
