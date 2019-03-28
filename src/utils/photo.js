@@ -1,5 +1,5 @@
 const { get } = require('https');
-const { getFileLink } = require('../services');
+const { getFileLink, sendPhotoStream: send } = require('../services');
 
 function getResponse(url) {
   return new Promise((resolve, reject) => {
@@ -13,8 +13,7 @@ async function getPhotoStream(photoId) {
 }
 
 async function sendPhotoStream(readStream) {
-  const id = 'some id'; // TODO: send real id
-  return id;
+  return send(readStream);
 }
 
 module.exports = {
