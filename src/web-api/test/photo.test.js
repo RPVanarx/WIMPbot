@@ -23,7 +23,7 @@ describe('/photo route test', () => {
     test(`should response with status 404 on GET ${route}/fake-photo.jpg`, async () => {
       const err = new Error('404: Not found');
       err.code = 404;
-      getFileLink.mockImplementation(() => Promise.reject(err));
+      getFileLink.mockImplementationOnce(() => Promise.reject(err));
       const response = await request(server).get(`${route}/fake-photo.jpg`);
       expect(response.status).toEqual(404);
     });
@@ -39,7 +39,7 @@ describe('/photo route test', () => {
 
   describe('Image test', () => {
     test(`should response with image`, async () => {
-      getFileLink.mockReturnValue(Promise.resolve('https://picsum.photos/300'));
+      getFileLink.mockImplementationOnce(() => Promise.resolve('https://picsum.photos/300'));
 
       const response = await request(server).get(`${route}/1`);
       expect(response.status).toEqual(200);
