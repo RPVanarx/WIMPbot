@@ -1,5 +1,7 @@
 const pino = require('pino');
 
+const level = process.env.NODE_ENV === 'test' ? 'silent' : 'trace';
+
 module.exports = (name = '', conf = { base: null }) => {
   let ns = name;
   if (ns) {
@@ -7,7 +9,7 @@ module.exports = (name = '', conf = { base: null }) => {
   }
   const options = Object.assign({}, conf, {
     name: ns[1],
-    level: 'trace',
+    level,
   });
   const log = pino(options);
   return log;
