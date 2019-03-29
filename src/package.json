@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node app.js",
+        "test": "jest",
         "test-web-api": "jest /web-api",
         "test-web-api-watch": "jest --watchAll /web-api"
     },
