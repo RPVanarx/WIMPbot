@@ -1,4 +1,3 @@
-const path = require('path');
 const request = require('supertest');
 const { koaApp } = require('../index.js');
 const webToken = require('../utils/web-token');
@@ -7,6 +6,9 @@ const { WEB_API_V1_PREFIX, WEB_API_PATH_REQUEST } = require('../../config');
 const server = koaApp.callback();
 const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_REQUEST}`;
 
+jest.mock('../../utils/photo');
+const { sendPhotoStream } = require('../../utils/photo');
+
 describe(`${WEB_API_PATH_REQUEST} route test`, () => {
   let fakeToken = null;
   beforeAll(() => {
@@ -14,6 +16,10 @@ describe(`${WEB_API_PATH_REQUEST} route test`, () => {
   });
   describe('Response test', () => {
     test(`should response with status 200 and proper JSON on valid request`, async () => {
+      sendPhotoStream.mockImplementationOnce(async readStream => {
+        readStream.resume();
+        return Promise.resolve('1');
+      });
       const response = await request(server)
         .post(route)
         .set('Cookie', [`token=${fakeToken}`])
