@@ -1,5 +1,6 @@
 const Router = require('koa-router');
 const signin = require('./signin');
+const signup = require('./signup');
 
 const { WEB_API_V1_PREFIX } = require('../../../config');
 
@@ -18,9 +19,11 @@ router.get('/', ctx => {
 router.use(signin.routes());
 router.use(signin.allowedMethods());
 
+router.use(signup.routes());
+router.use(signup.allowedMethods());
+
 // createRouter(require('./routes/photo'));
 // createRouter(require('./routes/requests'));
 // createRouter(require('./routes/request'));
-// createRouter(require('./routes/signup'));
 
 module.exports = router;

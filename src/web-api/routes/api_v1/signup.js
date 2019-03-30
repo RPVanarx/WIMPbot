@@ -1,17 +1,15 @@
-const path = require('path');
-const validator = require('../utils/validator');
-const cookies = require('../utils/cookies');
-const { registerUser } = require('../../services');
-const { setError } = require('../utils/error-handling');
-const { getUserCredentials, isExpired } = require('../utils/web-token');
+const Router = require('koa-router');
 
-const { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../config');
+const validator = require('../../utils/validator');
+const cookies = require('../../utils/cookies');
+const { registerUser } = require('../../../services');
+const { getUserCredentials, isExpired } = require('../../utils/web-token');
 
-const route = path.join(WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP);
+const { WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../../config');
 
-function formBody({ registered }) {
-  return { ...setError(), registered };
-}
+const router = new Router({
+  prefix: WEB_API_PATH_SIGNUP,
+});
 
 function validateQuery(ctx) {
   ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
@@ -38,12 +36,11 @@ function validateToken(ctx, token) {
 }
 
 function getPayload(ctx) {
-  validateQuery(ctx);
-
-  const { lat, lon } = ctx.request.query;
-
   const token = cookies.getToken(ctx);
   validateToken(ctx, token);
+
+  validateQuery(ctx);
+  const { lat, lon } = ctx.request.query;
 
   return {
     latitude: Number.parseFloat(lat),
@@ -69,9 +66,9 @@ async function handleRoute(ctx) {
     ctx.throw(500, 'Cannot register user!', { error: err });
   }
 
-  ctx.body = formBody({ registered: isRegistered });
+  ctx.body = { registered: isRegistered };
 }
 
-module.exports = ({ router }) => {
-  router.get(route, async ctx => handleRoute(ctx));
-};
+router.get('/', handleRoute);
+
+module.exports = router;
