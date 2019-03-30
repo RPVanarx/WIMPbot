@@ -35,7 +35,7 @@ describe(`${WEB_API_PATH_SIGNIN} route test`, () => {
       const response = await request(server).get(`${route}/aaa`);
       expect(response.status).toEqual(404);
     });
-    test(`should response with status 500 on getUserId()`, async () => {
+    test(`should response with status 500 on services error services`, async () => {
       authorize.mockImplementation(data => data);
       getUserId.mockImplementationOnce(() => Promise.reject(Error('>:)')));
       const response = await request(server).get(`${route}`);
