@@ -1,23 +1,26 @@
-const path = require('path');
-const multiparse = require('../utils/multipart-parser');
-const cookies = require('../utils/cookies');
-const validator = require('../utils/validator');
-const photoService = require('../../utils/photo');
-const { createRequest, /* getTelegramUserName */ } = require('../../services');
-const { isExpired, getUserCredentials } = require('../utils/web-token');
+const Router = require('koa-router');
+
+const multiparse = require('../../utils/multipart-parser');
+const cookies = require('../../utils/cookies');
+const validator = require('../../utils/validator');
+const photoService = require('../../../utils/photo');
+const { createRequest, /* getTelegramUserName */ } = require('../../../services');
+const { isExpired, getUserCredentials } = require('../../utils/web-token');
 
 const {
-  WEB_API_V1_PREFIX,
-  WEB_API_PATH_REQUEST: SUFFIX,
+  WEB_API_PATH_REQUEST,
   PLATFORM_TYPE_TELEGRAM,
   BUTTON_EVENT: { SEARCH: REQUEST_TYPE_SEARCH },
   WEB_PHOTO_FILE_SIZE_MAX,
   WEB_POST_FIELD_LENGTH_MAX,
-} = require('../../config');
+} = require('../../../config');
+
+const router = new Router({
+  prefix: WEB_API_PATH_REQUEST,
+});
 
 const POST_FIELDS_MAX = 3;
 const POST_FILES_MAX = 1;
-const route = path.join(WEB_API_V1_PREFIX, SUFFIX);
 
 function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) {
   let errors = [];
@@ -135,7 +138,7 @@ async function getRequest(ctx) {
   return formRequest(formData, platformId, photoId);
 }
 
-async function handlePost(ctx) {
+async function postRequest(ctx) {
   const request = await getRequest(ctx);
 
   let requestId;
@@ -148,6 +151,6 @@ async function handlePost(ctx) {
   ctx.body = { request: requestId.toString() };
 }
 
-module.exports = ({ router }) => {
-  router.post(route, async ctx => handlePost(ctx));
-};
+router.post('/', postRequest);
+
+module.exports = router;
