@@ -1,9 +1,8 @@
 const Router = require('koa-router');
 
 const authorize = require('../../utils/telegram-authorization');
-const cookies = require('../../utils/cookies');
+const token = require('../../middleware/token');
 const { getUserId } = require('../../../services');
-const { create: createToken } = require('../../utils/web-token');
 
 const { WEB_API_PATH_SIGNIN, PLATFORM_TYPE_TELEGRAM } = require('../../../config');
 
@@ -11,7 +10,7 @@ const router = new Router({
   prefix: WEB_API_PATH_SIGNIN,
 });
 
-async function signin(ctx) {
+async function signin(ctx, next) {
   const payload = { ...ctx.request.query };
   try {
     authorize(payload);
@@ -29,18 +28,13 @@ async function signin(ctx) {
     ctx.throw(500, 'Cannot get user ID!', { error: err });
   }
 
-  let token = null;
-  try {
-    token = createToken(payload.id);
-  } catch (err) {
-    ctx.throw(500, 'Cannot create token!', { error: err });
-  }
+  ctx.token = { id: payload.id };
 
-  cookies.setToken(ctx, token, true);
+  await next();
 
   ctx.body = { registered: !!wimpUserId };
 }
 
-router.get('/', signin);
+router.get('/', signin, token.set());
 
 module.exports = router;

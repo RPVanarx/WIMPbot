@@ -1,9 +1,8 @@
 const Router = require('koa-router');
 
+const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
-const cookies = require('../../utils/cookies');
 const { registerUser } = require('../../../services');
-const { getUserCredentials, isExpired } = require('../../utils/web-token');
 
 const { WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../../config');
 
@@ -24,40 +23,23 @@ function validateQuery(ctx) {
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
-function validateToken(ctx, token) {
-  let isTokenExpired = null;
-  try {
-    isTokenExpired = isExpired(token);
-  } catch (err) {
-    ctx.throw(401, 'Invalid token!', { error: err });
-  }
-
-  if (isTokenExpired) ctx.throw(401, 'Token expired! Please sign in again!');
-}
-
 function getPayload(ctx) {
-  const token = cookies.getToken(ctx);
-  validateToken(ctx, token);
-
   validateQuery(ctx);
   const { lat, lon } = ctx.request.query;
 
   return {
     latitude: Number.parseFloat(lat),
     longitude: Number.parseFloat(lon),
-    webToken: token,
   };
 }
 
 async function signup(ctx) {
-  const { longitude, latitude, webToken } = getPayload(ctx);
-
-  const { id: platformId } = getUserCredentials(webToken);
+  const { longitude, latitude } = getPayload(ctx);
 
   let isRegistered = false;
   try {
     isRegistered = await registerUser({
-      platformId,
+      platformId: ctx.token.id,
       platformType: PLATFORM_TYPE_TELEGRAM,
       longitude,
       latitude,
@@ -69,6 +51,6 @@ async function signup(ctx) {
   ctx.body = { registered: isRegistered };
 }
 
-router.get('/', signup);
+router.get('/', token.get(), signup);
 
 module.exports = router;

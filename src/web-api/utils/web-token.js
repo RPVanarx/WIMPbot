@@ -45,10 +45,10 @@ function unpackToken(packedToken) {
 
 function create(id, date = new Date()) {
   if (typeof id !== 'string') {
-    throw new TypeError('WEB-token: ID must be a string!');
+    throw new TypeError('Cannot create token! ID is not a string.');
   }
   if (id.length > idMaxLength) {
-    throw new Error(`WEB-token: ID is too long! Max: ${idMaxLength} characters`);
+    throw new Error(`Cannot create token! ID is too long. Max: ${idMaxLength} characters`);
   }
 
   const packedToken = packToken({ id, date });
@@ -67,19 +67,12 @@ function getUserCredentials(encryptedToken) {
   const packedToken = decrypt(encryptedToken);
   const token = unpackToken(packedToken);
 
-  if (isDateExpired(token)) throw new Error('WEB-token: token expired!');
+  if (isDateExpired(token)) throw new Error('Token expired! Please sign in again.');
 
   return token;
-}
-
-function isExpired(encryptedToken) {
-  const packedToken = decrypt(encryptedToken);
-  const token = unpackToken(packedToken);
-  return isDateExpired(token);
 }
 
 module.exports = {
   create,
   getUserCredentials,
-  isExpired,
 };

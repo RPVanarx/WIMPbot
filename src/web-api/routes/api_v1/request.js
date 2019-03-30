@@ -1,11 +1,10 @@
 const Router = require('koa-router');
 
 const multiparse = require('../../utils/multipart-parser');
-const cookies = require('../../utils/cookies');
+const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const photoService = require('../../../utils/photo');
 const { createRequest, /* getTelegramUserName */ } = require('../../../services');
-const { isExpired, getUserCredentials } = require('../../utils/web-token');
 
 const {
   WEB_API_PATH_REQUEST,
@@ -33,20 +32,9 @@ function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) 
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
-function validateToken(ctx, token) {
-  let isTokenExpired = null;
-  try {
-    isTokenExpired = isExpired(token);
-  } catch (err) {
-    ctx.throw(401, 'Invalid token!', { error: err });
-  }
-
-  if (isTokenExpired) ctx.throw(401, 'Token expired! Please sign in again!');
-}
-
 async function formRequest({ fields: { lon, lat, msg } }, platformId, photo) {
   return {
-    userName: 'fixme', // await getTelegramUserName(platformId),
+    userName: 'fixme', // FIXME: await getTelegramUserName(platformId),
     platformId,
     platformType: PLATFORM_TYPE_TELEGRAM,
     requestType: REQUEST_TYPE_SEARCH,
@@ -110,10 +98,7 @@ async function readPostForm(ctx) {
 }
 
 async function getRequest(ctx) {
-  const token = cookies.getToken(ctx);
-  validateToken(ctx, token);
-
-  const { id: platformId } = getUserCredentials(token);
+  const { id: platformId } = ctx.token.id;
 
   let formData = null;
   try {
@@ -151,6 +136,6 @@ async function postRequest(ctx) {
   ctx.body = { request: requestId.toString() };
 }
 
-router.post('/', postRequest);
+router.post('/', token.get(), postRequest);
 
 module.exports = router;
