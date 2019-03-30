@@ -1,18 +1,19 @@
-const path = require('path');
-const validator = require('../utils/validator');
-const { getRequestsInArea } = require('../../services');
-const { setError } = require('../utils/error-handling');
-const { idToUrl } = require('../utils/photo-url');
+const Router = require('koa-router');
+
+const validator = require('../../utils/validator');
+const { getRequestsInArea } = require('../../../services');
 
 const {
-  WEB_API_V1_PREFIX,
   DEFAULT_VALUES,
+  WEB_API_V1_PREFIX,
+  WEB_API_PATH_PHOTO,
   WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
   WEB_API_PATH_LIST: LIST_SUFFIX,
-} = require('../../config');
+} = require('../../../config');
 
-const routeRequests = path.join(WEB_API_V1_PREFIX, REQUEST_SUFFIX);
-const routeList = path.join(routeRequests, LIST_SUFFIX);
+const router = new Router({
+  prefix: REQUEST_SUFFIX + LIST_SUFFIX,
+});
 
 function validateQuery(ctx) {
   ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
@@ -29,18 +30,10 @@ function validateQuery(ctx) {
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
-function getPhotoUrl(photoId, ctx) {
-  const photoUrlPath = new URL(ctx.origin);
-  photoUrlPath.pathname = path.join(WEB_API_V1_PREFIX, '/photo');
-
-  let photoURL = '';
-  try {
-    photoURL = idToUrl(photoId, photoUrlPath.href);
-  } catch (err) {
-    ctx.app.emit('error', err, ctx);
-  }
-
-  return photoURL;
+function getPhotoUrl(photoId, { origin }) {
+  const photoUrlPath = new URL(origin);
+  photoUrlPath.pathname = WEB_API_V1_PREFIX + WEB_API_PATH_PHOTO + photoId;
+  return photoUrlPath;
 }
 
 function convertToResponse(dbRequests, ctx) {
@@ -59,12 +52,6 @@ function convertToResponse(dbRequests, ctx) {
   });
 }
 
-function formBody(requests) {
-  const body = setError();
-  body.requests = requests;
-  return body;
-}
-
 function getRequests({ r, d, lon, lat }) {
   const payload = {
     latitude: Number.parseFloat(lat),
@@ -76,18 +63,18 @@ function getRequests({ r, d, lon, lat }) {
   return getRequestsInArea(payload) || [];
 }
 
-async function setResponse(ctx) {
+async function getList(ctx) {
   validateQuery(ctx);
 
   try {
     const dbRequests = await getRequests(ctx.request.query);
     const resRequests = convertToResponse(dbRequests, ctx);
-    ctx.body = formBody(resRequests);
+    ctx.body = { requests: resRequests };
   } catch (err) {
     ctx.throw(500, 'Cannot get requests', { error: err });
   }
 }
 
-module.exports = ({ router }) => {
-  router.get(routeList, async ctx => setResponse(ctx));
-};
+router.get('/', getList);
+
+module.exports = router;

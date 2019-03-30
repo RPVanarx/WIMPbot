@@ -1,5 +1,6 @@
 const Router = require('koa-router');
 const photo = require('./photo');
+const requests = require('./requests');
 const signin = require('./signin');
 const signup = require('./signup');
 
@@ -18,10 +19,10 @@ router.get('/', ctx => {
 });
 
 router.use(photo.routes()).use(photo.allowedMethods());
+router.use(requests.routes()).use(requests.allowedMethods());
 router.use(signin.routes()).use(signin.allowedMethods());
 router.use(signup.routes()).use(signup.allowedMethods());
 
-// createRouter(require('./routes/requests'));
 // createRouter(require('./routes/request'));
 
 module.exports = router;
