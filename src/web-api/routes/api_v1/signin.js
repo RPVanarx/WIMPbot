@@ -11,7 +11,7 @@ const router = new Router({
   prefix: WEB_API_PATH_SIGNIN,
 });
 
-async function setResponse(ctx) {
+async function signin(ctx) {
   const payload = { ...ctx.request.query };
   try {
     authorize(payload);
@@ -41,6 +41,6 @@ async function setResponse(ctx) {
   ctx.body = { registered: !!wimpUserId };
 }
 
-router.get('/', setResponse);
+router.get('/', signin);
 
 module.exports = router;

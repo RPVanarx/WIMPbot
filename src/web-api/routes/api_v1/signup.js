@@ -49,7 +49,7 @@ function getPayload(ctx) {
   };
 }
 
-async function handleRoute(ctx) {
+async function signup(ctx) {
   const { longitude, latitude, webToken } = getPayload(ctx);
 
   const { id: platformId } = getUserCredentials(webToken);
@@ -69,6 +69,6 @@ async function handleRoute(ctx) {
   ctx.body = { registered: isRegistered };
 }
 
-router.get('/', handleRoute);
+router.get('/', signup);
 
 module.exports = router;
