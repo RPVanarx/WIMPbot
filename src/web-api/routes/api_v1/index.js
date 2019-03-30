@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const photo = require('./photo');
 const signin = require('./signin');
 const signup = require('./signup');
 
@@ -16,13 +17,10 @@ router.get('/', ctx => {
   };
 });
 
-router.use(signin.routes());
-router.use(signin.allowedMethods());
+router.use(photo.routes()).use(photo.allowedMethods());
+router.use(signin.routes()).use(signin.allowedMethods());
+router.use(signup.routes()).use(signup.allowedMethods());
 
-router.use(signup.routes());
-router.use(signup.allowedMethods());
-
-// createRouter(require('./routes/photo'));
 // createRouter(require('./routes/requests'));
 // createRouter(require('./routes/request'));
 
