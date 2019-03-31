@@ -36,15 +36,19 @@ stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene
 bot.start(ctx => ctx.reply(WELCOME_MESSAGE, startRegistrationButton));
 
 bot.action(REGISTRATION_MENU, async ctx => {
-  ctx.reply(
-    REGISTRATION_MENU_MESSAGE,
-    registrationMenu(
-      await getUserActivity({
-        platformId: ctx.update.callback_query.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
-      }),
-    ),
-  );
+  try {
+    ctx.reply(
+      REGISTRATION_MENU_MESSAGE,
+      registrationMenu(
+        await getUserActivity({
+          platformId: ctx.update.callback_query.from.id,
+          platformType: PLATFORM_TYPE_TELEGRAM,
+        }),
+      ),
+    );
+  } catch (error) {
+    log.error({ err: error.message, reqId: ctx.state.reqId }, 'callbackHandler registration menu');
+  }
 });
 
 bot.action(REQUEST_MENU, ctx => ctx.reply(REQUEST_MENU_MESSAGE, requestMenu));
@@ -68,10 +72,7 @@ callbackHandler.on('deleteRequest', async ctx => {
     await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
   } catch (error) {
-    log.error(
-      { err: error.message, from: ctx.from.id, reqId: ctx.state.reqId },
-      'callbackHandler deleteRequest',
-    );
+    log.error({ err: error.message, reqId: ctx.state.reqId }, 'callbackHandler deleteRequest');
   }
 });
 

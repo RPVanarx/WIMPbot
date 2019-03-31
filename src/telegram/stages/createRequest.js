@@ -31,7 +31,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
       return ctx.scene.leave();
     } catch (error) {
-      log.error({ err: error.message, from: ctx.from.id }, 'await badRequestCount');
+      log.error({ err: error.message }, 'await badRequestCount');
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
@@ -77,6 +77,14 @@ const scene = new WizardScene(
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
+    if (ctx.message.text.length > 1000) {
+      ctx.reply(
+        'Ваше повідомлення перевищує 1000 символів, скоротіть його та спробуйте ще раз',
+        mainMenu,
+      );
+      delete ctx.session.userMessage;
+      return ctx.scene.leave();
+    }
     try {
       const request = {
         platformId: ctx.message.from.id,
@@ -94,7 +102,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-      log.error({ err: error.message, from: ctx.from.id }, 'createRequestScene');
+      log.error({ err: error.message }, 'createRequestScene');
     }
     delete ctx.session.userMessage;
     return ctx.scene.leave();

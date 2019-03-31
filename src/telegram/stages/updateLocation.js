@@ -30,7 +30,7 @@ const scene = new WizardScene(
       ctx.reply(UPDATE_LOCATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
-      log.error({ err: error.message, from: ctx.from.id }, 'UpdateLocationScene');
+      log.error({ err: error.message }, 'UpdateLocationScene');
     }
     return ctx.scene.leave();
   },

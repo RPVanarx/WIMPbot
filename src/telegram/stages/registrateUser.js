@@ -29,7 +29,7 @@ const scene = new WizardScene(
       ctx.reply(REGISTRATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
-      log.error({ err: error.message, from: ctx.from.id }, 'registrateUserScene');
+      log.error({ err: error.message }, 'registrateUserScene');
     }
     return ctx.scene.leave();
   },

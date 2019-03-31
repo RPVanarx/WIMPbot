@@ -28,7 +28,7 @@ const scene = new WizardScene(
       ctx.reply(DEACTIVATE_USER.TRUE, mainMenu);
     } catch (error) {
       ctx.reply(DEACTIVATE_USER.FALSE, mainMenu);
-      log.error({ err: error.message, from: ctx.from.id }, 'deactivateUserScene');
+      log.error({ err: error.message }, 'deactivateUserScene');
     }
     return ctx.scene.leave();
   },
