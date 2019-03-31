@@ -4,7 +4,7 @@ const multiparse = require('../../utils/multipart-parser');
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const photoService = require('../../../utils/photo');
-const { createRequest, /* getTelegramUserName */ } = require('../../../services');
+const { createRequest /* getTelegramUserName */ } = require('../../../services');
 
 const {
   WEB_API_PATH_REQUEST,
@@ -22,13 +22,7 @@ const POST_FIELDS_MAX = 3;
 const POST_FILES_MAX = 1;
 
 function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) {
-  let errors = [];
-  try {
-    errors = validator.requestFormPresence({ msg, lon, lat, photo });
-  } catch (err) {
-    ctx.throw(500, 'POST file validation failed!', { error: err });
-  }
-
+  const errors = validator.requestFormPresence({ msg, lon, lat, photo });
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
@@ -45,39 +39,27 @@ async function formRequest({ fields: { lon, lat, msg } }, platformId, photo) {
   };
 }
 
+function throwValidationErrors(errors) {
+  const err = new Error(errors.join(' '));
+  err.status = 400;
+  throw err;
+}
+
 function onFile(fieldName, stream, fileName, encoding, mimeType) {
-  let errors = [];
-  try {
-    errors = validator.photoUpload({ fieldName, type: mimeType });
-  } catch (err) {
-    stream.resume();
-    throw new Error('POST file validation failed!', err);
-  }
+  const errors = validator.photoUpload({ fieldName, type: mimeType });
 
   if (errors.length) {
-    const err = new Error(errors.join(' '));
-    err.status = 400;
-
     stream.resume();
-    throw err;
+    throwValidationErrors(errors);
   }
 
   return photoService.sendPhotoStream(stream);
 }
 
 function onField(name, value) {
-  let errors = [];
-  try {
-    errors = validator.requestFormFieldsOptional({ [name]: value });
-  } catch (err) {
-    throw new Error('POST file validation failed!', err);
-  }
+  const errors = validator.requestFormFieldsOptional({ [name]: value });
 
-  if (errors.length) {
-    const err = new Error(errors.join(' '));
-    err.status = 400;
-    throw err;
-  }
+  if (errors.length) throwValidationErrors(errors);
 
   return value;
 }
@@ -112,12 +94,8 @@ async function getRequest(ctx) {
   try {
     photoId = await formData.files.photo;
   } catch (err) {
-    if (err.code === 400) {
-      if (err.message && err.message.endsWith('IMAGE_PROCESS_FAILED')) {
-        ctx.throw(err.code, `Invalid image!`, { error: err });
-      }
-      ctx.throw(err.code, err.message, { error: err });
-    }
+    if (err.code === 400) ctx.throw(err.code, `Invalid image!`, { error: err });
+
     ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
   return formRequest(formData, platformId, photoId);

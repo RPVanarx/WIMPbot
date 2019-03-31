@@ -11,15 +11,7 @@ const router = new Router({
 });
 
 function validateQuery(ctx) {
-  ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
-
-  const { lat, lon } = ctx.request.query;
-  let errors = [];
-  try {
-    errors = validator.signupQuery({ lon, lat });
-  } catch (err) {
-    ctx.throw(500, 'Signup query validation failed!', { error: err });
-  }
+  const errors = validator.signupQuery(ctx.request.query);
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 

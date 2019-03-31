@@ -16,17 +16,8 @@ const router = new Router({
 });
 
 function validateQuery(ctx) {
-  ctx.assert(ctx.request.query, 400, 'Query parameters not found!');
-
-  const { r = DEFAULT_VALUES.RADIUS, d, lon, lat } = ctx.request.query;
-
-  let errors = [];
-  try {
-    errors = validator.listQuery({ r, d, lon, lat });
-  } catch (err) {
-    ctx.throw(500, 'List query validation failed!', { error: err });
-  }
-
+  ctx.request.query.r = ctx.request.query.r || DEFAULT_VALUES.RADIUS;
+  const errors = validator.listQuery(ctx.request.query);
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
