@@ -5,6 +5,7 @@ const {
   PLATFORM_TYPE_TELEGRAM,
   MODERATOR_GROUP_ID,
   BUTTON_EVENT,
+  DEFAULT_VALUES: { REQUEST_MESSAGE_MAX: textLimit },
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, isUserCanCreateRequest } = require('../../services');
@@ -77,11 +78,8 @@ const scene = new WizardScene(
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
-    if (ctx.message.text.length > 1000) {
-      ctx.reply(
-        'Ваше повідомлення перевищує 1000 символів, скоротіть його та спробуйте ще раз',
-        mainMenu,
-      );
+    if (ctx.message.text.length > textLimit) {
+      ctx.reply(CREATE_REQUEST_MESSAGES.MANY_LETTERS, mainMenu);
       delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
