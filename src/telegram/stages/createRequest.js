@@ -15,6 +15,7 @@ const log = require('../../logger')(__filename);
 const scene = new WizardScene(
   name,
   async ctx => {
+    delete ctx.session.userMessage;
     if (!ctx.update.callback_query.from.username) {
       ctx.reply(CREATE_REQUEST_MESSAGES.NO_USER_NAME, mainMenu);
       return ctx.scene.leave();
@@ -47,9 +48,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.PHOTO);
       return ctx.wizard.next();
     }
-
     ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   ctx => {
@@ -59,7 +58,6 @@ const scene = new WizardScene(
       return ctx.wizard.next();
     }
     ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   ctx => {
@@ -69,18 +67,15 @@ const scene = new WizardScene(
       return ctx.wizard.next();
     }
     ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.text) {
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-      delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
     if (ctx.message.text.length > textLimit) {
       ctx.reply(CREATE_REQUEST_MESSAGES.MANY_LETTERS, mainMenu);
-      delete ctx.session.userMessage;
       return ctx.scene.leave();
     }
     try {
@@ -102,7 +97,6 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       log.error({ err: error.message }, 'createRequestScene');
     }
-    delete ctx.session.userMessage;
     return ctx.scene.leave();
   },
 );

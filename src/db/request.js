@@ -57,7 +57,7 @@ async function search({ platformId, platformType, radius, days }) {
 
 async function searchInArea({ longitude, latitude, radius, days }) {
   return (await client.query(
-    `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, u.user_name, u.platform_type 
+    `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, r.location, u.user_name, u.platform_type 
     FROM requests AS r, users AS u 
     WHERE (point($1, $2) <@> r.location) <= $3/1609.34 
     AND u.id = r.user_id 

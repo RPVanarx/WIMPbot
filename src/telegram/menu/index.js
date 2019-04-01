@@ -3,6 +3,8 @@ const {
   MAIN_BUTTONS,
   REGISTRATION_BUTTONS,
   REQUESTS_BUTTONS,
+  FIND_REQUESTS_BUTTON,
+  FIND_REQUESTS_MESSAGES: { CB_NEW_LOCATION, CB_REGISTRATE_LOCATION },
   BUTTON_EVENT,
   EVENT_NAMES,
   BUTTON_MESSAGES,
@@ -54,6 +56,13 @@ const searchFoundMenu = Extra.HTML().markup(message =>
   ]),
 );
 
+const newOrRegistrateLocation = Extra.HTML().markup(message =>
+  message.inlineKeyboard([
+    [message.callbackButton(FIND_REQUESTS_BUTTON.USE_REG_LOCATION, CB_REGISTRATE_LOCATION)],
+    [message.callbackButton(FIND_REQUESTS_BUTTON.USE_NEW_LOCATION, CB_NEW_LOCATION)],
+  ]),
+);
+
 module.exports = {
   mainMenu,
   registrationMenu,
@@ -61,4 +70,5 @@ module.exports = {
   yesNoQuestion,
   startRegistrationButton,
   searchFoundMenu,
+  newOrRegistrateLocation,
 };
