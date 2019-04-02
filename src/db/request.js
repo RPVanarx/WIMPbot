@@ -87,6 +87,20 @@ async function changeActiveStatus({ reqId, status, moderatorId }) {
   return Object.assign(request, userReq);
 }
 
+async function get(requestId) {
+  const response = await client.query(
+    `SELECT r.id, r.request_type, r.photo, r.message, r.creation_date, r.location, u.user_name, u.platform_type 
+    FROM requests AS r, users AS u 
+    WHERE r.id = $1 
+    AND u.id = r.user_id`,
+    [requestId],
+  );
+
+  if (!response.rows.length) return undefined;
+
+  return response.rows[0];
+}
+
 module.exports = {
   create,
   getRequestsToDelete,
@@ -94,4 +108,5 @@ module.exports = {
   search,
   searchInArea,
   changeActiveStatus,
+  get,
 };
