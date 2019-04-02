@@ -35,9 +35,7 @@ describe('/requests/list route test', () => {
       expect(response.headers['content-type']).toContain('application/json');
 
       const json = JSON.parse(response.text);
-      expect(json).toHaveProperty('error');
       expect(json).toHaveProperty('requests');
-      expect(json.error).not.toBeTruthy();
       expect(Array.isArray(json.requests)).toBeTruthy();
     });
   });
