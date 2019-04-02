@@ -3,20 +3,20 @@ const { CREATE_MESSAGE_TEXTS, MODER_BUTTON, MODERATOR_GROUP_ID } = require('../c
 
 function createMessage(request) {
   return `${CREATE_MESSAGE_TEXTS.TYPE} ${
-    request.requestType === 'search'
+    request.request_type === 'search'
       ? CREATE_MESSAGE_TEXTS.ANSWER_SEARCH
       : CREATE_MESSAGE_TEXTS.ANSWER_FOUND
   }
 ${CREATE_MESSAGE_TEXTS.PLATFORM} ${
-    request.platformType === 'telegram'
+    request.platform_type === 'telegram'
       ? CREATE_MESSAGE_TEXTS.PLATFORM_TELEGRAM
       : CREATE_MESSAGE_TEXTS.PLATFORM_VIBER
   }
-${CREATE_MESSAGE_TEXTS.SENDER} ${request.platformType === 'telegram' ? '@' : ''}${request.userName}
-${CREATE_MESSAGE_TEXTS.DATE} ${request.creationDate.toLocaleString()}
+${CREATE_MESSAGE_TEXTS.SENDER} ${request.platform_type === 'telegram' ? '@' : ''}${request.user_name}
+${CREATE_MESSAGE_TEXTS.DATE} ${request.creation_date.toLocaleString()}
 ${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}
-${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.BASE_LINE}${request.latitude},${
-    request.longitude
+${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.BASE_LINE}${request.location.x},${
+    request.location.y
   })`;
 }
 
@@ -45,13 +45,13 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
         [
           {
             text: MODER_BUTTON.APPROVE,
-            callback_data: MODER_BUTTON.CB_MODERATE + request.reqId + MODER_BUTTON.CB_TRUE,
+            callback_data: MODER_BUTTON.CB_MODERATE + request.id + MODER_BUTTON.CB_TRUE,
           },
         ],
         [
           {
             text: MODER_BUTTON.DECLINE,
-            callback_data: MODER_BUTTON.CB_MODERATE + request.reqId + MODER_BUTTON.CB_FALSE,
+            callback_data: MODER_BUTTON.CB_MODERATE + request.id + MODER_BUTTON.CB_FALSE,
           },
         ],
       ],
@@ -70,10 +70,11 @@ function getFileLink(id) {
 }
 
 async function sendPhotoStream(readStream) {
-  const newPhotoId = await bot.telegram.sendPhoto(MODERATOR_GROUP_ID, {
-    source: readStream,
-    disable_notification: true,
-  });
+  const newPhotoId = await bot.telegram.sendPhoto(
+    MODERATOR_GROUP_ID,
+    { source: readStream },
+    { disable_notification: true },
+  );
   bot.telegram.deleteMessage(MODERATOR_GROUP_ID, newPhotoId.message_id);
   return newPhotoId.photo[newPhotoId.photo.length - 1].file_id;
 }
