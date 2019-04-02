@@ -41,11 +41,6 @@ describe(`${WEB_API_PATH_SIGNIN} route test`, () => {
       const response = await request(server).get(`${route}`);
       expect(response.status).toEqual(500);
     });
-    test(`should response with status 500 on impossible ID`, async () => {
-      getUserId.mockImplementationOnce(() => Promise.resolve(Number.NaN));
-      const response = await request(server).get(`${route}`);
-      expect(response.status).toEqual(500);
-    });
   });
 
   describe('Response test', () => {

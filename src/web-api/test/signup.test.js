@@ -10,7 +10,7 @@ describe('/signup route test', () => {
   let fakeToken;
   let validFakeRequest;
   beforeAll(() => {
-    fakeToken = webToken.create('0');
+    fakeToken = webToken.put({ id: '0', name: 'dummy' });
     validFakeRequest = `${route}?lon=2&lat=3`;
   });
 

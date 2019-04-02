@@ -9,29 +9,26 @@ function set() {
   if (Number.isNaN(maxAge)) throw new TypeError('WEB_AUTH_AGE must be a number!');
 
   return async (ctx, next) => {
-    ctx.assert(ctx.token && ctx.token.id, 500, 'Token set error!');
+    ctx.assert(ctx.chest, 500, 'Token set error! No chest found!');
 
-    const encryptedToken = webToken.create(ctx.token.id);
-
+    const encryptedToken = webToken.put(ctx.chest);
     ctx.cookies.set(FIELD_TOKEN, encryptedToken, { maxAge, overwrite: true });
-
-    ctx.token = { ...ctx.token, token: encryptedToken };
     await next();
   };
 }
 
 function get() {
-  let decryptedToken;
+  let chest;
 
   return async (ctx, next) => {
-    const encryptedToken = ctx.cookies.get(FIELD_TOKEN);
+    const token = ctx.cookies.get(FIELD_TOKEN);
     try {
-      decryptedToken = webToken.getUserCredentials(encryptedToken);
+      chest = webToken.get(token);
     } catch (err) {
       ctx.throw(401, 'Invalid token!', { error: err });
     }
 
-    ctx.token = { id: decryptedToken.id, token: encryptedToken };
+    ctx.chest = chest;
     await next();
   };
 }

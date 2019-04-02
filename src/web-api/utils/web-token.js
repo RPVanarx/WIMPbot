@@ -4,7 +4,6 @@ const { WEB_TOKEN_KEY, WEB_AUTH_AGE } = require('../../config');
 const algorithm = 'aes-256-cbc';
 
 const ivSize = 16; // aes-256 = 256b = 16B
-const idMaxLength = 64; // 18 - Telegram's max
 
 function getKeyHash() {
   const hash = crypto.createHash('sha256');
@@ -33,8 +32,8 @@ function decrypt(encryptedToken) {
   return decipher.update(encryptedData, 'utf8') + decipher.final('utf8');
 }
 
-function packToken({ id, date }) {
-  return JSON.stringify({ id, date: date.getTime() });
+function packToken({ chest, date }) {
+  return JSON.stringify({ chest, date: date.getTime() });
 }
 
 function unpackToken(packedToken) {
@@ -43,15 +42,8 @@ function unpackToken(packedToken) {
   return token;
 }
 
-function create(id, date = new Date()) {
-  if (typeof id !== 'string') {
-    throw new TypeError('Cannot create token! ID is not a string.');
-  }
-  if (id.length > idMaxLength) {
-    throw new Error(`Cannot create token! ID is too long. Max: ${idMaxLength} characters`);
-  }
-
-  const packedToken = packToken({ id, date });
+function put(chest, date = new Date()) {
+  const packedToken = packToken({ chest, date });
   return encrypt(packedToken);
 }
 
@@ -63,16 +55,16 @@ function isDateExpired({ date }) {
   return false;
 }
 
-function getUserCredentials(encryptedToken) {
+function get(encryptedToken) {
   const packedToken = decrypt(encryptedToken);
   const token = unpackToken(packedToken);
 
   if (isDateExpired(token)) throw new Error('Token expired! Please sign in again.');
 
-  return token;
+  return token.chest;
 }
 
 module.exports = {
-  create,
-  getUserCredentials,
+  put,
+  get,
 };

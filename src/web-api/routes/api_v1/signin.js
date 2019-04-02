@@ -28,7 +28,7 @@ async function signin(ctx, next) {
     ctx.throw(500, 'Cannot get user ID!', { error: err });
   }
 
-  ctx.token = { id: payload.id };
+  ctx.chest = { id: payload.id, name: payload.username };
 
   await next();
 
