@@ -15,8 +15,8 @@ ${CREATE_MESSAGE_TEXTS.PLATFORM} ${
 ${CREATE_MESSAGE_TEXTS.SENDER} ${request.platform_type === 'telegram' ? '@' : ''}${request.user_name}
 ${CREATE_MESSAGE_TEXTS.DATE} ${request.creation_date.toLocaleString()}
 ${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}
-${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.BASE_LINE}${request.location.x},${
-    request.location.y
+${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.BASE_LINE}${request.location.y},${
+    request.location.x
   })`;
 }
 
@@ -25,15 +25,7 @@ function sendPhotoMessage({ request, chatId }) {
     // reply_markup: {
     //   inline_keyboard: [[{ text: 'дати коментар', callback_data: `comment:${request.reqId}` }]],
     // },
-    caption: createMessage({
-      requestType: request.request_type,
-      platformType: request.platform_type,
-      userName: request.user_name,
-      creationDate: request.creation_date,
-      message: request.message,
-      latitude: request.location.y,
-      longitude: request.location.x,
-    }),
+    caption: createMessage(request),
     parse_mode: 'Markdown',
   });
 }
