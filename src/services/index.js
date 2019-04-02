@@ -4,8 +4,9 @@ const {
   sendMessage,
   getFileLink,
   sendPhotoStream,
+  sendPhotoMessageToModerate,
 } = require('../telegram/addFunctions');
-const { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES } = require('../config');
+const { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES, MODERATOR_GROUP_ID } = require('../config');
 const log = require('../logger')(__filename);
 
 function registerUser({ platformId, platformType, latitude, longitude }) {
@@ -91,6 +92,11 @@ async function isUserCanCreateRequest({ platformId, platformType }) {
   return true;
 }
 
+async function moderateRequest(requestId) {
+  const req = await request.get(requestId);
+  sendPhotoMessageToModerate({ request: req, moderatorId: MODERATOR_GROUP_ID });
+}
+
 module.exports = {
   registerUser,
   changeUserActivity,
@@ -109,4 +115,5 @@ module.exports = {
   getTimeOfLastRequestFromUser,
   setBadRequestCountZero,
   isUserCanCreateRequest,
+  moderateRequest,
 };

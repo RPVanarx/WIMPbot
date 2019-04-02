@@ -4,7 +4,7 @@ const multiparse = require('../../utils/multipart-parser');
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const photoService = require('../../../utils/photo');
-const { createRequest /* getTelegramUserName */ } = require('../../../services');
+const { createRequest, moderateRequest } = require('../../../services');
 
 const {
   WEB_API_PATH_REQUEST,
@@ -26,9 +26,9 @@ function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) 
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
-async function formRequest({ fields: { lon, lat, msg } }, platformId, photo) {
+async function formRequest({ fields: { lon, lat, msg } }, platformId, userName, photo) {
   return {
-    userName: 'fixme', // FIXME: await getTelegramUserName(platformId),
+    userName,
     platformId,
     platformType: PLATFORM_TYPE_TELEGRAM,
     requestType: REQUEST_TYPE_SEARCH,
@@ -80,8 +80,6 @@ async function readPostForm(ctx) {
 }
 
 async function getRequest(ctx) {
-  const { id: platformId } = ctx.token.id;
-
   let formData = null;
   try {
     formData = await readPostForm(ctx);
@@ -98,7 +96,9 @@ async function getRequest(ctx) {
 
     ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
-  return formRequest(formData, platformId, photoId);
+
+  const { id: platformId, name: userName } = ctx.chest;
+  return formRequest(formData, platformId, userName, photoId);
 }
 
 async function postRequest(ctx) {
@@ -110,7 +110,13 @@ async function postRequest(ctx) {
   } catch (err) {
     ctx.throw(500, 'Cannot create request!', { error: err });
   }
-  // TODO: start moderation process
+
+  try {
+    await moderateRequest(requestId);
+  } catch (err) {
+    ctx.throw(500, 'Cannot start moderation process!', { error: err });
+  }
+
   ctx.body = { request: requestId.toString() };
 }
 

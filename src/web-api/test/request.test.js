@@ -12,7 +12,7 @@ const { sendPhotoStream } = require('../../utils/photo');
 describe(`${WEB_API_PATH_REQUEST} route test`, () => {
   let fakeToken = null;
   beforeAll(() => {
-    fakeToken = webToken.create('0');
+    fakeToken = webToken.put({ id: 0, name: 'dummy' });
   });
   describe('Response test', () => {
     test(`should response with status 200 and proper JSON on valid request`, async () => {

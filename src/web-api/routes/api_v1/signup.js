@@ -31,7 +31,7 @@ async function signup(ctx) {
   let isRegistered = false;
   try {
     isRegistered = await registerUser({
-      platformId: ctx.token.id,
+      platformId: ctx.chest.id,
       platformType: PLATFORM_TYPE_TELEGRAM,
       longitude,
       latitude,
