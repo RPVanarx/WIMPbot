@@ -21,8 +21,13 @@ function getUserId({ platformId, platformType }) {
   return user.getId({ platformId, platformType });
 }
 
-function createRequest(req) {
-  return request.create(req);
+async function createRequest(req) {
+  const id = await request.create(req);
+  await sendPhotoMessageToModerate({
+    request: { ...req, reqId: id, creationDate: new Date() },
+    moderatorId: MODERATOR_GROUP_ID,
+  });
+  return id;
 }
 
 function getUserRequests({ platformId, platformType }) {
@@ -92,10 +97,10 @@ async function isUserCanCreateRequest({ platformId, platformType }) {
   return true;
 }
 
-async function moderateRequest(requestId) {
-  const req = await request.get(requestId);
-  sendPhotoMessageToModerate({ request: req, moderatorId: MODERATOR_GROUP_ID });
-}
+// async function moderateRequest(requestId) {
+//   const req = await request.get(requestId);
+//   sendPhotoMessageToModerate({ request: req, moderatorId: MODERATOR_GROUP_ID });
+// }
 
 module.exports = {
   registerUser,
@@ -115,5 +120,5 @@ module.exports = {
   getTimeOfLastRequestFromUser,
   setBadRequestCountZero,
   isUserCanCreateRequest,
-  moderateRequest,
+  // moderateRequest,
 };
