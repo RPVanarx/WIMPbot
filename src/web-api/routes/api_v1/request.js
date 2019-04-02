@@ -4,7 +4,7 @@ const multiparse = require('../../utils/multipart-parser');
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const photoService = require('../../../utils/photo');
-const { createRequest /* getTelegramUserName */ } = require('../../../services');
+const { createRequest, moderateRequest, /* getTelegramUserName */ } = require('../../../services');
 
 const {
   WEB_API_PATH_REQUEST,
@@ -80,7 +80,7 @@ async function readPostForm(ctx) {
 }
 
 async function getRequest(ctx) {
-  const { id: platformId } = ctx.token.id;
+  const { id: platformId } = ctx.token;
 
   let formData = null;
   try {
@@ -110,7 +110,13 @@ async function postRequest(ctx) {
   } catch (err) {
     ctx.throw(500, 'Cannot create request!', { error: err });
   }
-  // TODO: start moderation process
+
+  try {
+    await moderateRequest(requestId);
+  } catch (err) {
+    ctx.throw(500, 'Cannot start moderation process!', { error: err });
+  }
+
   ctx.body = { request: requestId.toString() };
 }
 
