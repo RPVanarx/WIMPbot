@@ -23,7 +23,7 @@ function validateQuery(ctx) {
 
 function getPhotoUrl(photoId, { origin }) {
   const photoUrlPath = new URL(origin);
-  photoUrlPath.pathname = WEB_API_V1_PREFIX + WEB_API_PATH_PHOTO + photoId;
+  photoUrlPath.pathname = `${WEB_API_V1_PREFIX}${WEB_API_PATH_PHOTO}/${photoId}`;
   return photoUrlPath;
 }
 
@@ -39,6 +39,8 @@ function convertToResponse(dbRequests, ctx) {
       creationDate: r.creation_date.getTime().toString(),
       username: r.user_name,
       userPlatform: r.platform_type,
+      lon: r.location.x.toString(),
+      lat: r.location.y.toString(),
     };
   });
 }
