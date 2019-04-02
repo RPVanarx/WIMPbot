@@ -4,7 +4,7 @@ const multiparse = require('../../utils/multipart-parser');
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const photoService = require('../../../utils/photo');
-const { createRequest, moderateRequest } = require('../../../services');
+const { createRequest } = require('../../../services');
 
 const {
   WEB_API_PATH_REQUEST,
@@ -109,12 +109,6 @@ async function postRequest(ctx) {
     requestId = await createRequest(request);
   } catch (err) {
     ctx.throw(500, 'Cannot create request!', { error: err });
-  }
-
-  try {
-    await moderateRequest(requestId);
-  } catch (err) {
-    ctx.throw(500, 'Cannot start moderation process!', { error: err });
   }
 
   ctx.body = { request: requestId.toString() };
