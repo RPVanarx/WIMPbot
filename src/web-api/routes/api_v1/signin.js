@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-const authorize = require('../../utils/telegram-authorization');
+const auth = require('../../utils/telegram-authorization');
 const token = require('../../middleware/token');
 const { getUserId } = require('../../../services');
 
@@ -13,7 +13,7 @@ const router = new Router({
 async function signin(ctx, next) {
   const payload = { ...ctx.request.query };
   try {
-    authorize(payload);
+    auth(payload);
   } catch (err) {
     ctx.throw(401, `Authentication failed: ${err.message}`);
   }
