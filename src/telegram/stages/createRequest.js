@@ -3,13 +3,13 @@ const {
   CREATE_REQUEST_MESSAGES,
   EVENT_NAMES: { CREATE_REQUEST: name },
   PLATFORM_TYPE_TELEGRAM,
-  MODERATOR_GROUP_ID,
+  // MODERATOR_GROUP_ID,
   BUTTON_EVENT,
   DEFAULT_VALUES: { REQUEST_MESSAGE_MAX: textLimit },
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, isUserCanCreateRequest } = require('../../services');
-const { sendPhotoMessageToModerate } = require('../addFunctions');
+// const { sendPhotoMessageToModerate } = require('../addFunctions');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
@@ -88,10 +88,10 @@ const scene = new WizardScene(
         latitude: ctx.session.userMessage.location.latitude,
         photo: ctx.session.userMessage.photo,
         message: ctx.message.text,
-        creationDate: new Date(),
+        // creationDate: new Date(),
       };
-      request.reqId = await createRequest(request);
-      sendPhotoMessageToModerate({ request, moderatorId: MODERATOR_GROUP_ID });
+      /* request.reqId = */ await createRequest(request);
+      // sendPhotoMessageToModerate({ request, moderatorId: MODERATOR_GROUP_ID });
       ctx.reply(CREATE_REQUEST_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
