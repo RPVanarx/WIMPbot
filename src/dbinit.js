@@ -13,7 +13,7 @@ const pool = new Pool({
 });
 
 pool.on('error', error => {
-  log.error({ err: error.message }, 'DB init: Uncaught pool error!');
+  log.error({ err: error }, 'DB init: Uncaught pool error!');
 });
 
 let isInitialized = false;
@@ -28,11 +28,11 @@ async function initDb(dbPool, triesLeft) {
   } catch (error) {
     if (client) client.release();
 
-    log.error({ err: error.message }, `DB init: Failed to connect! Attempts left: ${triesLeft}`);
+    log.error({ err: error }, `DB init: Failed to connect! Attempts left: ${triesLeft}`);
     const tries = triesLeft - 1;
 
     if (!tries) {
-      log.error({ err: error.message }, 'DB init: Unable to connect to database!');
+      log.error({ err: error }, 'DB init: Unable to connect to database!');
       process.exit(1);
     }
     setTimeout(() => initDb(dbPool, tries), DB.DELAY);
@@ -41,7 +41,7 @@ async function initDb(dbPool, triesLeft) {
 
   if (!client) {
     const err = new Error('DB init: Cannot init! DB client not ready!');
-    log.error({ err: err.message }, err.message);
+    log.error({ err }, err.message);
     process.exit(1);
   }
   // eslint-disable-next-line no-restricted-syntax
@@ -51,7 +51,7 @@ async function initDb(dbPool, triesLeft) {
     } catch (error) {
       if (client) client.release();
 
-      log.error({ err: error.message }, `DB init: Cannot execute request: ${request}`);
+      log.error({ err: error }, `DB init: Cannot execute request: ${request}`);
       process.exit(1);
     }
   }
@@ -63,7 +63,7 @@ async function initDb(dbPool, triesLeft) {
     await pool.end();
     log.info('DB init: done - ending pool');
   } catch (error) {
-    log.error({ err: error.message }, 'DB init: Cannot end pool!');
+    log.error({ err: error }, 'DB init: Cannot end pool!');
     process.exit(1);
   }
 }

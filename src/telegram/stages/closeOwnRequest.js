@@ -33,7 +33,7 @@ const scene = new WizardScene(name, async ctx => {
       CLOSE_OWN_REQUESTS_MESSAGES.TIMEOUT,
     );
   } catch (error) {
-    log.error({ err: error.message }, 'closeOwnRequest');
+    log.error({ err: error }, 'closeOwnRequest');
   }
   return ctx.scene.leave();
 });

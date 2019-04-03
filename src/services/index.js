@@ -72,7 +72,7 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
       sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
     );
   } catch (error) {
-    log.error({ err: error.message, reqId, statusString }, 'deleteUserScene');
+    log.error({ err: error, reqId, statusString }, 'deleteUserScene');
   }
 }
 

@@ -33,7 +33,7 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.MANY_BAD_REQUESTS, mainMenu);
       return ctx.scene.leave();
     } catch (error) {
-      log.error({ err: error.message }, 'await badRequestCount');
+      log.error({ err: error }, 'await badRequestCount');
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
@@ -88,14 +88,12 @@ const scene = new WizardScene(
         latitude: ctx.session.userMessage.location.latitude,
         photo: ctx.session.userMessage.photo,
         message: ctx.message.text,
-        // creationDate: new Date(),
       };
-      /* request.reqId = */ await createRequest(request);
-      // sendPhotoMessageToModerate({ request, moderatorId: MODERATOR_GROUP_ID });
+      await createRequest(request);
       ctx.reply(CREATE_REQUEST_MESSAGES.ENTER, mainMenu);
     } catch (error) {
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
-      log.error({ err: error.message }, 'createRequestScene');
+      log.error({ err: error }, 'createRequestScene');
     }
     return ctx.scene.leave();
   },

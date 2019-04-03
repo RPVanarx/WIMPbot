@@ -103,7 +103,7 @@ const scene = new WizardScene(
       );
     } catch (error) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
-      log.error({ err: error.message }, 'findRequests Scene');
+      log.error({ err: error }, 'findRequests Scene');
     }
     return ctx.scene.leave();
   },

@@ -47,7 +47,7 @@ bot.action(REGISTRATION_MENU, async ctx => {
       ),
     );
   } catch (error) {
-    log.error({ err: error.message, reqId: ctx.state.reqId }, 'callbackHandler registration menu');
+    log.error({ err: error, reqId: ctx.state.reqId }, 'callbackHandler registration menu');
   }
 });
 
@@ -72,7 +72,7 @@ callbackHandler.on('deleteRequest', async ctx => {
     await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
   } catch (error) {
-    log.error({ err: error.message, reqId: ctx.state.reqId }, 'callbackHandler deleteRequest');
+    log.error({ err: error, reqId: ctx.state.reqId }, 'callbackHandler deleteRequest');
   }
 });
 

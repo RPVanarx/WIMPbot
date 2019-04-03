@@ -16,7 +16,7 @@ const pool = new Pool({
 });
 
 pool.on('error', error => {
-  log.error({ err: error.message }, 'DBconnect: Uncaught pool error!');
+  log.error({ err: error }, 'DBconnect: Uncaught pool error!');
 });
 
 module.exports = pool;
