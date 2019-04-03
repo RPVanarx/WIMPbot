@@ -7,12 +7,12 @@ const {
   DEFAULT_VALUES,
   WEB_API_V1_PREFIX,
   WEB_API_PATH_PHOTO,
-  WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
-  WEB_API_PATH_LIST: LIST_SUFFIX,
+  WEB_API_PATH_REQUESTS,
+  WEB_API_PATH_LIST,
 } = require('../../../config');
 
 const router = new Router({
-  prefix: REQUEST_SUFFIX + LIST_SUFFIX,
+  prefix: WEB_API_PATH_REQUESTS + WEB_API_PATH_LIST,
 });
 
 function validateQuery(ctx) {
