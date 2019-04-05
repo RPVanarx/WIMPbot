@@ -53,5 +53,5 @@ router.get('/requests/:latitude/:longitude/:radius/:days', async ctx => {
 app.use(router.middleware());
 
 module.exports = {
-  listen: () => app.listen(3006),
+  listen: () => app.listen(3007),
 };
