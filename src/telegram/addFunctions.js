@@ -14,10 +14,11 @@ ${CREATE_MESSAGE_TEXTS.PLATFORM} ${
   }
 ${CREATE_MESSAGE_TEXTS.SENDER} ${request.platformType === 'telegram' ? '@' : ''}${request.userName}
 ${CREATE_MESSAGE_TEXTS.DATE} ${request.creationDate.toLocaleString()}
-${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}
-${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.BASE_LINE}${request.latitude},${
+${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.LOCATION_LINE_BEGIN}${request.latitude},${
     request.longitude
-  })`;
+  }${CREATE_MESSAGE_TEXTS.LOCATION_LINE_END}
+${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}
+`;
 }
 
 function sendPhotoMessage({ request, chatId }) {
@@ -34,7 +35,7 @@ function sendPhotoMessage({ request, chatId }) {
       latitude: request.location.y,
       longitude: request.location.x,
     }),
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
   });
 }
 
@@ -57,7 +58,7 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
       ],
     },
     caption: createMessage(request),
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
   });
 }
 

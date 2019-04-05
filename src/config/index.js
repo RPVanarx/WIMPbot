@@ -184,7 +184,8 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     DATE: 'Час створення:',
     LOCATION: 'Координати заявки:',
     MESSAGE_FROM_USER: 'Опис від користувача:',
-    BASE_LINE: '[тут](http://maps.google.com/maps?q=',
+    LOCATION_LINE_BEGIN: '<a href="http://maps.google.com/maps?q=',
+    LOCATION_LINE_END: '">тут</a>',
   },
 
   MODER_BUTTON: {
