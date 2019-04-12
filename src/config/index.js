@@ -15,6 +15,8 @@ module.exports = {
 
   WEB_PORT: process.env.WEB_PORT || 3003,
   WEB_CORS_ORIGIN: process.env.WEB_CORS_ORIGIN || 'http://localhost:1234',
+  WEB_CORS_ALLOW_METHODS: 'GET,POST,OPTIONS',
+  WEB_CORS_MAX_AGE: 86400,
 
   WEB_TOKEN_KEY: process.env.WEB_TOKEN_KEY,
 

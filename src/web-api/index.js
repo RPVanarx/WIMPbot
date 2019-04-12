@@ -5,7 +5,12 @@ const log = require('../logger')(__filename);
 const errorHandler = require('./middleware/error-handler');
 const rootRouter = require('./routes');
 
-const { WEB_PORT, WEB_CORS_ORIGIN } = require('../config');
+const {
+  WEB_PORT,
+  WEB_CORS_ORIGIN,
+  WEB_CORS_ALLOW_METHODS,
+  WEB_CORS_MAX_AGE,
+} = require('../config');
 
 const app = new Koa();
 
@@ -15,8 +20,8 @@ app.on('error', (err, ctx) => {
 
 const corsOptions = {
   origin: WEB_CORS_ORIGIN,
-  allowMethods: 'GET,POST,OPTIONS',
-  maxAge: 86400,
+  allowMethods: WEB_CORS_ALLOW_METHODS,
+  maxAge: WEB_CORS_MAX_AGE,
   credentials: true,
   keepHeadersOnError: true,
 };
