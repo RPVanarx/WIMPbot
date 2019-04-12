@@ -2,7 +2,7 @@ const Koa = require('koa');
 const cors = require('@koa/cors');
 
 const log = require('../logger')(__filename);
-const errorHandler = require('./utils/error-handler');
+const errorHandler = require('./middleware/error-handler');
 const rootRouter = require('./routes');
 
 const { WEB_PORT, WEB_CORS_ORIGIN } = require('../config');
@@ -21,9 +21,9 @@ const corsOptions = {
   keepHeadersOnError: true,
 };
 
-app.use(cors(corsOptions));
-
 app.use(errorHandler());
+
+app.use(cors(corsOptions));
 
 app.use(rootRouter.routes());
 app.use(rootRouter.allowedMethods());
