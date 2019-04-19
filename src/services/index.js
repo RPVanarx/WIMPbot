@@ -76,7 +76,7 @@ function makePhotoURL(photoId) {
   return 'https://dl-media.viber.com/1/share/2/long/vibes/icon/image/0x0/1433/673465886be1a0cabc915dad06fa14f71b6f80496ca0943dea5b85a4f54a1433.jpg';
 }
 
-function sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
+async function sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
   let sendRequestMessage;
   let photoURL = photo;
   if (platformType === 'telegram') sendRequestMessage = sendPhotoMessageTelegram;
@@ -84,7 +84,8 @@ function sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
     sendRequestMessage = sendPhotoMessageViber;
     photoURL = makePhotoURL(photo);
   }
-  return sendRequestMessage({ request: userRequest, photo: photoURL, chatId });
+  const res = await sendRequestMessage({ request: userRequest, photo: photoURL, chatId });
+  return res;
 }
 
 async function processModerationRequest({ reqId, statusString, moderatorId }) {
@@ -98,14 +99,14 @@ async function processModerationRequest({ reqId, statusString, moderatorId }) {
     }
     sendMessage(platformType, userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
     const users = await getUsersInRequestRadius(userRequest.location);
-    users.forEach(client =>
-      sendPhotoMessage({
+    users.forEach(async client => {
+      const res = await sendPhotoMessage({
         platformType: client.platform_type,
         userRequest,
         photo: userRequest.photo,
         chatId: client.platform_id,
-      }),
-    );
+      });
+    });
   } catch (error) {
     log.error({ err: error, reqId, statusString }, 'process moderate request');
   }

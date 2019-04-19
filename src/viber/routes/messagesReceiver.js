@@ -16,7 +16,7 @@ const {
   createRequest,
   getRequestsInArea,
 } = require('../../services');
-const { sendPhotoMessageViber } = require('../utils');
+const { sendOwnMessage } = require('../utils');
 const usersRequestBase = require('../usersRequestBase');
 const badRequest = require('../badRequest');
 
@@ -314,7 +314,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               // doPhotoURL(req.photo);
               setTimeout(
                 () =>
-                  sendPhotoMessageViber({
+                  sendOwnMessage({
                     chatId: response.userProfile.id,
                     photo: photoURL,
                     request: req,

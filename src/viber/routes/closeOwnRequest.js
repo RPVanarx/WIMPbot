@@ -4,7 +4,7 @@ const bot = require('../bot');
 const badRequest = require('../badRequest');
 const { PLATFORM_TYPE_VIBER } = require('../../config');
 const { getUserStep, setUserStep, getUserRequests } = require('../../services');
-const { sendPhotoMessageViber } = require('../utils');
+const { sendOwnMessage } = require('../utils');
 
 bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
   try {
@@ -45,7 +45,7 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
       // doPhotoURL(req.photo);
       setTimeout(
         () =>
-          sendPhotoMessageViber({
+          sendOwnMessage({
             chatId: response.userProfile.id,
             photo: photoURL,
             request: req,
@@ -55,7 +55,7 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
     });
     setTimeout(
       () => bot.sendMessage(response.userProfile, keyboard.deleteRequestButtons(requests)),
-      1000,
+      1000 * requests.length + 1000,
     );
   } catch (error) {
     console.log(error);
