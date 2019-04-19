@@ -9,6 +9,7 @@ const createTableUser = `CREATE TABLE IF NOT EXISTS users(
     location POINT NOT NULL,
     bad_request_count INT DEFAULT 0,
     is_active BOOLEAN DEFAULT true,
+    step SMALLINT DEFAULT 0,
     UNIQUE (platform_id, platform_type)
 );`;
 

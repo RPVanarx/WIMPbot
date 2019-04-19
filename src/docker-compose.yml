@@ -8,16 +8,16 @@ services:
     env_file:
       - ./.env.db
     ports:
-      - 5431:5432
+      - 5430:5432
   web:
     image: wimp
     depends_on:
       - db
     restart: always
     ports:
-      - 3030:3000
+      - 3031:3000
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
+      - 8092:8080

@@ -31,7 +31,7 @@ async function create(request) {
 
 async function getRequestsToDelete({ platformId, platformType }) {
   return (await client.query(
-    `SELECT id, photo, message FROM requests 
+    `SELECT * FROM requests 
     WHERE user_id = (SELECT id FROM users WHERE platform_id = $1 AND platform_type = $2) 
     AND is_active = true`,
     [platformId, platformType],

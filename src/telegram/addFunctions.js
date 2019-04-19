@@ -1,5 +1,5 @@
 const bot = require('./bot');
-const { CREATE_MESSAGE_TEXTS, MODER_BUTTON, MODERATOR_GROUP_ID } = require('../config');
+const { MODER_BUTTON, MODERATOR_GROUP_ID, CREATE_MESSAGE_TEXTS } = require('../config');
 
 function createMessage(request) {
   return `${CREATE_MESSAGE_TEXTS.TYPE} ${
@@ -17,15 +17,11 @@ ${CREATE_MESSAGE_TEXTS.DATE} ${request.creationDate.toLocaleString()}
 ${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.LOCATION_LINE_BEGIN}${request.latitude},${
     request.longitude
   }${CREATE_MESSAGE_TEXTS.LOCATION_LINE_END}
-${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}
-`;
+${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}`;
 }
 
-function sendPhotoMessage({ request, chatId }) {
-  bot.telegram.sendPhoto(chatId, request.photo, {
-    // reply_markup: {
-    //   inline_keyboard: [[{ text: 'дати коментар', callback_data: `comment:${request.reqId}` }]],
-    // },
+function sendPhotoMessageTelegram({ request, photo, chatId }) {
+  bot.telegram.sendPhoto(chatId, photo, {
     caption: createMessage({
       requestType: request.request_type,
       platformType: request.platform_type,
@@ -62,12 +58,20 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
   });
 }
 
-function sendMessage(id, message) {
+function sendMessageTelegram(id, message) {
   return bot.telegram.sendMessage(id, message);
 }
 
 function getFileLink(id) {
   return bot.telegram.getFileLink(id);
+}
+
+async function getNewPhotoId(url) {
+  const photoId = await bot.telegram.sendPhoto(MODERATOR_GROUP_ID, url, {
+    disable_notification: true,
+  });
+  bot.telegram.deleteMessage(MODERATOR_GROUP_ID, photoId.message_id);
+  return photoId.photo[photoId.photo.length - 1].file_id;
 }
 
 async function sendPhotoStream(readStream) {
@@ -81,9 +85,10 @@ async function sendPhotoStream(readStream) {
 }
 
 module.exports = {
-  sendPhotoMessage,
+  sendPhotoMessageTelegram,
   sendPhotoMessageToModerate,
-  sendMessage,
+  sendMessageTelegram,
   getFileLink,
   sendPhotoStream,
+  getNewPhotoId,
 };

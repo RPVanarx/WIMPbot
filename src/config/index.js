@@ -2,6 +2,7 @@ require('dotenv').config();
 
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
+  VIBER_TOKEN: process.env.VIBER_TOKEN,
   db: {
     USER: process.env.PGUSER,
     HOST: process.env.PGHOST,
@@ -46,6 +47,7 @@ module.exports = {
 
   PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
+  PLATFORM_TYPE_VIBER: 'viber',
 
   EVENT_NAMES: {
     REGISTRATION_MENU: 'registrationMenu',
@@ -185,6 +187,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     LOCATION: 'Координати заявки:',
     MESSAGE_FROM_USER: 'Опис від користувача:',
     LOCATION_LINE_BEGIN: '<a href="http://maps.google.com/maps?q=',
+    URL: 'http://maps.google.com/maps?q=',
     LOCATION_LINE_END: '">тут</a>',
   },
 

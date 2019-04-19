@@ -1,11 +1,13 @@
 const { user, request } = require('../db');
 const {
-  sendPhotoMessage,
-  sendMessage,
+  sendPhotoMessageTelegram,
+  sendMessageTelegram,
   getFileLink,
   sendPhotoStream,
   sendPhotoMessageToModerate,
+  getNewPhotoId,
 } = require('../telegram/addFunctions');
+const { sendMessageViber, sendPhotoMessageViber } = require('../viber/utils');
 const { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES, MODERATOR_GROUP_ID } = require('../config');
 const log = require('../logger')(__filename);
 
@@ -58,21 +60,54 @@ function getBadRequestCount({ platformId, platformType }) {
   return user.badRequestCount({ platformId, platformType });
 }
 
+function getPlatformTypeRequestId(requestId) {
+  return user.getPlatformTypeFromRequest(requestId);
+}
+
+function sendMessage(platformType, userId, message) {
+  let sendMessageType;
+  if (platformType === 'telegram') sendMessageType = sendMessageTelegram;
+  if (platformType === 'viber') sendMessageType = sendMessageViber;
+  return sendMessageType(userId, message);
+}
+
+function makePhotoURL(photoId) {
+  // тут я маю підключити створення урли фотки на нашу апі
+  return 'https://dl-media.viber.com/1/share/2/long/vibes/icon/image/0x0/1433/673465886be1a0cabc915dad06fa14f71b6f80496ca0943dea5b85a4f54a1433.jpg';
+}
+
+function sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
+  let sendRequestMessage;
+  let photoURL = photo;
+  if (platformType === 'telegram') sendRequestMessage = sendPhotoMessageTelegram;
+  if (platformType === 'viber') {
+    sendRequestMessage = sendPhotoMessageViber;
+    photoURL = makePhotoURL(photo);
+  }
+  return sendRequestMessage({ request: userRequest, photo: photoURL, chatId });
+}
+
 async function processModerationRequest({ reqId, statusString, moderatorId }) {
   try {
+    const platformType = await getPlatformTypeRequestId(reqId);
     const status = JSON.parse(statusString);
     const userRequest = await request.changeActiveStatus({ reqId, status, moderatorId });
     if (!status) {
-      sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_FALSE);
+      sendMessage(platformType, userRequest.platform_id, SERVICES_MESSAGES.MODERATION_FALSE);
       return;
     }
-    sendMessage(userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
+    sendMessage(platformType, userRequest.platform_id, SERVICES_MESSAGES.MODERATION_TRUE);
     const users = await getUsersInRequestRadius(userRequest.location);
-    users.forEach(element =>
-      sendPhotoMessage({ request: userRequest, chatId: element.platform_id }),
+    users.forEach(client =>
+      sendPhotoMessage({
+        platformType: client.platform_type,
+        userRequest,
+        photo: userRequest.photo,
+        chatId: client.platform_id,
+      }),
     );
   } catch (error) {
-    log.error({ err: error, reqId, statusString }, 'deleteUserScene');
+    log.error({ err: error, reqId, statusString }, 'process moderate request');
   }
 }
 
@@ -97,10 +132,29 @@ async function isUserCanCreateRequest({ platformId, platformType }) {
   return true;
 }
 
-// async function moderateRequest(requestId) {
-//   const req = await request.get(requestId);
-//   sendPhotoMessageToModerate({ request: req, moderatorId: MODERATOR_GROUP_ID });
-// }
+async function getUserName({ platformId, platformType }) {
+  return user.getName({ platformId, platformType });
+}
+
+async function setUserName({ platformId, platformType, userName }) {
+  return user.setName({ platformId, platformType, userName });
+}
+
+async function getPlatformIdFromRequest(requestId) {
+  return user.getPlatformId(requestId);
+}
+
+async function getUserStep({ platformId, platformType }) {
+  return user.getStep({ platformId, platformType });
+}
+
+async function setUserStep({ platformId, platformType, value }) {
+  return user.setStep({ platformId, platformType, value });
+}
+
+async function getUserLocation({ platformId, platformType }) {
+  return user.getLocation({ platformId, platformType });
+}
 
 module.exports = {
   registerUser,
@@ -120,5 +174,13 @@ module.exports = {
   getTimeOfLastRequestFromUser,
   setBadRequestCountZero,
   isUserCanCreateRequest,
+  getUserName,
+  setUserName,
+  getNewPhotoId,
+  getPlatformIdFromRequest,
+  getPlatformTypeRequestId,
+  getUserStep,
+  setUserStep,
+  getUserLocation,
   // moderateRequest,
 };
