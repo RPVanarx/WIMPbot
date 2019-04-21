@@ -9,7 +9,6 @@ const {
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, isUserCanCreateRequest } = require('../../services');
-// const { sendPhotoMessageToModerate } = require('../addFunctions');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(

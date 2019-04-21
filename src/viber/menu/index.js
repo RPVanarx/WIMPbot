@@ -142,7 +142,7 @@ const deleteRequestButtons = arrayIdRequests => {
     ActionBody: 'returnMainMenu',
     Text: 'Повернутися в головне меню',
   });
-  return new KeyboardMessage({ Type: 'keyboard', Buttons: arrayButtons });
+  return { Type: 'keyboard', Buttons: arrayButtons };
 };
 
 const locationChoise = {

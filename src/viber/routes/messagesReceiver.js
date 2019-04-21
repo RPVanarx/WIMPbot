@@ -15,6 +15,7 @@ const {
   setUserStep,
   createRequest,
   getRequestsInArea,
+  getFileLink,
 } = require('../../services');
 const { sendOwnMessage } = require('../utils');
 const usersRequestBase = require('../usersRequestBase');
@@ -127,7 +128,6 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           }
         }
         default:
-          console.log('default');
           break;
       }
     }
@@ -267,7 +267,6 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             break;
           } catch (error) {
-            console.log(error);
             badRequest(response.userProfile);
             return;
           }
@@ -308,10 +307,8 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               });
               return;
             }
-            requests.forEach((req, i) => {
-              const photoURL =
-                'https://dl-media.viber.com/1/share/2/long/vibes/icon/image/0x0/1433/673465886be1a0cabc915dad06fa14f71b6f80496ca0943dea5b85a4f54a1433.jpg';
-              // doPhotoURL(req.photo);
+            requests.forEach(async (req, i) => {
+              const photoURL = await getFileLink(req.photo);
               setTimeout(
                 () =>
                   sendOwnMessage({
@@ -322,7 +319,15 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
                 1000 * i,
               );
             });
-            bot.sendMessage(response.userProfile, new KeyboardMessage(keyboard.mainMenu));
+            setTimeout(
+              () => bot.sendMessage(response.userProfile, new KeyboardMessage(keyboard.mainMenu)),
+              requests.length * 1000 + 1000,
+            );
+            await setUserStep({
+              platformId: response.userProfile.id,
+              platformType: PLATFORM_TYPE_VIBER,
+              value: 1,
+            });
             break;
           } catch (error) {
             console.log(error);
@@ -331,7 +336,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           }
         }
         default: {
-          console.log('default');
+          break;
         }
       }
     }

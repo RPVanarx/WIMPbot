@@ -6,10 +6,9 @@ const {
   PLATFORM_TYPE_TELEGRAM,
   DEFAULT_VALUES,
 } = require('../../config');
-const { sendPhotoMessage } = require('../addFunctions');
 const { mainMenu, newOrRegistrateLocation } = require('../menu');
 const log = require('../../logger')(__filename);
-const { getRequestsInRegLocation, getRequestsInArea } = require('../../services');
+const { getRequestsInRegLocation, getRequestsInArea, sendPhotoMessage } = require('../../services');
 
 const scene = new WizardScene(
   name,
@@ -95,7 +94,12 @@ const scene = new WizardScene(
         return ctx.scene.leave();
       }
       await requests.forEach(req => {
-        sendPhotoMessage({ request: req, chatId: ctx.message.from.id });
+        sendPhotoMessage({
+          userRequest: req,
+          platformType: PLATFORM_TYPE_TELEGRAM,
+          photo: req.photo,
+          chatId: ctx.message.from.id,
+        });
       });
       setTimeout(
         () => ctx.reply(FIND_REQUESTS_MESSAGES.SAMPLE_END, mainMenu),

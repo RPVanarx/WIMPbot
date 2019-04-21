@@ -1,21 +1,19 @@
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
+const { getUserStep, getUserActivity, getUserRequests } = require('../services/requestDB');
 const keyboard = require('./menu');
 const { PLATFORM_TYPE_VIBER } = require('../config');
-const { getUserStep, getUserActivity, getUserRequests } = require('../services');
 
 module.exports = async id => {
   const step = await getUserStep({
     platformId: id,
     platformType: PLATFORM_TYPE_VIBER,
   });
-  let buttons;
   switch (step) {
     case 1: {
-      buttons = new KeyboardMessage(keyboard.mainMenu);
-      break;
+      return new KeyboardMessage(keyboard.mainMenu);
     }
     case 2: {
-      buttons = new KeyboardMessage(
+      return new KeyboardMessage(
         keyboard.controlPanel(
           await getUserActivity({
             platformId: id,
@@ -23,68 +21,31 @@ module.exports = async id => {
           }),
         ),
       );
-      break;
     }
-    case 3: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
+    case (3, 7, 8, 9, 12, 13, 14): {
+      return new KeyboardMessage(keyboard.backMainMenu);
     }
     case 4: {
-      buttons = new KeyboardMessage(keyboard.requestMenu);
-      break;
+      return new KeyboardMessage(keyboard.requestMenu);
     }
     case 5: {
-      buttons = keyboard.phoneShare;
-      break;
+      return keyboard.phoneShare;
     }
     case 6: {
-      buttons = new KeyboardMessage(keyboard.searchFoundMenu);
-      break;
-    }
-    case 7: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
-    }
-    case 8: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
-    }
-    case 9: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
+      return new KeyboardMessage(keyboard.searchFoundMenu);
     }
     case 10: {
       const requests = await getUserRequests({
         platformId: id,
         platformType: PLATFORM_TYPE_VIBER,
       });
-      buttons = keyboard.deleteRequestButtons(requests);
-      break;
+      return new KeyboardMessage(keyboard.deleteRequestButtons(requests));
     }
     case 11: {
-      const requests = await getUserRequests({
-        platformId: id,
-        platformType: PLATFORM_TYPE_VIBER,
-      });
-      buttons = keyboard.deleteRequestButtons(requests);
-      break;
-    }
-    case 12: {
-      buttons = new KeyboardMessage(keyboard.locationChoise);
-      break;
-    }
-    case 13: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
-    }
-    case 14: {
-      buttons = new KeyboardMessage(keyboard.backMainMenu);
-      break;
+      return new KeyboardMessage(keyboard.locationChoise);
     }
     default: {
-      buttons = new KeyboardMessage(keyboard.mainMenu);
-      console.log('default');
+      return new KeyboardMessage(keyboard.mainMenu);
     }
   }
-  return buttons;
 };
