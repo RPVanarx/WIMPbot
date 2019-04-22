@@ -2,7 +2,7 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER } = require('../../config');
+const { PLATFORM_TYPE_VIBER, VIBER_REQUEST_CLOSE } = require('../../config');
 const {
   getUserStep,
   getUserRequests,
@@ -30,7 +30,10 @@ bot.onTextMessage(/closeRequest/, async (message, response) => {
       platformType: PLATFORM_TYPE_VIBER,
     });
     bot.sendMessage(response.userProfile, [
-      new TextMessage(`Заявка ${requestId} закрита`, keyboard.deleteRequestButtons(requests)),
+      new TextMessage(
+        `${VIBER_REQUEST_CLOSE.REQUEST} ${requestId} ${VIBER_REQUEST_CLOSE.CLOSE}`,
+        keyboard.deleteRequestButtons(requests),
+      ),
     ]);
   } catch (error) {
     console.log(error);

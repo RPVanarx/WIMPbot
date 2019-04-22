@@ -2,7 +2,7 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER } = require('../../config');
+const { PLATFORM_TYPE_VIBER, REQUEST_MENU_MESSAGE } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
 
 bot.onTextMessage(/requestMenu/, async (message, response) => {
@@ -23,7 +23,7 @@ bot.onTextMessage(/requestMenu/, async (message, response) => {
     });
     bot.sendMessage(
       response.userProfile,
-      new TextMessage('Ви в меню подачі заявки', keyboard.requestMenu),
+      new TextMessage(REQUEST_MENU_MESSAGE, keyboard.requestMenu),
     );
   } catch (error) {
     console.log(error);

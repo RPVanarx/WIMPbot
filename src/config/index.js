@@ -63,7 +63,7 @@ module.exports = {
 
   WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
 https://www.youtube.com/watch?v=vASw0m6YdWs`,
-  WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
+  WELCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
 
   MAIN_BUTTONS: {
     REGISTRATION: 'Панель керування користувача',
@@ -197,5 +197,27 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     CB_MODERATE: 'moderate:',
     CB_TRUE: ':true',
     CB_FALSE: ':false',
+  },
+
+  YOU: 'Ви',
+
+  VIBER_REQUEST_CLOSE: {
+    REQUEST: 'Заявка',
+    CLOSE: 'закрита',
+  },
+
+  VIBER_TELEPHONE: {
+    NUMBER:
+      'Для створення заявки необхідно надати свій номер мобільного, інакше інші користувачі не зможуть вам відповісти',
+    SHARE_NUMBER: 'Відправити свій номер телефону',
+  },
+
+  VIBER_BACK_MAIN_MENU: 'Ви повернулися в головне меню',
+
+  VIBER_BAD_REQUEST: 'Щось пішло не так, ви повернуті до головного меню',
+
+  VIBER_KEYBOARD: {
+    BACK_MAIN_MENU: 'Повернутися в головне меню',
+    CLOSE_REQUEST: 'Закрити заявку',
   },
 };

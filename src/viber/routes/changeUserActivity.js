@@ -2,7 +2,7 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER } = require('../../config');
+const { PLATFORM_TYPE_VIBER, DEACTIVATE_USER, ACTIVATE_USER } = require('../../config');
 const { getUserStep, setUserStep, changeUserActivity } = require('../../services');
 
 bot.onTextMessage(/changeUserActivity/, async (message, response) => {
@@ -28,9 +28,7 @@ bot.onTextMessage(/changeUserActivity/, async (message, response) => {
       platformType: PLATFORM_TYPE_VIBER,
       value: status,
     });
-    const answerMessage = JSON.parse(status)
-      ? 'Ви знову отримуватимете заявки'
-      : 'Ви більше не отримуватимете заявок';
+    const answerMessage = JSON.parse(status) ? ACTIVATE_USER.TRUE : DEACTIVATE_USER.TRUE;
     bot.sendMessage(response.userProfile, new TextMessage(answerMessage, keyboard.mainMenu));
   } catch (error) {
     console.log(error);

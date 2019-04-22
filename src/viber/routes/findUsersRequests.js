@@ -2,7 +2,10 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER } = require('../../config');
+const {
+  PLATFORM_TYPE_VIBER,
+  FIND_REQUESTS_MESSAGES: { QUESTION_LOCATION },
+} = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
 
 bot.onTextMessage(/findUsersRequests/, async (message, response) => {
@@ -23,7 +26,7 @@ bot.onTextMessage(/findUsersRequests/, async (message, response) => {
     });
     bot.sendMessage(
       response.userProfile,
-      new TextMessage('По яких координатах бажаєте зробити вибірку?', keyboard.locationChoise),
+      new TextMessage(QUESTION_LOCATION, keyboard.locationChoise),
     );
   } catch (error) {
     console.log(error);

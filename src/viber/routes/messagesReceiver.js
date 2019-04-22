@@ -6,7 +6,20 @@ const PictureMessage = require('viber-bot').Message.Picture;
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
 const bot = require('../bot');
 const keyboard = require('../menu');
-const { PLATFORM_TYPE_VIBER, DEFAULT_VALUES } = require('../../config');
+const {
+  PLATFORM_TYPE_VIBER,
+  DEFAULT_VALUES,
+  REGISTRATION_MESSAGES: { ENTER },
+  UPDATE_LOCATION_MESSAGES: { ENTER: ENTER_LOCATION },
+  CREATE_REQUEST_MESSAGES: {
+    DESCRIPTION,
+    CHOICE_TYPE,
+    LOCATION,
+    MANY_LETTERS,
+    ENTER: MODERATION_START,
+  },
+  FIND_REQUESTS_MESSAGES: { NEW_LOCATION_RADIUS, ERROR_RADIUS, ERROR_DAYS, DAYS, NO_REQUESTS },
+} = require('../../config');
 const {
   registerUser,
   setUserName,
@@ -43,13 +56,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               platformType: PLATFORM_TYPE_VIBER,
               value: 1,
             });
-            bot.sendMessage(
-              response.userProfile,
-              new TextMessage(
-                'Реєстрація пройшла успішно. Вам доступне головне меню.',
-                keyboard.mainMenu,
-              ),
-            );
+            bot.sendMessage(response.userProfile, new TextMessage(ENTER, keyboard.mainMenu));
             break;
           } catch (error) {
             console.log(error);
@@ -72,7 +79,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             });
             bot.sendMessage(
               response.userProfile,
-              new TextMessage('Ваша локація змінена', keyboard.mainMenu),
+              new TextMessage(ENTER_LOCATION, keyboard.mainMenu),
             );
             break;
           } catch (error) {
@@ -92,10 +99,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             });
             bot.sendMessage(
               response.userProfile,
-              new TextMessage(
-                'Локація прийнята, тепер напишіть опис вашого улюбленця 1 повідомленням до 1000 символів',
-                keyboard.backMainMenu,
-              ),
+              new TextMessage(DESCRIPTION, keyboard.backMainMenu),
             );
             break;
           } catch (error) {
@@ -115,10 +119,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             });
             bot.sendMessage(
               response.userProfile,
-              new TextMessage(
-                'Локація прийнята. Введіть радіус для вибірки',
-                keyboard.backMainMenu,
-              ),
+              new TextMessage(NEW_LOCATION_RADIUS, keyboard.backMainMenu),
             );
             break;
           } catch (error) {
@@ -156,10 +157,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         usersRequestBase.get(response.userProfile.id).userName = message.contactPhoneNumber;
         bot.sendMessage(
           response.userProfile,
-          new TextMessage(
-            'Ваш улюбленець загубився, чи ви знайшли чийогось?',
-            keyboard.searchFoundMenu,
-          ),
+          new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu),
         );
       } catch (error) {
         console.log(error);
@@ -185,13 +183,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           value: 8,
         });
         usersRequestBase.get(response.userProfile.id).photo = id;
-        bot.sendMessage(
-          response.userProfile,
-          new TextMessage(
-            'Включіть гпс та відправте координати де загубився/знайшовся улюбленець',
-            keyboard.backMainMenu,
-          ),
-        );
+        bot.sendMessage(response.userProfile, new TextMessage(LOCATION, keyboard.backMainMenu));
       } catch (error) {
         console.log(error);
         badRequest(response.userProfile);
@@ -210,10 +202,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             if (message.text.length > 1000) {
               bot.sendMessage(
                 response.userProfile,
-                new TextMessage(
-                  'Ваше повідомлення занадто довге, скоротіть його та відправте знову',
-                  keyboard.backMainMenu,
-                ),
+                new TextMessage(MANY_LETTERS, keyboard.backMainMenu),
               );
               return;
             }
@@ -229,7 +218,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             await createRequest(userRequest);
             bot.sendMessage(
               response.userProfile,
-              new TextMessage('Ваша заявка відправлена на модерацію.', keyboard.mainMenu),
+              new TextMessage(MODERATION_START, keyboard.mainMenu),
             );
             break;
           } catch (error) {
@@ -247,10 +236,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           ) {
             bot.sendMessage(
               response.userProfile,
-              new TextMessage(
-                'Значення не підходить, необхідно ввести тільки число від 100 до 10000',
-                keyboard.backMainMenu,
-              ),
+              new TextMessage(ERROR_RADIUS, keyboard.backMainMenu),
             );
             return;
           }
@@ -261,10 +247,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               platformType: PLATFORM_TYPE_VIBER,
               value: 14,
             });
-            bot.sendMessage(
-              response.userProfile,
-              new TextMessage('Вкажіть кількість днів вибірки від 1 до 30', keyboard.backMainMenu),
-            );
+            bot.sendMessage(response.userProfile, new TextMessage(DAYS, keyboard.backMainMenu));
             break;
           } catch (error) {
             badRequest(response.userProfile);
@@ -280,10 +263,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           ) {
             bot.sendMessage(
               response.userProfile,
-              new TextMessage(
-                'Значення не підходить, необхідно ввести тільки число від 1 до 30',
-                keyboard.backMainMenu,
-              ),
+              new TextMessage(ERROR_DAYS, keyboard.backMainMenu),
             );
             return;
           }
@@ -298,7 +278,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             if (requests.length === 0) {
               bot.sendMessage(
                 response.userProfile,
-                new TextMessage('Заявок не знайдено', keyboard.mainMenu),
+                new TextMessage(NO_REQUESTS, keyboard.mainMenu),
               );
               await setUserStep({
                 platformId: response.userProfile.id,

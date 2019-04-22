@@ -2,7 +2,10 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER } = require('../../config');
+const {
+  PLATFORM_TYPE_VIBER,
+  CREATE_REQUEST_MESSAGES: { PHOTO },
+} = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
 
@@ -25,10 +28,7 @@ bot.onTextMessage(/requestType/, async (message, response) => {
       value: 7,
     });
     usersRequestBase.get(response.userProfile.id).requestType = type;
-    bot.sendMessage(
-      response.userProfile,
-      new TextMessage('Відправте фото вашого/знайденого улюбленя', keyboard.backMainMenu),
-    );
+    bot.sendMessage(response.userProfile, new TextMessage(PHOTO, keyboard.backMainMenu));
   } catch (error) {
     console.log(error);
     badRequest(response.userProfile.id);
