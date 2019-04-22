@@ -7,6 +7,7 @@ const {
   UPDATE_LOCATION_MESSAGES: { UPDATE },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/updateLocation/, async (message, response) => {
   try {
@@ -26,7 +27,7 @@ bot.onTextMessage(/updateLocation/, async (message, response) => {
     });
     bot.sendMessage(response.userProfile, new TextMessage(UPDATE, keyboard.backMainMenu));
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'updateLocation viber');
     badRequest(response.userProfile);
   }
 });

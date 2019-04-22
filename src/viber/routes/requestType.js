@@ -8,6 +8,7 @@ const {
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/requestType/, async (message, response) => {
   try {
@@ -30,7 +31,7 @@ bot.onTextMessage(/requestType/, async (message, response) => {
     usersRequestBase.get(response.userProfile.id).requestType = type;
     bot.sendMessage(response.userProfile, new TextMessage(PHOTO, keyboard.backMainMenu));
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'requestType viber');
     badRequest(response.userProfile.id);
   }
 });

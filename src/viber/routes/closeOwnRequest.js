@@ -10,6 +10,7 @@ const {
 } = require('../../config');
 const { getUserStep, setUserStep, getUserRequests, getFileLink } = require('../../services');
 const { sendOwnMessage } = require('../utils');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
   try {
@@ -62,7 +63,7 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
       1000 * requests.length + 1000,
     );
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'closeOwnRequest viber');
     badRequest(response.userProfile);
   }
 });

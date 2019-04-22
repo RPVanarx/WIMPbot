@@ -9,6 +9,7 @@ const {
 } = require('../../config');
 const { getUserStep, setUserStep, getUserName, isUserCanCreateRequest } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/createRequest/, async (message, response) => {
   try {
@@ -53,7 +54,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
     usersRequestBase.set(response.userProfile.id, { userName: phoneNumber });
     bot.sendMessage(response.userProfile, new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu));
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'createRequest viber');
     badRequest(response.userProfile);
   }
 });

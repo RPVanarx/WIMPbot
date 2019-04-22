@@ -33,6 +33,7 @@ const {
 const { sendOwnMessage } = require('../utils');
 const usersRequestBase = require('../usersRequestBase');
 const badRequest = require('../badRequest');
+const log = require('../../logger')(__filename);
 
 bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
   try {
@@ -59,7 +60,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             bot.sendMessage(response.userProfile, new TextMessage(ENTER, keyboard.mainMenu));
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'registrate location viber');
             badRequest(response.userProfile);
             return;
           }
@@ -83,7 +84,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'update location viber');
             badRequest(response.userProfile);
             return;
           }
@@ -103,7 +104,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'create request location viber');
             badRequest(response.userProfile);
             return;
           }
@@ -123,7 +124,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'find requests location viber');
             badRequest(response.userProfile);
             return;
           }
@@ -160,7 +161,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu),
         );
       } catch (error) {
-        console.log(error);
+        log.error({ err: error }, 'phone share viber');
         badRequest(response.userProfile);
         return;
       }
@@ -185,7 +186,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         usersRequestBase.get(response.userProfile.id).photo = id;
         bot.sendMessage(response.userProfile, new TextMessage(LOCATION, keyboard.backMainMenu));
       } catch (error) {
-        console.log(error);
+        log.error({ err: error }, 'pictureMessage viber');
         badRequest(response.userProfile);
         return;
       }
@@ -222,7 +223,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'create request message viber');
             badRequest(response.userProfile);
             return;
           }
@@ -250,24 +251,25 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             bot.sendMessage(response.userProfile, new TextMessage(DAYS, keyboard.backMainMenu));
             break;
           } catch (error) {
+            log.error({ err: error }, 'find requests radius viber');
             badRequest(response.userProfile);
             return;
           }
         }
         case 14: {
-          const days = Number.parseInt(message.text, 10);
-          if (
-            days < DEFAULT_VALUES.DAYS_MIN ||
-            days > DEFAULT_VALUES.DAYS_MAX ||
-            !/^\d+$/.test(message.text)
-          ) {
-            bot.sendMessage(
-              response.userProfile,
-              new TextMessage(ERROR_DAYS, keyboard.backMainMenu),
-            );
-            return;
-          }
           try {
+            const days = Number.parseInt(message.text, 10);
+            if (
+              days < DEFAULT_VALUES.DAYS_MIN ||
+              days > DEFAULT_VALUES.DAYS_MAX ||
+              !/^\d+$/.test(message.text)
+            ) {
+              bot.sendMessage(
+                response.userProfile,
+                new TextMessage(ERROR_DAYS, keyboard.backMainMenu),
+              );
+              return;
+            }
             const requestParams = usersRequestBase.get(response.userProfile.id);
             const requests = await getRequestsInArea({
               latitude: requestParams.latitude,
@@ -310,7 +312,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             });
             break;
           } catch (error) {
-            console.log(error);
+            log.error({ err: error }, 'find requests days viber');
             badRequest(response.userProfile);
             return;
           }
@@ -321,7 +323,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'find requests module viber');
     badRequest(response.userProfile);
   }
 });

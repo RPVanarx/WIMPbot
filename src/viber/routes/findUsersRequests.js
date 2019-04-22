@@ -7,6 +7,7 @@ const {
   FIND_REQUESTS_MESSAGES: { QUESTION_LOCATION },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/findUsersRequests/, async (message, response) => {
   try {
@@ -29,7 +30,7 @@ bot.onTextMessage(/findUsersRequests/, async (message, response) => {
       new TextMessage(QUESTION_LOCATION, keyboard.locationChoise),
     );
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'findUsersRequests viber');
     badRequest(response.userProfile);
   }
 });

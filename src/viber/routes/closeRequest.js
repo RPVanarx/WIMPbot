@@ -9,6 +9,7 @@ const {
   getPlatformIdFromRequest,
   deleteRequest,
 } = require('../../services');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/closeRequest/, async (message, response) => {
   try {
@@ -36,7 +37,7 @@ bot.onTextMessage(/closeRequest/, async (message, response) => {
       ),
     ]);
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'closeRequest viber');
     badRequest(response.userProfile);
   }
 });

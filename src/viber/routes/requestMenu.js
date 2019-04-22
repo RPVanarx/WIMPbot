@@ -4,6 +4,7 @@ const bot = require('../bot');
 const badRequest = require('../badRequest');
 const { PLATFORM_TYPE_VIBER, REQUEST_MENU_MESSAGE } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/requestMenu/, async (message, response) => {
   try {
@@ -26,7 +27,7 @@ bot.onTextMessage(/requestMenu/, async (message, response) => {
       new TextMessage(REQUEST_MENU_MESSAGE, keyboard.requestMenu),
     );
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'requestMenu viber');
     badRequest(response.userProfile);
   }
 });

@@ -8,6 +8,7 @@ const {
 } = require('../../config');
 const { getUserStep, setUserStep, getUserLocation } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/locationChoise/, async (message, response) => {
   try {
@@ -46,7 +47,7 @@ bot.onTextMessage(/locationChoise/, async (message, response) => {
     bot.sendMessage(response.userProfile, new TextMessage(RADIUS, keyboard.backMainMenu));
     return;
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'locationChoise viber');
     badRequest(response.userProfile);
   }
 });

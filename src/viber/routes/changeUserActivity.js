@@ -4,6 +4,7 @@ const bot = require('../bot');
 const badRequest = require('../badRequest');
 const { PLATFORM_TYPE_VIBER, DEACTIVATE_USER, ACTIVATE_USER } = require('../../config');
 const { getUserStep, setUserStep, changeUserActivity } = require('../../services');
+const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/changeUserActivity/, async (message, response) => {
   try {
@@ -31,7 +32,7 @@ bot.onTextMessage(/changeUserActivity/, async (message, response) => {
     const answerMessage = JSON.parse(status) ? ACTIVATE_USER.TRUE : DEACTIVATE_USER.TRUE;
     bot.sendMessage(response.userProfile, new TextMessage(answerMessage, keyboard.mainMenu));
   } catch (error) {
-    console.log(error);
+    log.error({ err: error }, 'changeUserActivity viber');
     badRequest(response.userProfile);
   }
 });
