@@ -14,10 +14,14 @@ module.exports = {
   },
   MODERATOR_GROUP_ID: process.env.MODERATORSID,
 
-  WEB_AUTH_AGE: process.env.WEB_AUTH_AGE || 1000 * 60 * 60, // 60 min by default
   WEB_PORT: process.env.WEB_PORT || 3003,
+  WEB_CORS_ORIGIN: process.env.WEB_CORS_ORIGIN || 'http://localhost:1234',
+  WEB_CORS_ALLOW_METHODS: 'GET,POST,OPTIONS',
+  WEB_CORS_MAX_AGE: 86400,
 
   WEB_TOKEN_KEY: process.env.WEB_TOKEN_KEY,
+
+  WEB_AUTH_AGE: process.env.WEB_AUTH_AGE || 1000 * 60 * 60, // 60 min by default
   WEB_PHOTO_FILE_SIZE_MAX: 10 * 1024 * 1024, // 10 MiB (10 MB is telegram API limit)
   WEB_PHOTO_FILE_SIZE_MIN: 1024, // 1 KiB
   WEB_POST_FIELD_LENGTH_MAX: 1024,
