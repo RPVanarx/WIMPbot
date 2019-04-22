@@ -1,6 +1,6 @@
 const http = require('http');
 const bot = require('./bot');
-const ngrokURL = require('./get_public_url');
+const ngrokURL = require('./getNgrokPublicUrl');
 const routes = require('./routes');
 const log = require('../logger')(__filename);
 

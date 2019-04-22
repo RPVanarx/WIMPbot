@@ -36,9 +36,7 @@
         "pg": "^7.6.0",
         "pino": "^5.11.1",
         "telegraf": "^3.27.1",
-        "viber-bot": "^1.0.13",
-        "winston": "^3.2.1",
-        "winston-console-formatter": "^1.0.0-beta.3"
+        "viber-bot": "^1.0.13"
     },
     "prettier": {
         "bracketSpacing": true,
