@@ -15,10 +15,10 @@ const startViber = async () => {
 
 process
   .on('unhandledRejection', (reason, p) => {
-    console.error(reason, 'Unhandled Rejection at Promise', p);
+    log.error({ err: reason }, `viber launch ${p}`);
   })
   .on('uncaughtException', err => {
-    console.error(err, 'Uncaught Exception thrown');
+    log.error({ err }, 'viber launch');
     process.exit(1);
   });
 
