@@ -2,6 +2,7 @@ require('dotenv').config();
 
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
+  VIBER_TOKEN: process.env.VIBER_TOKEN,
   db: {
     USER: process.env.PGUSER,
     HOST: process.env.PGHOST,
@@ -50,6 +51,7 @@ module.exports = {
 
   PLATFORM_TYPE_WEB: 'web',
   PLATFORM_TYPE_TELEGRAM: 'telegram',
+  PLATFORM_TYPE_VIBER: 'viber',
 
   EVENT_NAMES: {
     REGISTRATION_MENU: 'registrationMenu',
@@ -65,7 +67,7 @@ module.exports = {
 
   WELCOME_MESSAGE: `Привіт, Ви приєдналися до чат-боту з пошуку загублених домашніх улюбленців, пропоную переглянути невелике відео щоб зрозуміти як зі мною працювати, а вже потім пройти швидку реєстрацію. 
 https://www.youtube.com/watch?v=vASw0m6YdWs`,
-  WELLCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
+  WELCOME_MENU_BUTTON_REGISTRATION: 'Зареєструватися',
 
   MAIN_BUTTONS: {
     REGISTRATION: 'Панель керування користувача',
@@ -189,6 +191,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     LOCATION: 'Координати заявки:',
     MESSAGE_FROM_USER: 'Опис від користувача:',
     LOCATION_LINE_BEGIN: '<a href="http://maps.google.com/maps?q=',
+    URL: 'http://maps.google.com/maps?q=',
     LOCATION_LINE_END: '">тут</a>',
   },
 
@@ -198,5 +201,27 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     CB_MODERATE: 'moderate:',
     CB_TRUE: ':true',
     CB_FALSE: ':false',
+  },
+
+  YOU: 'Ви',
+
+  VIBER_REQUEST_CLOSE: {
+    REQUEST: 'Заявка',
+    CLOSE: 'закрита',
+  },
+
+  VIBER_TELEPHONE: {
+    NUMBER:
+      'Для створення заявки необхідно надати свій номер мобільного, інакше інші користувачі не зможуть вам відповісти',
+    SHARE_NUMBER: 'Відправити свій номер телефону',
+  },
+
+  VIBER_BACK_MAIN_MENU: 'Ви повернулися в головне меню',
+
+  VIBER_BAD_REQUEST: 'Щось пішло не так, ви повернуті до головного меню',
+
+  VIBER_KEYBOARD: {
+    BACK_MAIN_MENU: 'Повернутися в головне меню',
+    CLOSE_REQUEST: 'Закрити заявку',
   },
 };

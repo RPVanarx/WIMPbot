@@ -28,7 +28,7 @@ async function getActivityStatus({ platformId, platformType }) {
 
 async function findUsersInRequestRadius(location) {
   return (await client.query(
-    `SELECT platform_id FROM users 
+    `SELECT platform_id, platform_type FROM users 
     WHERE is_active = true 
     AND location <@> point($1, $2) <= $3/1609.34`,
     [location.x, location.y, RADIUS],
@@ -72,6 +72,65 @@ async function getId({ platformId, platformType }) {
   return response.rows[0].id;
 }
 
+async function getName({ platformId, platformType }) {
+  const response = await client.query(
+    `SELECT user_name FROM users
+        WHERE platform_id = $1 AND platform_type = $2`,
+    [platformId, platformType],
+  );
+  return response.rows[0].user_name;
+}
+
+async function setName({ platformId, platformType, userName }) {
+  await client.query(
+    `UPDATE users SET user_name = $3 
+        WHERE platform_id = $1 and platform_type = $2`,
+    [platformId, platformType, userName],
+  );
+  return true;
+}
+
+async function getPlatformId(requestId) {
+  return (await client.query(
+    `SELECT platform_id FROM users 
+      WHERE id = (SELECT user_id FROM requests WHERE id = $1)`,
+    [requestId],
+  )).rows[0].platform_id;
+}
+
+async function getPlatformTypeFromRequest(requestId) {
+  return (await client.query(
+    `SELECT platform_type FROM users 
+          WHERE id = (SELECT user_id FROM requests WHERE id = $1)`,
+    [requestId],
+  )).rows[0].platform_type;
+}
+
+async function getStep({ platformId, platformType }) {
+  return (await client.query(
+    `SELECT step FROM users 
+    WHERE platform_id = $1 and platform_type = $2`,
+    [platformId, platformType],
+  )).rows[0].step;
+}
+
+async function setStep({ platformId, platformType, value }) {
+  await client.query(
+    `UPDATE users SET step = $1  
+        WHERE platform_id = $2 and platform_type = $3`,
+    [value, platformId, platformType],
+  );
+  return true;
+}
+
+async function getLocation({ platformId, platformType }) {
+  return (await client.query(
+    `SELECT location FROM users 
+        WHERE platform_id = $1 and platform_type = $2`,
+    [platformId, platformType],
+  )).rows[0].location;
+}
+
 module.exports = {
   create,
   changeActivity,
@@ -81,4 +140,11 @@ module.exports = {
   getTimeOfLastRequest,
   updateBadRequestCountToZero,
   getId,
+  getName,
+  setName,
+  getPlatformId,
+  getPlatformTypeFromRequest,
+  getStep,
+  setStep,
+  getLocation,
 };
