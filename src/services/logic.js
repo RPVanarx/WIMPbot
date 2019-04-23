@@ -17,7 +17,10 @@ const {
   createRequest,
 } = require('./requestDB');
 const { sendMessageViber, sendPhotoMessageViber } = require('../viber/utils');
-const { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES, MODERATOR_GROUP_ID } = require('../config');
+const {
+  localesUA: { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES },
+  credentials: { MODERATOR_GROUP_ID },
+} = require('../config');
 
 async function isUserCanCreateRequest({ platformId, platformType }) {
   const badRequestCount = await getBadRequestCount({ platformId, platformType });

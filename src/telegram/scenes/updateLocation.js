@@ -1,35 +1,38 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  REGISTRATION_MESSAGES,
-  EVENT_NAMES: { REGISTRATION_USER: name },
-  PLATFORM_TYPE_TELEGRAM,
+  localesUA: { UPDATE_LOCATION_MESSAGES },
+  telegramEvents: {
+    SCENES: { UPDATE_LOCATION: name },
+  },
+  platformType: { TELEGRAM },
 } = require('../../config');
-const { mainMenu, startRegistrationButton } = require('../menu');
+const { mainMenu } = require('../menu');
 const { registerUser } = require('../../services');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(REGISTRATION_MESSAGES.CREATE);
+    ctx.reply(UPDATE_LOCATION_MESSAGES.UPDATE);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!ctx.message || !ctx.message.location) {
-      ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
     try {
       await registerUser({
         platformId: ctx.message.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
+        platformType: TELEGRAM,
+        userName: ctx.message.from.username,
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
       });
-      ctx.reply(REGISTRATION_MESSAGES.ENTER, mainMenu);
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ENTER, mainMenu);
     } catch (error) {
-      ctx.reply(REGISTRATION_MESSAGES.ERROR, startRegistrationButton);
-      log.error({ err: error }, 'registrateUserScene');
+      ctx.reply(UPDATE_LOCATION_MESSAGES.ERROR, mainMenu);
+      log.error({ err: error }, 'UpdateLocationScene');
     }
     return ctx.scene.leave();
   },

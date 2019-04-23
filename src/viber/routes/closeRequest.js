@@ -2,7 +2,10 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER, VIBER_REQUEST_CLOSE } = require('../../config');
+const {
+  platformType: { VIBER },
+  localesUA: { VIBER_REQUEST_CLOSE },
+} = require('../../config');
 const {
   getUserStep,
   getUserRequests,
@@ -18,7 +21,7 @@ bot.onTextMessage(/closeRequest/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 10 ||
       userIdFromRequest !== response.userProfile.id
     ) {
@@ -28,7 +31,7 @@ bot.onTextMessage(/closeRequest/, async (message, response) => {
     await deleteRequest(requestId);
     const requests = await getUserRequests({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
     });
     bot.sendMessage(response.userProfile, [
       new TextMessage(

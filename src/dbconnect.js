@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
 const dbinit = require('./dbinit');
-const { db } = require('./config');
+const {
+  credentials: { db },
+} = require('./config');
 const log = require('./logger')(__filename);
 
 if (!dbinit.isInitialized) {

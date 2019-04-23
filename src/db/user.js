@@ -1,6 +1,6 @@
 const client = require('../dbconnect');
 const {
-  DEFAULT_VALUES: { RADIUS },
+  defaultValues: { RADIUS },
 } = require('../config');
 
 async function create({ platformId, platformType, longitude, latitude }) {

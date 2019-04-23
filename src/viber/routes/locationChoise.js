@@ -3,8 +3,13 @@ const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
 const {
-  PLATFORM_TYPE_VIBER,
-  FIND_REQUESTS_MESSAGES: { LOCATION, RADIUS, CB_NEW_LOCATION, CB_REGISTRATE_LOCATION },
+  platformType: { VIBER },
+  localesUA: {
+    FIND_REQUESTS_MESSAGES: { LOCATION, RADIUS },
+  },
+  viberEvents: {
+    BUTTONS: { NEW_LOCATION, REGISTRATE_LOCATION },
+  },
 } = require('../../config');
 const { getUserStep, setUserStep, getUserLocation } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
@@ -16,18 +21,18 @@ bot.onTextMessage(/locationChoise/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 11 ||
-      ![CB_REGISTRATE_LOCATION, CB_NEW_LOCATION].includes(choise)
+      ![REGISTRATE_LOCATION, NEW_LOCATION].includes(choise)
     ) {
       badRequest(response.userProfile);
       return;
     }
     usersRequestBase.set(response.userProfile.id, {});
-    if (choise === CB_NEW_LOCATION) {
+    if (choise === NEW_LOCATION) {
       await setUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
         value: 12,
       });
       bot.sendMessage(response.userProfile, new TextMessage(LOCATION, keyboard.backMainMenu));
@@ -35,12 +40,12 @@ bot.onTextMessage(/locationChoise/, async (message, response) => {
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 13,
     });
     const location = await getUserLocation({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
     });
     usersRequestBase.get(response.userProfile.id).latitude = location.y;
     usersRequestBase.get(response.userProfile.id).longitude = location.x;

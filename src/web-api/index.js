@@ -4,7 +4,9 @@ const log = require('../logger')(__filename);
 const errorHandler = require('./utils/error-handler');
 const rootRouter = require('./routes');
 
-const { WEB_PORT } = require('../config');
+const {
+  credentials: { WEB_PORT },
+} = require('../config');
 
 const app = new Koa();
 

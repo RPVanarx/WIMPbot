@@ -4,9 +4,11 @@ const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
 const {
-  PLATFORM_TYPE_VIBER,
-  CLOSE_OWN_REQUESTS_MESSAGES: { NO_REQUESTS },
-  YOU,
+  platformType: { VIBER },
+  localesUA: {
+    CLOSE_OWN_REQUESTS_MESSAGES: { NO_REQUESTS },
+    YOU,
+  },
 } = require('../../config');
 const { getUserStep, setUserStep, getUserRequests, getFileLink } = require('../../services');
 const { sendOwnMessage } = require('../utils');
@@ -17,7 +19,7 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 4
     ) {
       badRequest(response.userProfile);
@@ -25,12 +27,12 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
     }
     const requests = await getUserRequests({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
     });
     if (requests.length === 0) {
       await setUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
         value: 1,
       });
       bot.sendMessage(response.userProfile, new TextMessage(NO_REQUESTS, keyboard.mainMenu));
@@ -38,7 +40,7 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 10,
     });
     requests.forEach(async (req, i) => {

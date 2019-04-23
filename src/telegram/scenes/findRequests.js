@@ -1,10 +1,13 @@
 const WizardScene = require('telegraf/scenes/wizard');
 
 const {
-  FIND_REQUESTS_MESSAGES,
-  EVENT_NAMES: { FIND_REQUESTS: name },
-  PLATFORM_TYPE_TELEGRAM,
-  DEFAULT_VALUES,
+  localesUA: { FIND_REQUESTS_MESSAGES },
+  telegramEvents: {
+    SCENES: { FIND_REQUESTS: name },
+    BUTTONS: { NEW_LOCATION, REGISTRATE_LOCATION },
+  },
+  platformType: { TELEGRAM },
+  defaultValues: { RADIUS_MIN, RADIUS_MAX, DAYS_MIN, DAYS_MAX, TIMEOUT_TELEGRAM_SAMPLE },
 } = require('../../config');
 const { mainMenu, newOrRegistrateLocation } = require('../menu');
 const log = require('../../logger')(__filename);
@@ -22,15 +25,12 @@ const scene = new WizardScene(
     if (
       !ctx.update ||
       !ctx.update.callback_query ||
-      ![
-        FIND_REQUESTS_MESSAGES.CB_NEW_LOCATION,
-        FIND_REQUESTS_MESSAGES.CB_REGISTRATE_LOCATION,
-      ].includes(ctx.update.callback_query.data)
+      ![NEW_LOCATION, REGISTRATE_LOCATION].includes(ctx.update.callback_query.data)
     ) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
-    if (ctx.update.callback_query.data === FIND_REQUESTS_MESSAGES.CB_REGISTRATE_LOCATION) {
+    if (ctx.update.callback_query.data === REGISTRATE_LOCATION) {
       ctx.reply(FIND_REQUESTS_MESSAGES.RADIUS);
       return ctx.wizard.selectStep(ctx.wizard.cursor + 2);
     }
@@ -53,7 +53,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     const radius = Number.parseInt(ctx.message.text, 10);
-    if (radius < DEFAULT_VALUES.RADIUS_MIN || radius > DEFAULT_VALUES.RADIUS_MAX) {
+    if (radius < RADIUS_MIN || radius > RADIUS_MAX) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_RADIUS, mainMenu);
       return ctx.scene.leave();
     }
@@ -67,7 +67,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     const days = Number.parseInt(ctx.message.text, 10);
-    if (days < DEFAULT_VALUES.DAYS_MIN || days > DEFAULT_VALUES.DAYS_MAX) {
+    if (days < DAYS_MIN || days > DAYS_MAX) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR_DAYS, mainMenu);
       return ctx.scene.leave();
     }
@@ -76,7 +76,7 @@ const scene = new WizardScene(
       if (!ctx.session.userMessage.location) {
         requests = await getRequestsInRegLocation({
           platformId: ctx.message.from.id,
-          platformType: PLATFORM_TYPE_TELEGRAM,
+          platformType: TELEGRAM,
           radius: ctx.session.userMessage.newRadius,
           days: Number.parseInt(ctx.message.text, 10),
         });
@@ -96,14 +96,14 @@ const scene = new WizardScene(
       await requests.forEach(req => {
         sendPhotoMessage({
           userRequest: req,
-          platformType: PLATFORM_TYPE_TELEGRAM,
+          platformType: TELEGRAM,
           photo: req.photo,
           chatId: ctx.message.from.id,
         });
       });
       setTimeout(
         () => ctx.reply(FIND_REQUESTS_MESSAGES.SAMPLE_END, mainMenu),
-        FIND_REQUESTS_MESSAGES.TIMEOUT,
+        TIMEOUT_TELEGRAM_SAMPLE,
       );
     } catch (error) {
       ctx.reply(FIND_REQUESTS_MESSAGES.ERROR, mainMenu);

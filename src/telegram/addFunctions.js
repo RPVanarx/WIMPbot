@@ -1,18 +1,21 @@
 const bot = require('./bot');
-const { MODER_BUTTON, MODERATOR_GROUP_ID, CREATE_MESSAGE_TEXTS } = require('../config');
+const {
+  localesUA: { MODER_BUTTON, CREATE_MESSAGE_TEXTS },
+  credentials: { MODERATOR_GROUP_ID },
+  telegramEvents: {
+    BUTTONS: { MODERATE, FALSE, TRUE, SEARCH },
+  },
+  platformType: { TELEGRAM, VIBER },
+} = require('../config');
 
 function createMessage(request) {
   return `${CREATE_MESSAGE_TEXTS.TYPE} ${
-    request.requestType === 'search'
+    request.requestType === SEARCH
       ? CREATE_MESSAGE_TEXTS.ANSWER_SEARCH
       : CREATE_MESSAGE_TEXTS.ANSWER_FOUND
   }
-${CREATE_MESSAGE_TEXTS.PLATFORM} ${
-    request.platformType === 'telegram'
-      ? CREATE_MESSAGE_TEXTS.PLATFORM_TELEGRAM
-      : CREATE_MESSAGE_TEXTS.PLATFORM_VIBER
-  }
-${CREATE_MESSAGE_TEXTS.SENDER} ${request.platformType === 'telegram' ? '@' : ''}${request.userName}
+${CREATE_MESSAGE_TEXTS.PLATFORM} ${request.platformType === TELEGRAM ? TELEGRAM : VIBER}
+${CREATE_MESSAGE_TEXTS.SENDER} ${request.platformType === TELEGRAM ? '@' : ''}${request.userName}
 ${CREATE_MESSAGE_TEXTS.DATE} ${request.creationDate.toLocaleString()}
 ${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.LOCATION_LINE_BEGIN}${request.latitude},${
     request.longitude
@@ -42,13 +45,13 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
         [
           {
             text: MODER_BUTTON.APPROVE,
-            callback_data: MODER_BUTTON.CB_MODERATE + request.reqId + MODER_BUTTON.CB_TRUE,
+            callback_data: `${MODERATE}:${request.reqId}${TRUE}`,
           },
         ],
         [
           {
             text: MODER_BUTTON.DECLINE,
-            callback_data: MODER_BUTTON.CB_MODERATE + request.reqId + MODER_BUTTON.CB_FALSE,
+            callback_data: `${MODERATE}:${request.reqId}${FALSE}`,
           },
         ],
       ],

@@ -1,6 +1,8 @@
 const webToken = require('../utils/web-token');
 
-const { WEB_AUTH_AGE } = require('../../config');
+const {
+  webApi: { WEB_AUTH_AGE },
+} = require('../../config');
 
 const FIELD_TOKEN = 'token';
 

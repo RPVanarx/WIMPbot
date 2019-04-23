@@ -1,5 +1,7 @@
 const ViberBot = require('viber-bot').Bot;
-const { VIBER_TOKEN } = require('../config');
+const {
+  credentials: { VIBER_TOKEN },
+} = require('../config');
 
 const bot = new ViberBot({
   authToken: VIBER_TOKEN,

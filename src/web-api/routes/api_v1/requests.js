@@ -4,11 +4,13 @@ const validator = require('../../utils/validator');
 const { getRequestsInArea } = require('../../../services');
 
 const {
-  DEFAULT_VALUES,
-  WEB_API_V1_PREFIX,
-  WEB_API_PATH_PHOTO,
-  WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
-  WEB_API_PATH_LIST: LIST_SUFFIX,
+  defaultValues: { RADIUS },
+  webApi: {
+    WEB_API_V1_PREFIX,
+    WEB_API_PATH_PHOTO,
+    WEB_API_PATH_REQUESTS: REQUEST_SUFFIX,
+    WEB_API_PATH_LIST: LIST_SUFFIX,
+  },
 } = require('../../../config');
 
 const router = new Router({
@@ -16,7 +18,7 @@ const router = new Router({
 });
 
 function validateQuery(ctx) {
-  ctx.request.query.r = ctx.request.query.r || DEFAULT_VALUES.RADIUS;
+  ctx.request.query.r = ctx.request.query.r || RADIUS;
   const errors = validator.listQuery(ctx.request.query);
   ctx.assert(!errors.length, 400, errors.join(' '));
 }

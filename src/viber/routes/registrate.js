@@ -1,7 +1,9 @@
 const TextMessage = require('viber-bot').Message.Text;
 const bot = require('../bot');
 const {
-  REGISTRATION_MESSAGES: { CREATE },
+  localesUA: {
+    REGISTRATION_MESSAGES: { CREATE },
+  },
 } = require('../../config');
 
 bot.onTextMessage(/registrateUser/, (message, response) => {

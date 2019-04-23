@@ -1,11 +1,12 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  CREATE_REQUEST_MESSAGES,
-  EVENT_NAMES: { CREATE_REQUEST: name },
-  PLATFORM_TYPE_TELEGRAM,
-  // MODERATOR_GROUP_ID,
-  BUTTON_EVENT,
-  DEFAULT_VALUES: { REQUEST_MESSAGE_MAX: textLimit },
+  localesUA: { CREATE_REQUEST_MESSAGES },
+  telegramEvents: {
+    SCENES: { CREATE_REQUEST: name },
+    BUTTONS: { SEARCH, FOUND },
+  },
+  platformType: { TELEGRAM },
+  defaultValues: { REQUEST_MESSAGE_MAX },
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const { createRequest, isUserCanCreateRequest } = require('../../services');
@@ -22,7 +23,7 @@ const scene = new WizardScene(
     try {
       const status = await isUserCanCreateRequest({
         platformId: ctx.update.callback_query.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
+        platformType: TELEGRAM,
       });
       if (status) {
         ctx.reply(CREATE_REQUEST_MESSAGES.CHOICE_TYPE, searchFoundMenu);
@@ -41,7 +42,7 @@ const scene = new WizardScene(
     if (
       ctx.update &&
       ctx.update.callback_query &&
-      [BUTTON_EVENT.SEARCH, BUTTON_EVENT.FOUND].includes(ctx.update.callback_query.data)
+      [SEARCH, FOUND].includes(ctx.update.callback_query.data)
     ) {
       ctx.session.userMessage.requestType = ctx.update.callback_query.data;
       ctx.reply(CREATE_REQUEST_MESSAGES.PHOTO);
@@ -73,14 +74,14 @@ const scene = new WizardScene(
       ctx.reply(CREATE_REQUEST_MESSAGES.ERROR, mainMenu);
       return ctx.scene.leave();
     }
-    if (ctx.message.text.length > textLimit) {
+    if (ctx.message.text.length > REQUEST_MESSAGE_MAX) {
       ctx.reply(CREATE_REQUEST_MESSAGES.MANY_LETTERS, mainMenu);
       return ctx.scene.leave();
     }
     try {
       const request = {
         platformId: ctx.message.from.id,
-        platformType: PLATFORM_TYPE_TELEGRAM,
+        platformType: TELEGRAM,
         userName: ctx.message.from.username,
         requestType: ctx.session.userMessage.requestType,
         longitude: ctx.session.userMessage.location.longitude,

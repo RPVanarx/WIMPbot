@@ -4,7 +4,10 @@ const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
 const { registerUser } = require('../../../services');
 
-const { WEB_API_PATH_SIGNUP, PLATFORM_TYPE_TELEGRAM } = require('../../../config');
+const {
+  webApi: { WEB_API_PATH_SIGNUP },
+  platformType: { TELEGRAM },
+} = require('../../../config');
 
 const router = new Router({
   prefix: WEB_API_PATH_SIGNUP,
@@ -32,7 +35,7 @@ async function signup(ctx) {
   try {
     isRegistered = await registerUser({
       platformId: ctx.chest.id,
-      platformType: PLATFORM_TYPE_TELEGRAM,
+      platformType: TELEGRAM,
       longitude,
       latitude,
     });

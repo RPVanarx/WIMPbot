@@ -7,11 +7,11 @@ const photoService = require('../../../utils/photo');
 const { createRequest } = require('../../../services');
 
 const {
-  WEB_API_PATH_REQUEST,
-  PLATFORM_TYPE_TELEGRAM,
-  BUTTON_EVENT: { SEARCH: REQUEST_TYPE_SEARCH },
-  WEB_PHOTO_FILE_SIZE_MAX,
-  WEB_POST_FIELD_LENGTH_MAX,
+  webApi: { WEB_API_PATH_REQUEST, WEB_PHOTO_FILE_SIZE_MAX, WEB_POST_FIELD_LENGTH_MAX },
+  platformType: { TELEGRAM },
+  telegramEvents: {
+    BUTTONS: { SEARCH: REQUEST_TYPE_SEARCH },
+  },
 } = require('../../../config');
 
 const router = new Router({
@@ -30,7 +30,7 @@ async function formRequest({ fields: { lon, lat, msg } }, platformId, userName, 
   return {
     userName,
     platformId,
-    platformType: PLATFORM_TYPE_TELEGRAM,
+    platformType: TELEGRAM,
     requestType: REQUEST_TYPE_SEARCH,
     longitude: lon,
     latitude: lat,

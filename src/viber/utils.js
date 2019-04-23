@@ -1,24 +1,26 @@
 const TextMessage = require('viber-bot').Message.Text;
 const PictureMessage = require('viber-bot').Message.Picture;
 const bot = require('./bot');
-const { CREATE_MESSAGE_TEXTS } = require('../config');
+const {
+  localesUA: { CREATE_MESSAGE_TEXTS },
+  platformType: { VIBER, TELEGRAM },
+  telegramEvents: {
+    BUTTONS: { SEARCH },
+  },
+} = require('../config');
 const getCurrentKeyboard = require('./getCurrentKeyboard');
 
 function createMessage(request) {
-  return `Заявка №${request.id}
+  return `${CREATE_MESSAGE_TEXTS.REQUEST}${request.id}
 ${CREATE_MESSAGE_TEXTS.TYPE} ${
-    request.request_type === 'search'
+    request.request_type === SEARCH
       ? CREATE_MESSAGE_TEXTS.ANSWER_SEARCH
       : CREATE_MESSAGE_TEXTS.ANSWER_FOUND
   }
-${CREATE_MESSAGE_TEXTS.PLATFORM} ${
-    request.platform_type === 'telegram'
-      ? CREATE_MESSAGE_TEXTS.PLATFORM_TELEGRAM
-      : CREATE_MESSAGE_TEXTS.PLATFORM_VIBER
-  }
-${CREATE_MESSAGE_TEXTS.SENDER} ${request.platform_type === 'telegram' ? 'https://t.me/' : ''}${
-    request.user_name
-  }
+${CREATE_MESSAGE_TEXTS.PLATFORM} ${request.platform_type === TELEGRAM ? TELEGRAM : VIBER}
+${CREATE_MESSAGE_TEXTS.SENDER} ${
+    request.platform_type === TELEGRAM ? `${CREATE_MESSAGE_TEXTS.TELEGRAM_URL}` : ''
+  }${request.user_name}
 ${CREATE_MESSAGE_TEXTS.DATE} ${request.creation_date.toLocaleString()}
 ${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.URL}${request.location.y},${
     request.location.x
@@ -30,7 +32,7 @@ async function sendPhotoMessageViber({ chatId, request, photo }) {
   const keyboard = await getCurrentKeyboard(chatId);
   const message = createMessage(request);
   bot.sendMessage({ id: chatId }, [
-    new PictureMessage(photo, `Заявка №${request.id}`),
+    new PictureMessage(photo, `${CREATE_MESSAGE_TEXTS.REQUEST}${request.id}`),
     new TextMessage(message),
     keyboard,
   ]);
@@ -39,7 +41,7 @@ async function sendPhotoMessageViber({ chatId, request, photo }) {
 function sendOwnMessage({ chatId, request, photo }) {
   const message = createMessage(request);
   bot.sendMessage({ id: chatId }, [
-    new PictureMessage(photo, `Заявка №${request.id}`),
+    new PictureMessage(photo, `${CREATE_MESSAGE_TEXTS.REQUEST}${request.id}`),
     new TextMessage(message),
   ]);
 }
