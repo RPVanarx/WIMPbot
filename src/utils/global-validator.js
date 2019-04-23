@@ -1,5 +1,5 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
-const { DEFAULT_VALUES } = require('../config');
+const { defaultValues: DEFAULT_VALUES } = require('../config');
 
 // HACK: Remove duplicates from array
 // Valid for 1.1.8 forgjs (1.1.9 still has this bug)

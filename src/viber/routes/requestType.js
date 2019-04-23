@@ -3,8 +3,10 @@ const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
 const {
-  PLATFORM_TYPE_VIBER,
-  CREATE_REQUEST_MESSAGES: { PHOTO },
+  platformType: { VIBER },
+  localesUA: {
+    CREATE_REQUEST_MESSAGES: { PHOTO },
+  },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
@@ -16,7 +18,7 @@ bot.onTextMessage(/requestType/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 6 ||
       !['search', 'found'].includes(type)
     ) {
@@ -25,7 +27,7 @@ bot.onTextMessage(/requestType/, async (message, response) => {
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 7,
     });
     usersRequestBase.get(response.userProfile.id).requestType = type;

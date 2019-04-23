@@ -4,7 +4,10 @@ const auth = require('../../utils/telegram-authorization');
 const token = require('../../middleware/token');
 const { getUserId } = require('../../../services');
 
-const { WEB_API_PATH_SIGNIN, PLATFORM_TYPE_TELEGRAM } = require('../../../config');
+const {
+  webApi: { WEB_API_PATH_SIGNIN },
+  platformType: { PLATFORM_TYPE_TELEGRAM },
+} = require('../../../config');
 
 const router = new Router({
   prefix: WEB_API_PATH_SIGNIN,

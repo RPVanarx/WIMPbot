@@ -1,8 +1,9 @@
 const Router = require('koa-router');
 
 const photo = require('../../../utils/photo');
-
-const { WEB_API_PATH_PHOTO } = require('../../../config');
+const {
+  webApi: { WEB_API_PATH_PHOTO },
+} = require('../../../config');
 
 const router = new Router({
   prefix: WEB_API_PATH_PHOTO,

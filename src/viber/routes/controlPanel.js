@@ -1,7 +1,10 @@
 const TextMessage = require('viber-bot').Message.Text;
 const bot = require('../bot');
 const keyboard = require('../menu');
-const { PLATFORM_TYPE_VIBER, REGISTRATION_MENU_MESSAGE } = require('../../config');
+const {
+  platformType: { VIBER },
+  localesUA: { REGISTRATION_MENU_MESSAGE },
+} = require('../../config');
 const { getUserActivity, getUserStep, setUserStep } = require('../../services');
 const badRequest = require('../badRequest');
 const log = require('../../logger')(__filename);
@@ -11,7 +14,7 @@ bot.onTextMessage(/controlPanel/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 1
     ) {
       badRequest(response.userProfile);
@@ -19,13 +22,13 @@ bot.onTextMessage(/controlPanel/, async (message, response) => {
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 2,
     });
     const controlKeyboard = keyboard.controlPanel(
       await getUserActivity({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       }),
     );
     bot.sendMessage(

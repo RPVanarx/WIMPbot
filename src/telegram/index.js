@@ -2,15 +2,16 @@ const session = require('telegraf/session');
 const Router = require('telegraf/router');
 const bot = require('./bot');
 const {
-  EVENT_NAMES: { REGISTRATION_MENU, REQUEST_MENU },
-  WELCOME_MESSAGE,
-  REGISTRATION_MENU_MESSAGE,
-  REQUEST_MENU_MESSAGE,
-  PLATFORM_TYPE_TELEGRAM,
+  telegramEvents: {
+    SCENES: { REGISTRATION_MENU, REQUEST_MENU },
+    BUTTONS: { DELETE_REQUEST, MODERATE },
+  },
+  localesUA: { WELCOME_MESSAGE, REGISTRATION_MENU_MESSAGE, REQUEST_MENU_MESSAGE },
+  platformType: { TELEGRAM },
 } = require('../config');
 const log = require('../logger')(__filename);
 
-const { stage, stagesArray } = require('./stages');
+const { stage, stagesArray } = require('./scenes');
 const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
 const { deleteRequest, getUserActivity, processModerationRequest } = require('../services');
 
@@ -42,7 +43,7 @@ bot.action(REGISTRATION_MENU, async ctx => {
       registrationMenu(
         await getUserActivity({
           platformId: ctx.update.callback_query.from.id,
-          platformType: PLATFORM_TYPE_TELEGRAM,
+          platformType: TELEGRAM,
         }),
       ),
     );
@@ -67,7 +68,7 @@ const callbackHandler = new Router(({ callbackQuery }) => {
   };
 });
 
-callbackHandler.on('deleteRequest', async ctx => {
+callbackHandler.on(DELETE_REQUEST, async ctx => {
   try {
     await deleteRequest(ctx.state.reqId);
     ctx.deleteMessage();
@@ -76,19 +77,7 @@ callbackHandler.on('deleteRequest', async ctx => {
   }
 });
 
-// callbackHandler.on('comment', async ctx => {
-//   try {
-//     const a = await ctx.telegram.sendPhoto(
-//       433445035,
-//       'http://static1.banki.ru/ugc/62/b3/09/df/7255314.jpg',
-//     );
-//     console.log(a);
-//   } catch (error) {
-//     console.error(`comment ${error}`);
-//   }
-// });
-
-callbackHandler.on('moderate', async ctx => {
+callbackHandler.on(MODERATE, async ctx => {
   processModerationRequest({
     reqId: ctx.state.reqId,
     statusString: ctx.state.status,

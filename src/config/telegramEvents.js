@@ -1,0 +1,25 @@
+module.exports = {
+  SCENES: {
+    REGISTRATION_MENU: 'registrationMenu',
+    REQUEST_MENU: 'requestMenu',
+    FIND_REQUESTS: 'findRequests',
+    REGISTRATION_USER: 'registrateUser',
+    UPDATE_LOCATION: 'updateLocation',
+    DEACTIVATE_USER: 'deactivateUser',
+    CREATE_REQUEST: 'createRequest',
+    DELETE_REQUEST: 'closeOwnRequest',
+    ACTIVATE_USER: 'activateUser',
+  },
+  BUTTONS: {
+    YES: 'yes',
+    NO: 'no',
+    SEARCH: 'search',
+    FOUND: 'found',
+    NEW_LOCATION: 'newLocation',
+    REGISTRATE_LOCATION: 'registrateLocation',
+    MODERATE: 'moderate',
+    TRUE: ':true',
+    FALSE: ':false',
+    DELETE_REQUEST: 'deleteRequest',
+  },
+};

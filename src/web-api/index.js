@@ -6,10 +6,7 @@ const errorHandler = require('./middleware/error-handler');
 const rootRouter = require('./routes');
 
 const {
-  WEB_PORT,
-  WEB_CORS_ORIGIN,
-  WEB_CORS_ALLOW_METHODS,
-  WEB_CORS_MAX_AGE,
+  webApi: { WEB_PORT, WEB_CORS_ORIGIN, WEB_CORS_ALLOW_METHODS, WEB_CORS_MAX_AGE },
 } = require('../config');
 
 const app = new Koa();

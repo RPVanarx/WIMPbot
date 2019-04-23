@@ -6,7 +6,9 @@ const requests = require('./requests');
 const signin = require('./signin');
 const signup = require('./signup');
 
-const { WEB_API_V1_PREFIX } = require('../../../config');
+const {
+  webApi: { WEB_API_V1_PREFIX },
+} = require('../../../config');
 
 const router = new Router({
   prefix: WEB_API_V1_PREFIX,

@@ -7,18 +7,20 @@ const KeyboardMessage = require('viber-bot').Message.Keyboard;
 const bot = require('../bot');
 const keyboard = require('../menu');
 const {
-  PLATFORM_TYPE_VIBER,
-  DEFAULT_VALUES,
-  REGISTRATION_MESSAGES: { ENTER },
-  UPDATE_LOCATION_MESSAGES: { ENTER: ENTER_LOCATION },
-  CREATE_REQUEST_MESSAGES: {
-    DESCRIPTION,
-    CHOICE_TYPE,
-    LOCATION,
-    MANY_LETTERS,
-    ENTER: MODERATION_START,
+  platformType: { VIBER },
+  defaultValues: { RADIUS_MAX, RADIUS_MIN, DAYS_MAX, DAYS_MIN },
+  localesUA: {
+    REGISTRATION_MESSAGES: { ENTER },
+    UPDATE_LOCATION_MESSAGES: { ENTER: ENTER_LOCATION },
+    CREATE_REQUEST_MESSAGES: {
+      DESCRIPTION,
+      CHOICE_TYPE,
+      LOCATION,
+      MANY_LETTERS,
+      ENTER: MODERATION_START,
+    },
+    FIND_REQUESTS_MESSAGES: { NEW_LOCATION_RADIUS, ERROR_RADIUS, ERROR_DAYS, DAYS, NO_REQUESTS },
   },
-  FIND_REQUESTS_MESSAGES: { NEW_LOCATION_RADIUS, ERROR_RADIUS, ERROR_DAYS, DAYS, NO_REQUESTS },
 } = require('../../config');
 const {
   registerUser,
@@ -41,20 +43,20 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
       switch (
         await getUserStep({
           platformId: response.userProfile.id,
-          platformType: PLATFORM_TYPE_VIBER,
+          platformType: VIBER,
         })
       ) {
         case 0: {
           try {
             await registerUser({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               longitude: message.longitude,
               latitude: message.latitude,
             });
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 1,
             });
             bot.sendMessage(response.userProfile, new TextMessage(ENTER, keyboard.mainMenu));
@@ -69,13 +71,13 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           try {
             await registerUser({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               longitude: message.longitude,
               latitude: message.latitude,
             });
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 1,
             });
             bot.sendMessage(
@@ -95,7 +97,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             usersRequestBase.get(response.userProfile.id).longitude = message.longitude;
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 9,
             });
             bot.sendMessage(
@@ -115,7 +117,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             usersRequestBase.get(response.userProfile.id).longitude = message.longitude;
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 13,
             });
             bot.sendMessage(
@@ -138,7 +140,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         if (
           (await getUserStep({
             platformId: response.userProfile.id,
-            platformType: PLATFORM_TYPE_VIBER,
+            platformType: VIBER,
           })) !== 5 &&
           message.contactName !== undefined
         ) {
@@ -147,12 +149,12 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         }
         await setUserName({
           platformId: response.userProfile.id,
-          platformType: PLATFORM_TYPE_VIBER,
+          platformType: VIBER,
           userName: message.contactPhoneNumber,
         });
         await setUserStep({
           platformId: response.userProfile.id,
-          platformType: PLATFORM_TYPE_VIBER,
+          platformType: VIBER,
           value: 6,
         });
         usersRequestBase.get(response.userProfile.id).userName = message.contactPhoneNumber;
@@ -171,7 +173,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         if (
           (await getUserStep({
             platformId: response.userProfile.id,
-            platformType: PLATFORM_TYPE_VIBER,
+            platformType: VIBER,
           })) !== 7
         ) {
           badRequest(response.userProfile);
@@ -180,7 +182,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         const id = await getNewPhotoId(message.url);
         await setUserStep({
           platformId: response.userProfile.id,
-          platformType: PLATFORM_TYPE_VIBER,
+          platformType: VIBER,
           value: 8,
         });
         usersRequestBase.get(response.userProfile.id).photo = id;
@@ -195,7 +197,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
       switch (
         await getUserStep({
           platformId: response.userProfile.id,
-          platformType: PLATFORM_TYPE_VIBER,
+          platformType: VIBER,
         })
       ) {
         case 9: {
@@ -209,12 +211,12 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             }
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 1,
             });
             const userRequest = usersRequestBase.get(response.userProfile.id);
             userRequest.message = message.text;
-            userRequest.platformType = PLATFORM_TYPE_VIBER;
+            userRequest.platformType = VIBER;
             userRequest.platformId = response.userProfile.id;
             await createRequest(userRequest);
             bot.sendMessage(
@@ -230,11 +232,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         }
         case 13: {
           const radius = Number.parseInt(message.text, 10);
-          if (
-            radius < DEFAULT_VALUES.RADIUS_MIN ||
-            radius > DEFAULT_VALUES.RADIUS_MAX ||
-            !/^\d+$/.test(message.text)
-          ) {
+          if (radius < RADIUS_MIN || radius > RADIUS_MAX || !/^\d+$/.test(message.text)) {
             bot.sendMessage(
               response.userProfile,
               new TextMessage(ERROR_RADIUS, keyboard.backMainMenu),
@@ -245,7 +243,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           try {
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 14,
             });
             bot.sendMessage(response.userProfile, new TextMessage(DAYS, keyboard.backMainMenu));
@@ -259,11 +257,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         case 14: {
           try {
             const days = Number.parseInt(message.text, 10);
-            if (
-              days < DEFAULT_VALUES.DAYS_MIN ||
-              days > DEFAULT_VALUES.DAYS_MAX ||
-              !/^\d+$/.test(message.text)
-            ) {
+            if (days < DAYS_MIN || days > DAYS_MAX || !/^\d+$/.test(message.text)) {
               bot.sendMessage(
                 response.userProfile,
                 new TextMessage(ERROR_DAYS, keyboard.backMainMenu),
@@ -284,7 +278,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               );
               await setUserStep({
                 platformId: response.userProfile.id,
-                platformType: PLATFORM_TYPE_VIBER,
+                platformType: VIBER,
                 value: 1,
               });
               return;
@@ -307,7 +301,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             );
             await setUserStep({
               platformId: response.userProfile.id,
-              platformType: PLATFORM_TYPE_VIBER,
+              platformType: VIBER,
               value: 1,
             });
             break;

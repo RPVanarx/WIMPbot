@@ -2,7 +2,11 @@ const TextMessage = require('viber-bot').Message.Text;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
-const { PLATFORM_TYPE_VIBER, DEACTIVATE_USER, ACTIVATE_USER } = require('../../config');
+const {
+  platformType: { VIBER },
+  localesUA: { DEACTIVATE_USER, ACTIVATE_USER },
+  viberEvents: { TRUE, FALSE },
+} = require('../../config');
 const { getUserStep, setUserStep, changeUserActivity } = require('../../services');
 const log = require('../../logger')(__filename);
 
@@ -12,21 +16,21 @@ bot.onTextMessage(/changeUserActivity/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 2 ||
-      !['true', 'false'].includes(status)
+      ![TRUE, FALSE].includes(status)
     ) {
       badRequest(response.userProfile);
       return;
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 1,
     });
     await changeUserActivity({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: status,
     });
     const answerMessage = JSON.parse(status) ? ACTIVATE_USER.TRUE : DEACTIVATE_USER.TRUE;

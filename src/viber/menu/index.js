@@ -1,14 +1,16 @@
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
 const {
-  FIND_REQUESTS_MESSAGES: { CB_NEW_LOCATION, CB_REGISTRATE_LOCATION },
-  VIBER_TELEPHONE: { SHARE_NUMBER },
-  VIBER_KEYBOARD,
-  WELCOME_MENU_BUTTON_REGISTRATION,
-  MAIN_BUTTONS,
-  REGISTRATION_BUTTONS,
-  REQUESTS_BUTTONS,
-  BUTTON_MESSAGES,
-  FIND_REQUESTS_BUTTON,
+  localesUA: {
+    FIND_REQUESTS_MESSAGES: { NEW_LOCATION, REGISTRATE_LOCATION },
+    VIBER_TELEPHONE: { SHARE_NUMBER },
+    VIBER_KEYBOARD,
+    WELCOME_MENU_BUTTON_REGISTRATION,
+    MAIN_BUTTONS,
+    REGISTRATION_BUTTONS,
+    REQUESTS_BUTTONS,
+    BUTTON_MESSAGES,
+    FIND_REQUESTS_BUTTON,
+  },
 } = require('../../config');
 
 const phoneShare = new KeyboardMessage(
@@ -161,12 +163,12 @@ const locationChoise = {
   Buttons: [
     {
       ActionType: 'reply',
-      ActionBody: `locationChoise:${CB_REGISTRATE_LOCATION}`,
+      ActionBody: `locationChoise:${REGISTRATE_LOCATION}`,
       Text: FIND_REQUESTS_BUTTON.USE_REG_LOCATION,
     },
     {
       ActionType: 'reply',
-      ActionBody: `locationChoise:${CB_NEW_LOCATION}`,
+      ActionBody: `locationChoise:${NEW_LOCATION}`,
       Text: FIND_REQUESTS_BUTTON.USE_NEW_LOCATION,
     },
     {

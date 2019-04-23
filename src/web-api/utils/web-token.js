@@ -1,5 +1,7 @@
 const crypto = require('crypto');
-const { WEB_TOKEN_KEY, WEB_AUTH_AGE } = require('../../config');
+const {
+  webApi: { WEB_TOKEN_KEY, WEB_AUTH_AGE },
+} = require('../../config');
 
 const algorithm = 'aes-256-cbc';
 

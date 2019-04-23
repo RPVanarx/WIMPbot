@@ -1,12 +1,14 @@
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
 const { getUserStep, getUserActivity, getUserRequests } = require('../services/requestDB');
 const keyboard = require('./menu');
-const { PLATFORM_TYPE_VIBER } = require('../config');
+const {
+  platformType: { VIBER },
+} = require('../config');
 
 module.exports = async id => {
   const step = await getUserStep({
     platformId: id,
-    platformType: PLATFORM_TYPE_VIBER,
+    platformType: VIBER,
   });
   switch (step) {
     case 1: {
@@ -17,7 +19,7 @@ module.exports = async id => {
         keyboard.controlPanel(
           await getUserActivity({
             platformId: id,
-            platformType: PLATFORM_TYPE_VIBER,
+            platformType: VIBER,
           }),
         ),
       );
@@ -37,7 +39,7 @@ module.exports = async id => {
     case 10: {
       const requests = await getUserRequests({
         platformId: id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       });
       return new KeyboardMessage(keyboard.deleteRequestButtons(requests));
     }

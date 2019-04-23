@@ -3,9 +3,11 @@ const keyboard = require('../menu');
 const bot = require('../bot');
 const badRequest = require('../badRequest');
 const {
-  PLATFORM_TYPE_VIBER,
-  VIBER_TELEPHONE,
-  CREATE_REQUEST_MESSAGES: { MANY_BAD_REQUESTS, CHOICE_TYPE },
+  platformType: { VIBER },
+  localesUA: {
+    VIBER_TELEPHONE,
+    CREATE_REQUEST_MESSAGES: { MANY_BAD_REQUESTS, CHOICE_TYPE },
+  },
 } = require('../../config');
 const { getUserStep, setUserStep, getUserName, isUserCanCreateRequest } = require('../../services');
 const usersRequestBase = require('../usersRequestBase');
@@ -16,7 +18,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
       })) !== 4
     ) {
       badRequest(response.userProfile);
@@ -24,12 +26,12 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
     }
     const phoneNumber = await getUserName({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
     });
     if (!phoneNumber) {
       await setUserStep({
         platformId: response.userProfile.id,
-        platformType: PLATFORM_TYPE_VIBER,
+        platformType: VIBER,
         value: 5,
       });
       bot.sendMessage(response.userProfile, [
@@ -40,7 +42,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
     }
     const status = await isUserCanCreateRequest({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
     });
     if (!status) {
       badRequest(response.userProfile, MANY_BAD_REQUESTS);
@@ -48,7 +50,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
     }
     await setUserStep({
       platformId: response.userProfile.id,
-      platformType: PLATFORM_TYPE_VIBER,
+      platformType: VIBER,
       value: 6,
     });
     usersRequestBase.set(response.userProfile.id, { userName: phoneNumber });
