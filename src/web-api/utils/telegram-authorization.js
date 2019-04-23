@@ -49,7 +49,7 @@ function validateAuthDate({ auth_date: dateInSeconds }) {
   if (WEB_AUTH_AGE < Date.now() - date) throw new Error('Authentication expired');
 }
 
-module.exports = function authorize(telegramAuthData) {
+module.exports = function auth(telegramAuthData) {
   validatePayload(telegramAuthData);
   checkSignature(telegramAuthData);
   validateAuthDate(telegramAuthData);
