@@ -10,7 +10,13 @@ const {
     YOU,
   },
 } = require('../../config');
-const { getUserStep, setUserStep, getUserRequests, getFileLink } = require('../../services');
+const {
+  getUserStep,
+  setUserStep,
+  getUserRequests,
+  getFileLink,
+  createMessageRequest,
+} = require('../../services');
 const { sendOwnMessage } = require('../utils');
 const log = require('../../logger')(__filename);
 
@@ -46,15 +52,27 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
     requests.forEach(async (req, i) => {
       req.user_name = YOU;
       const photoURL = await getFileLink(req.photo);
-      setTimeout(
-        () =>
-          sendOwnMessage({
-            chatId: response.userProfile.id,
-            photo: photoURL,
-            request: req,
-          }),
-        1000 * i,
-      );
+      setTimeout(() => {
+        const createMessage = createMessageRequest(
+          {
+            platformType: VIBER,
+            requestType: req.request_type,
+            userName: req.user_name,
+            creationDate: req.creation_date,
+            message: req.message,
+            latitude: req.location.y,
+            longitude: req.location.x,
+            id: req.id,
+          },
+          VIBER,
+        );
+        sendOwnMessage({
+          chatId: response.userProfile.id,
+          photo: photoURL,
+          requestId: req.id,
+          message: createMessage,
+        });
+      }, 1000 * i);
     });
     setTimeout(
       () =>

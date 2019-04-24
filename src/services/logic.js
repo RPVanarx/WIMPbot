@@ -20,7 +20,9 @@ const { sendMessageViber, sendPhotoMessageViber } = require('../viber/utils');
 const {
   localesUA: { SERVICES_MESSAGES, CREATE_REQUEST_MESSAGES },
   credentials: { MODERATOR_GROUP_ID },
+  platformType: { TELEGRAM, VIBER },
 } = require('../config');
+const createMessageRequest = require('./createMessageRequest');
 
 async function isUserCanCreateRequest({ platformId, platformType }) {
   const badRequestCount = await getBadRequestCount({ platformId, platformType });
@@ -36,21 +38,31 @@ async function isUserCanCreateRequest({ platformId, platformType }) {
 }
 
 function sendMessage(platformType, userId, message) {
-  if (platformType === 'telegram') return sendMessageTelegram(userId, message);
-  if (platformType === 'viber') return sendMessageViber(userId, message);
+  if (platformType === TELEGRAM) return sendMessageTelegram(userId, message);
+  if (platformType === VIBER) return sendMessageViber(userId, message);
   return false;
 }
 
 async function sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
-  let sendRequestMessage;
-  let photoURL = photo;
-  if (platformType === 'telegram') sendRequestMessage = sendPhotoMessageTelegram;
-  if (platformType === 'viber') {
-    sendRequestMessage = sendPhotoMessageViber;
-    photoURL = await getFileLink(photo);
+  const message = createMessageRequest(
+    {
+      platformType: userRequest.platform_type,
+      requestType: userRequest.request_type,
+      userName: userRequest.user_name,
+      creationDate: userRequest.creation_date,
+      message: userRequest.message,
+      latitude: userRequest.location.y,
+      longitude: userRequest.location.x,
+      id: userRequest.id,
+    },
+    platformType,
+  );
+  if (platformType === TELEGRAM) return sendPhotoMessageTelegram({ message, photo, chatId });
+  if (platformType === VIBER) {
+    const photoURL = await getFileLink(photo);
+    return sendPhotoMessageViber({ message, photo: photoURL, chatId, requestId: userRequest.id });
   }
-  const res = await sendRequestMessage({ request: userRequest, photo: photoURL, chatId });
-  return res;
+  return true;
 }
 
 async function processModerationRequest({ reqId, statusString, moderatorId }) {

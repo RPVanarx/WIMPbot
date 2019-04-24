@@ -1,39 +1,17 @@
 const bot = require('./bot');
 const {
-  localesUA: { MODER_BUTTON, CREATE_MESSAGE_TEXTS },
+  localesUA: { MODER_BUTTON },
   credentials: { MODERATOR_GROUP_ID },
   telegramEvents: {
-    BUTTONS: { MODERATE, FALSE, TRUE, SEARCH },
+    BUTTONS: { MODERATE, FALSE, TRUE },
   },
-  platformType: { TELEGRAM, VIBER },
+  platformType: { TELEGRAM },
 } = require('../config');
+const { createMessageRequest } = require('../services');
 
-function createMessage(request) {
-  return `${CREATE_MESSAGE_TEXTS.TYPE} ${
-    request.requestType === SEARCH
-      ? CREATE_MESSAGE_TEXTS.ANSWER_SEARCH
-      : CREATE_MESSAGE_TEXTS.ANSWER_FOUND
-  }
-${CREATE_MESSAGE_TEXTS.PLATFORM} ${request.platformType === TELEGRAM ? TELEGRAM : VIBER}
-${CREATE_MESSAGE_TEXTS.SENDER} ${request.platformType === TELEGRAM ? '@' : ''}${request.userName}
-${CREATE_MESSAGE_TEXTS.DATE} ${request.creationDate.toLocaleString()}
-${CREATE_MESSAGE_TEXTS.LOCATION} ${CREATE_MESSAGE_TEXTS.LOCATION_LINE_BEGIN}${request.latitude},${
-    request.longitude
-  }${CREATE_MESSAGE_TEXTS.LOCATION_LINE_END}
-${CREATE_MESSAGE_TEXTS.MESSAGE_FROM_USER} ${request.message}`;
-}
-
-function sendPhotoMessageTelegram({ request, photo, chatId }) {
+function sendPhotoMessageTelegram({ message, photo, chatId }) {
   bot.telegram.sendPhoto(chatId, photo, {
-    caption: createMessage({
-      requestType: request.request_type,
-      platformType: request.platform_type,
-      userName: request.user_name,
-      creationDate: request.creation_date,
-      message: request.message,
-      latitude: request.location.y,
-      longitude: request.location.x,
-    }),
+    caption: message,
     parse_mode: 'HTML',
   });
 }
@@ -56,7 +34,7 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
         ],
       ],
     },
-    caption: createMessage(request),
+    caption: createMessageRequest(request, TELEGRAM),
     parse_mode: 'HTML',
   });
 }
