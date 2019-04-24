@@ -34,6 +34,8 @@ const {
   changeRequestActiveStatus,
 } = require('./requestDB');
 
+const createMessageRequest = require('./createMessageRequest');
+
 module.exports = {
   createRequest,
   makePhotoURL,
@@ -65,4 +67,5 @@ module.exports = {
   setUserStep,
   getUserLocation,
   changeRequestActiveStatus,
+  createMessageRequest,
 };

@@ -8,7 +8,7 @@ module.exports = {
     HOST: process.env.PGHOST,
     DATABASE: process.env.PGDATABASE,
     PASSWORD: process.env.PGPASSWORD,
-    PORT: process.env.PGPORT,
+    PORT: process.env.PGPORT || 3000,
     RETRIES: 5,
     DELAY: 3000,
   },
