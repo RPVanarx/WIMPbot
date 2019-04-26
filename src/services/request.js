@@ -16,11 +16,6 @@ module.exports = {
     return id;
   },
 
-  // TODO: check it it's necessary, then remove.
-  // createRequest(req) {
-  //   return request.create(req);
-  // },
-
   changeRequestActiveStatus({ reqId, status, moderatorId }) {
     return request.changeActiveStatus({ reqId, status, moderatorId });
   },
