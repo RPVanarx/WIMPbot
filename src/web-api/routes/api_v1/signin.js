@@ -1,16 +1,19 @@
 const Router = require('koa-router');
 
+const { getUserId } = require('../../../services/user');
+
 const auth = require('../../utils/telegram-authorization');
 const token = require('../../middleware/token');
-const { getUserId } = require('../../../services');
 
 const {
-  webApi: { WEB_API_PATH_SIGNIN },
+  webApi: {
+    PREFIX: { SIGNIN },
+  },
   platformType: { PLATFORM_TYPE_TELEGRAM },
 } = require('../../../config');
 
 const router = new Router({
-  prefix: WEB_API_PATH_SIGNIN,
+  prefix: SIGNIN,
 });
 
 async function signin(ctx, next) {

@@ -13,7 +13,11 @@ const log = require('../logger')(__filename);
 
 const { stage, stagesArray } = require('./scenes');
 const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
-const { deleteRequest, getUserActivity, processModerationRequest } = require('../services');
+const {
+  request: { deleteRequest },
+  user: { getUserActivity },
+  processModerationRequest,
+} = require('../services');
 
 const mediaAlbumCheckMiddleware = (ctx, next) => {
   if (ctx.message && ctx.message.media_group_id) {

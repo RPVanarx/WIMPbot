@@ -1,14 +1,18 @@
+const fs = require('fs');
+
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
+
 const {
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO },
-} = require('../../config');
+  PREFIX: { API_V1, PHOTO },
+} = require('../../config/webApi');
 
 const server = koaApp.callback();
-const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_PHOTO}`;
+const route = `${API_V1}${PHOTO}`;
 
-jest.mock('../../services');
-const { getFileLink } = require('../../services');
+jest.mock('../../services/photo');
+const { getPhotoStream } = require('../../services/photo');
 
 describe('/photo route test', () => {
   describe('Error test', () => {
@@ -24,9 +28,10 @@ describe('/photo route test', () => {
     });
     test(`should response with status 404 on GET ${route}/fake-photo.jpg`, async () => {
       const err = new Error('404: Not found');
-      err.code = 404;
-      getFileLink.mockImplementationOnce(() => Promise.reject(err));
+      err.code = 400;
+      getPhotoStream.mockRejectedValueOnce(err);
       const response = await request(server).get(`${route}/fake-photo.jpg`);
+      expect(getPhotoStream).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(404);
     });
     test(`should response with JSON that contains error message`, async () => {
@@ -41,7 +46,7 @@ describe('/photo route test', () => {
 
   describe('Image test', () => {
     test(`should response with image`, async () => {
-      getFileLink.mockImplementationOnce(() => Promise.resolve('https://picsum.photos/300'));
+      getPhotoStream.mockResolvedValueOnce(fs.createReadStream(`${__dirname}/test.png`));
 
       const response = await request(server).get(`${route}/1`);
       expect(response.status).toEqual(200);

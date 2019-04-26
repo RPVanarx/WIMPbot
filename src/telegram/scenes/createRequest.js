@@ -9,7 +9,10 @@ const {
   defaultValues: { REQUEST_MESSAGE_MAX },
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
-const { createRequest, isUserCanCreateRequest } = require('../../services');
+const {
+  request: { createRequest },
+  user: { canUserCreateRequest },
+} = require('../../services');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
@@ -21,7 +24,7 @@ const scene = new WizardScene(
       return ctx.scene.leave();
     }
     try {
-      const status = await isUserCanCreateRequest({
+      const status = await canUserCreateRequest({
         platformId: ctx.update.callback_query.from.id,
         platformType: TELEGRAM,
       });

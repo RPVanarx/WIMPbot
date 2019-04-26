@@ -1,11 +1,12 @@
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
 
 const {
-  webApi: { WEB_API_V1_PREFIX },
-} = require('../../config');
+  PREFIX: { API_V1 },
+} = require('../../config/webApi');
 
-const route = WEB_API_V1_PREFIX;
+const route = API_V1;
 const server = koaApp.callback();
 
 describe(`${route} route test`, () => {

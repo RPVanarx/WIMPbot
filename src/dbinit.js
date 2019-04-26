@@ -1,9 +1,12 @@
 const { Pool } = require('pg');
+
+const log = require('./logger')(__filename);
+
+const migrate = require('./migrate');
+
 const {
   credentials: { db: DB },
 } = require('./config');
-const migrate = require('./migrate');
-const log = require('./logger')(__filename);
 
 const pool = new Pool({
   user: DB.USER,

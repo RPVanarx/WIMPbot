@@ -9,7 +9,12 @@ const {
     CREATE_REQUEST_MESSAGES: { MANY_BAD_REQUESTS, CHOICE_TYPE },
   },
 } = require('../../config');
-const { getUserStep, setUserStep, getUserName, isUserCanCreateRequest } = require('../../services');
+const {
+  getUserStep,
+  setUserStep,
+  getUserName,
+  canUserCreateRequest,
+} = require('../../services/user');
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 
@@ -40,7 +45,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
       ]);
       return;
     }
-    const status = await isUserCanCreateRequest({
+    const status = await canUserCreateRequest({
       platformId: response.userProfile.id,
       platformType: VIBER,
     });

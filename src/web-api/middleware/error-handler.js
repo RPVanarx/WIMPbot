@@ -1,5 +1,5 @@
 const {
-  webApi: { WEB_API_JSON_ERROR_NAME: ERROR },
+  webApi: { JSON_ERROR_NAME: ERROR },
 } = require('../../config');
 
 function setErrorJSON(obj = {}, errorMessage = '') {

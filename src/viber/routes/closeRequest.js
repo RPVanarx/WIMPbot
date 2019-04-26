@@ -7,10 +7,8 @@ const {
   localesUA: { VIBER_REQUEST_CLOSE },
 } = require('../../config');
 const {
-  getUserStep,
-  getUserRequests,
-  getPlatformIdFromRequest,
-  deleteRequest,
+  user: { getUserStep, getPlatformIdFromRequest },
+  request: { getUserRequests, deleteRequest },
 } = require('../../services');
 const log = require('../../logger')(__filename);
 

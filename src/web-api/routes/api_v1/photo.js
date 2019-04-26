@@ -1,12 +1,13 @@
 const Router = require('koa-router');
 
-const photo = require('../../../utils/photo');
+const { getPhotoStream } = require('../../../services/photo');
+
 const {
-  webApi: { WEB_API_PATH_PHOTO },
-} = require('../../../config');
+  PREFIX: { PHOTO },
+} = require('../../../config/webApi');
 
 const router = new Router({
-  prefix: WEB_API_PATH_PHOTO,
+  prefix: PHOTO,
 });
 
 async function getPhoto(ctx) {
@@ -15,10 +16,10 @@ async function getPhoto(ctx) {
   const photoId = ctx.params.id;
 
   try {
-    ctx.body = await photo.getPhotoStream(photoId);
+    ctx.body = await getPhotoStream(photoId);
     ctx.type = 'image/jpeg';
   } catch (err) {
-    if (err.code === 404) ctx.throw(404, 'Photo not found', { error: err });
+    if (err.code === 400 || err.code === 404) ctx.throw(404, 'Photo not found', { error: err });
 
     ctx.throw(500, 'Cannot get photo', { error: err });
   }

@@ -23,14 +23,9 @@ const {
   },
 } = require('../../config');
 const {
-  registerUser,
-  setUserName,
-  getNewPhotoId,
-  getUserStep,
-  setUserStep,
-  createRequest,
-  getRequestsInArea,
-  getFileLink,
+  user: { registerUser, setUserName, getUserStep, setUserStep },
+  request: { createRequest, getRequestsInArea },
+  photo: { getNewPhotoId, getFileLink },
 } = require('../../services');
 const { sendOwnMessage } = require('../utils');
 const usersRequestBase = require('../usersRequestBase');

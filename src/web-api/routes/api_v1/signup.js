@@ -1,16 +1,19 @@
 const Router = require('koa-router');
 
+const { registerUser } = require('../../../services/user');
+
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
-const { registerUser } = require('../../../services');
 
 const {
-  webApi: { WEB_API_PATH_SIGNUP },
+  webApi: {
+    PREFIX: { SIGNUP },
+  },
   platformType: { TELEGRAM },
 } = require('../../../config');
 
 const router = new Router({
-  prefix: WEB_API_PATH_SIGNUP,
+  prefix: SIGNUP,
 });
 
 function validateQuery(ctx) {

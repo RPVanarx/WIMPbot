@@ -1,17 +1,19 @@
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
 const webToken = require('../utils/web-token');
+
 const {
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_REQUEST },
-} = require('../../config');
+  PREFIX: { API_V1, REQUEST },
+} = require('../../config/webApi');
 
 const server = koaApp.callback();
-const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_REQUEST}`;
+const route = `${API_V1}${REQUEST}`;
 
-jest.mock('../../utils/photo');
-const { sendPhotoStream } = require('../../utils/photo');
+jest.mock('../../services/photo');
+const { sendPhotoStream } = require('../../services/photo');
 
-describe(`${WEB_API_PATH_REQUEST} route test`, () => {
+describe(`${REQUEST} route test`, () => {
   let fakeToken = null;
   beforeAll(() => {
     fakeToken = webToken.put({ id: 0, name: 'dummy' });
@@ -29,6 +31,7 @@ describe(`${WEB_API_PATH_REQUEST} route test`, () => {
         .field({ lat: 10 })
         .field({ msg: 'cat' })
         .attach('photo', `${__dirname}/test.png`);
+
       expect(response.status).toEqual(200);
       expect(response.headers['content-type']).toContain('application/json');
 

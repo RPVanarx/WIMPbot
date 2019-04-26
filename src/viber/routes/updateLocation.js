@@ -8,7 +8,7 @@ const {
     UPDATE_LOCATION_MESSAGES: { UPDATE },
   },
 } = require('../../config');
-const { getUserStep, setUserStep } = require('../../services');
+const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/updateLocation/, async (message, response) => {

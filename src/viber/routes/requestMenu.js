@@ -6,7 +6,7 @@ const {
   platformType: { VIBER },
   localesUA: { REQUEST_MENU_MESSAGE },
 } = require('../../config');
-const { getUserStep, setUserStep } = require('../../services');
+const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/requestMenu/, async (message, response) => {

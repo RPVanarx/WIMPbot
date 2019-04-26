@@ -1,15 +1,18 @@
 const Router = require('koa-router');
 
+const { getRequestsInArea } = require('../../../services/request');
+
 const validator = require('../../utils/validator');
-const { getRequestsInArea } = require('../../../services');
 
 const {
   defaultValues: { RADIUS },
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_PHOTO, WEB_API_PATH_REQUESTS, WEB_API_PATH_LIST },
+  webApi: {
+    PREFIX: { API_V1, PHOTO, REQUESTS, LIST },
+  },
 } = require('../../../config');
 
 const router = new Router({
-  prefix: WEB_API_PATH_REQUESTS + WEB_API_PATH_LIST,
+  prefix: REQUESTS + LIST,
 });
 
 function validateQuery(ctx) {
@@ -20,7 +23,7 @@ function validateQuery(ctx) {
 
 function getPhotoUrl(photoId, { origin }) {
   const photoUrlPath = new URL(origin);
-  photoUrlPath.pathname = `${WEB_API_V1_PREFIX}${WEB_API_PATH_PHOTO}/${photoId}`;
+  photoUrlPath.pathname = `${API_V1}${PHOTO}/${photoId}`;
   return photoUrlPath;
 }
 

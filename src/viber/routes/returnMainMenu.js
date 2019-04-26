@@ -5,7 +5,7 @@ const {
   platformType: { VIBER },
   localesUA: { VIBER_BACK_MAIN_MENU },
 } = require('../../config');
-const { setUserStep } = require('../../services');
+const { setUserStep } = require('../../services/user');
 const badRequest = require('../badRequest');
 const log = require('../../logger')(__filename);
 

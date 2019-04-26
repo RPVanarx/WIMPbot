@@ -11,7 +11,7 @@ const {
     BUTTONS: { NEW_LOCATION, REGISTRATE_LOCATION },
   },
 } = require('../../config');
-const { getUserStep, setUserStep, getUserLocation } = require('../../services');
+const { getUserStep, setUserStep, getUserLocation } = require('../../services/user');
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 

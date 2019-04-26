@@ -7,7 +7,7 @@ const {
   },
   platformType: { TELEGRAM },
 } = require('../config');
-const { createMessageRequest } = require('../services');
+const createMessageRequest = require('../utils/createMessageRequest');
 
 function sendPhotoMessageTelegram({ message, photo, chatId }) {
   bot.telegram.sendPhoto(chatId, photo, {

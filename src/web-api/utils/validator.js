@@ -1,4 +1,5 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
+
 const globalValidator = require('../../utils/global-validator');
 
 const photoUploadValidator = new Validator({

@@ -8,7 +8,7 @@ const {
     FIND_REQUESTS_MESSAGES: { QUESTION_LOCATION },
   },
 } = require('../../config');
-const { getUserStep, setUserStep } = require('../../services');
+const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/findUsersRequests/, async (message, response) => {

@@ -8,7 +8,7 @@ const {
   platformType: { TELEGRAM },
   defaultValues: { TIMEOUT_TELEGRAM_SAMPLE },
 } = require('../../config');
-const { getUserRequests } = require('../../services');
+const { getUserRequests } = require('../../services/request');
 const { mainMenu } = require('../menu');
 const log = require('../../logger')(__filename);
 

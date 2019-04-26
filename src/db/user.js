@@ -51,7 +51,7 @@ async function getTimeOfLastRequest({ platformId, platformType }) {
   )).rows[0].creation_date;
 }
 
-async function updateBadRequestCountToZero({ platformId, platformType }) {
+async function resetBadRequest({ platformId, platformType }) {
   await client.query(
     `UPDATE users SET bad_request_count = 0 
     WHERE platform_id = $1 and platform_type = $2`,
@@ -138,7 +138,7 @@ module.exports = {
   findUsersInRequestRadius,
   badRequestCount,
   getTimeOfLastRequest,
-  updateBadRequestCountToZero,
+  resetBadRequest,
   getId,
   getName,
   setName,

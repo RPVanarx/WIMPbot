@@ -11,12 +11,10 @@ const {
   },
 } = require('../../config');
 const {
-  getUserStep,
-  setUserStep,
-  getUserRequests,
-  getFileLink,
-  createMessageRequest,
+  user: { getUserStep, setUserStep, getUserRequests },
+  photo: { getFileLink },
 } = require('../../services');
+const createMessageRequest = require('../../utils/createMessageRequest');
 const { sendOwnMessage } = require('../utils');
 const log = require('../../logger')(__filename);
 

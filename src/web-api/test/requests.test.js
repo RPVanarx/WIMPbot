@@ -1,11 +1,13 @@
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
+
 const {
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_REQUESTS },
-} = require('../../config');
+  PREFIX: { API_V1, REQUESTS },
+} = require('../../config/webApi');
 
 const server = koaApp.callback();
-const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_REQUESTS}`;
+const route = `${API_V1}${REQUESTS}`;
 
 describe('/reqests route test', () => {
   test(`should response with status 404 on GET ${route}`, async () => {

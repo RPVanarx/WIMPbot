@@ -1,10 +1,9 @@
 const { createHash, createHmac } = require('crypto');
+
 const {
   credentials: { TELEGRAM_TOKEN },
-  webApi: { WEB_AUTH_AGE },
+  webApi: { WEB_AUTH_AGE, SHA_256_HASH_LENGTH },
 } = require('../../config');
-
-const SHA_256_HASH_LENGTH = 64;
 
 function validatePayload(data) {
   if (!data) throw new TypeError('Empty data!');

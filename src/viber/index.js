@@ -1,7 +1,7 @@
 const http = require('http');
 const bot = require('./bot');
 const ngrokURL = require('./getNgrokPublicUrl');
-const routes = require('./routes');
+const routes = require('./routes'); // TODO: use or remove
 const log = require('../logger')(__filename);
 
 const port = 3000;
@@ -22,4 +22,10 @@ process
     process.exit(1);
   });
 
-module.exports = { launch: () => startViber() };
+function launch() {
+  startViber().catch(err => log.error({ err }, `Cannot start viber: ${err}`));
+}
+
+module.exports = {
+  launch,
+};

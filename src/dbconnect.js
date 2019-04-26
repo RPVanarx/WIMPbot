@@ -1,9 +1,12 @@
 const { Pool } = require('pg');
+
+const log = require('./logger')(__filename);
+
 const dbinit = require('./dbinit');
+
 const {
   credentials: { db },
 } = require('./config');
-const log = require('./logger')(__filename);
 
 if (!dbinit.isInitialized) {
   log.warn(`DBconnect: DB is not initialized! You should run init first!`);

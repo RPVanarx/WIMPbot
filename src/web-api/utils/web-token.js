@@ -1,6 +1,7 @@
 const crypto = require('crypto');
+
 const {
-  webApi: { WEB_TOKEN_KEY, WEB_AUTH_AGE },
+  webApi: { TOKEN_KEY, AUTH_AGE },
 } = require('../../config');
 
 const algorithm = 'aes-256-cbc';
@@ -9,7 +10,9 @@ const ivSize = 16; // aes-256 = 256b = 16B
 
 function getKeyHash() {
   const hash = crypto.createHash('sha256');
-  hash.update(WEB_TOKEN_KEY.toString());
+
+  if (!TOKEN_KEY) throw new Error('No token key!');
+  hash.update(TOKEN_KEY.toString());
   return hash.digest();
 }
 
@@ -52,7 +55,7 @@ function put(chest, date = new Date()) {
 function isDateExpired({ date }) {
   const age = Date.now() - date.getTime();
 
-  if (age > WEB_AUTH_AGE) return true;
+  if (age > AUTH_AGE) return true;
 
   return false;
 }

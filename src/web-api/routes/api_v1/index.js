@@ -7,11 +7,11 @@ const signin = require('./signin');
 const signup = require('./signup');
 
 const {
-  webApi: { WEB_API_V1_PREFIX },
-} = require('../../../config');
+  PREFIX: { API_V1 },
+} = require('../../../config/webApi');
 
 const router = new Router({
-  prefix: WEB_API_V1_PREFIX,
+  prefix: API_V1,
 });
 
 router.get('/', ctx => {

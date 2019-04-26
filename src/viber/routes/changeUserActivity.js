@@ -7,7 +7,7 @@ const {
   localesUA: { DEACTIVATE_USER, ACTIVATE_USER },
   viberEvents: { TRUE, FALSE },
 } = require('../../config');
-const { getUserStep, setUserStep, changeUserActivity } = require('../../services');
+const { getUserStep, setUserStep, changeUserActivity } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 bot.onTextMessage(/changeUserActivity/, async (message, response) => {

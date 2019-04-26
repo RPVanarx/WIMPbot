@@ -8,7 +8,7 @@ const {
   platformType: { TELEGRAM },
 } = require('../../config');
 const { mainMenu, yesNoQuestion } = require('../menu');
-const { changeUserActivity } = require('../../services');
+const { changeUserActivity } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(

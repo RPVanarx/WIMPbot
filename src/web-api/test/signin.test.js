@@ -1,19 +1,21 @@
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
+
 const {
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNIN },
-} = require('../../config');
+  PREFIX: { API_V1, SIGNIN },
+} = require('../../config/webApi');
 
 const server = koaApp.callback();
-const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNIN}`;
+const route = `${API_V1}${SIGNIN}`;
 
 jest.mock('../utils/telegram-authorization');
-jest.mock('../../services');
+jest.mock('../../services/user');
 
-const { getUserId } = require('../../services');
+const { getUserId } = require('../../services/user');
 const authorize = require('../utils/telegram-authorization');
 
-describe(`${WEB_API_PATH_SIGNIN} route test`, () => {
+describe(`${SIGNIN} route test`, () => {
   describe('Error test', () => {
     beforeAll(() => {
       authorize.mockImplementation(() => {

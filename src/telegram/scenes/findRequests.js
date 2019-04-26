@@ -11,7 +11,10 @@ const {
 } = require('../../config');
 const { mainMenu, newOrRegistrateLocation } = require('../menu');
 const log = require('../../logger')(__filename);
-const { getRequestsInRegLocation, getRequestsInArea, sendPhotoMessage } = require('../../services');
+const {
+  request: { getRequestsInRegLocation, getRequestsInArea },
+  message: { sendPhotoMessage },
+} = require('../../services');
 
 const scene = new WizardScene(
   name,

@@ -6,7 +6,7 @@ const errorHandler = require('./middleware/error-handler');
 const rootRouter = require('./routes');
 
 const {
-  webApi: { WEB_PORT, WEB_CORS_ORIGIN, WEB_CORS_ALLOW_METHODS, WEB_CORS_MAX_AGE },
+  webApi: { PORT, CORS },
 } = require('../config');
 
 const app = new Koa();
@@ -16,9 +16,9 @@ app.on('error', (err, ctx) => {
 });
 
 const corsOptions = {
-  origin: WEB_CORS_ORIGIN,
-  allowMethods: WEB_CORS_ALLOW_METHODS,
-  maxAge: WEB_CORS_MAX_AGE,
+  origin: CORS.ORIGIN,
+  allowMethods: CORS.ALLOW_METHODS,
+  maxAge: CORS.MAX_AGE,
   credentials: true,
   keepHeadersOnError: true,
 };
@@ -31,8 +31,8 @@ app.use(rootRouter.routes());
 app.use(rootRouter.allowedMethods());
 
 function listen() {
-  return app.listen(WEB_PORT, () => {
-    log.info(`Web API is listening on port ${WEB_PORT}`);
+  return app.listen(PORT, () => {
+    log.info(`Web API is listening on port ${PORT}`);
   });
 }
 

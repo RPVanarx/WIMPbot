@@ -1,4 +1,5 @@
 const { Validator, Rule } = require('@cesium133/forgjs');
+
 const { defaultValues: DEFAULT_VALUES } = require('../config');
 
 // HACK: Remove duplicates from array

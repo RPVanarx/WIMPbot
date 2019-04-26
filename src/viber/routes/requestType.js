@@ -8,7 +8,7 @@ const {
     CREATE_REQUEST_MESSAGES: { PHOTO },
   },
 } = require('../../config');
-const { getUserStep, setUserStep } = require('../../services');
+const { getUserStep, setUserStep } = require('../../services/user');
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 

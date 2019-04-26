@@ -5,7 +5,7 @@ const {
   platformType: { VIBER },
   localesUA: { REGISTRATION_MENU_MESSAGE },
 } = require('../../config');
-const { getUserActivity, getUserStep, setUserStep } = require('../../services');
+const { getUserActivity, getUserStep, setUserStep } = require('../../services/user');
 const badRequest = require('../badRequest');
 const log = require('../../logger')(__filename);
 

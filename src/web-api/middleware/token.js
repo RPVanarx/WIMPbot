@@ -1,14 +1,14 @@
 const webToken = require('../utils/web-token');
 
 const {
-  webApi: { WEB_AUTH_AGE },
+  webApi: { AUTH_AGE },
 } = require('../../config');
 
 const FIELD_TOKEN = 'token';
 
 function set() {
-  const maxAge = Number(WEB_AUTH_AGE);
-  if (Number.isNaN(maxAge)) throw new TypeError('WEB_AUTH_AGE must be a number!');
+  const maxAge = Number(AUTH_AGE);
+  if (Number.isNaN(maxAge)) throw new TypeError('AUTH_AGE must be a number!');
 
   return async (ctx, next) => {
     ctx.assert(ctx.chest, 500, 'Token set error! No chest found!');

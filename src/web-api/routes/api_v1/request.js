@@ -1,25 +1,32 @@
 const Router = require('koa-router');
 
-const multiparse = require('../../utils/multipart-parser');
+const {
+  request: { createRequest },
+  photo: { sendPhotoStream },
+} = require('../../../services');
+
 const token = require('../../middleware/token');
+const multiparse = require('../../utils/multipart-parser');
 const validator = require('../../utils/validator');
-const photoService = require('../../../utils/photo');
-const { createRequest } = require('../../../services');
 
 const {
-  webApi: { WEB_API_PATH_REQUEST, WEB_PHOTO_FILE_SIZE_MAX, WEB_POST_FIELD_LENGTH_MAX },
+  webApi: {
+    PREFIX: { REQUEST },
+    PHOTO_FILE_SIZE_MAX,
+  },
   platformType: { TELEGRAM },
   telegramEvents: {
     BUTTONS: { SEARCH: REQUEST_TYPE_SEARCH },
   },
 } = require('../../../config');
 
-const router = new Router({
-  prefix: WEB_API_PATH_REQUEST,
-});
-
 const POST_FIELDS_MAX = 3;
 const POST_FILES_MAX = 1;
+const POST_FIELD_LENGTH_MAX = 1024;
+
+const router = new Router({
+  prefix: REQUEST,
+});
 
 function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) {
   const errors = validator.requestFormPresence({ msg, lon, lat, photo });
@@ -53,7 +60,7 @@ function onFile(fieldName, stream, fileName, encoding, mimeType) {
     throwValidationErrors(errors);
   }
 
-  return photoService.sendPhotoStream(stream);
+  return sendPhotoStream(stream);
 }
 
 function onField(name, value) {
@@ -68,9 +75,9 @@ async function readPostForm(ctx) {
   const options = {
     headers: ctx.req.headers,
     limits: {
-      fieldSize: WEB_POST_FIELD_LENGTH_MAX,
+      fieldSize: POST_FIELD_LENGTH_MAX,
       fields: POST_FIELDS_MAX,
-      fileSize: WEB_PHOTO_FILE_SIZE_MAX,
+      fileSize: PHOTO_FILE_SIZE_MAX,
       files: POST_FILES_MAX,
       parts: POST_FIELDS_MAX + POST_FILES_MAX,
     },

@@ -1,14 +1,16 @@
 const request = require('supertest');
+
 const { koaApp } = require('../index.js');
+
 const {
-  webApi: { WEB_API_V1_PREFIX, WEB_API_PATH_SIGNUP },
-} = require('../../config');
+  PREFIX: { API_V1, SIGNUP },
+} = require('../../config/webApi');
 const webToken = require('../utils/web-token');
 
 const server = koaApp.callback();
-const route = `${WEB_API_V1_PREFIX}${WEB_API_PATH_SIGNUP}`;
+const route = `${API_V1}${SIGNUP}`;
 
-describe('/signup route test', () => {
+describe(`${SIGNUP} route test`, () => {
   let fakeToken;
   let validFakeRequest;
   beforeAll(() => {
