@@ -11,7 +11,8 @@ const {
   },
 } = require('../../config');
 const {
-  user: { getUserStep, setUserStep, getUserRequests },
+  user: { getUserStep, setUserStep },
+  request: { getUserRequests },
   photo: { getFileLink },
 } = require('../../services');
 const createMessageRequest = require('../../utils/createMessageRequest');

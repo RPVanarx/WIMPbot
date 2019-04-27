@@ -1,7 +1,7 @@
 const TextMessage = require('viber-bot').Message.Text;
 const bot = require('./bot');
 const keyboard = require('./menu');
-const { setUserStep } = require('../services');
+const { setUserStep } = require('../services/user');
 const {
   platformType: { VIBER },
   localesUA: { VIBER_BAD_REQUEST },

@@ -1,7 +1,6 @@
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
 const {
   localesUA: {
-    FIND_REQUESTS_MESSAGES: { NEW_LOCATION, REGISTRATE_LOCATION },
     VIBER_TELEPHONE: { SHARE_NUMBER },
     VIBER_KEYBOARD,
     WELCOME_MENU_BUTTON_REGISTRATION,
@@ -10,6 +9,9 @@ const {
     REQUESTS_BUTTONS,
     BUTTON_MESSAGES,
     FIND_REQUESTS_BUTTON,
+  },
+  viberEvents: {
+    BUTTONS: { NEW_LOCATION, REGISTRATE_LOCATION },
   },
 } = require('../../config');
 

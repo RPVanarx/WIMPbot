@@ -39,7 +39,7 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     USE_NEW_LOCATION: 'Ввести довільні координати',
   },
 
-  DEACTIVATE_USER_MESSAGES: {
+  DEACTIVATE_USER: {
     QUESTION: 'Ви впевнені що не бажаєте більше отримувати повідомлення про пошук?',
     TRUE: 'Ваш запит на відписку від повідомлень прийнято',
     FALSE: 'Відміна',

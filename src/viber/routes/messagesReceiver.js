@@ -27,6 +27,7 @@ const {
   request: { createRequest, getRequestsInArea },
   photo: { getNewPhotoId, getFileLink },
 } = require('../../services');
+const createMessageRequest = require('../../utils/createMessageRequest');
 const { sendOwnMessage } = require('../utils');
 const usersRequestBase = require('../usersRequestBase');
 const badRequest = require('../badRequest');
@@ -280,12 +281,26 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
             }
             requests.forEach(async (req, i) => {
               const photoURL = await getFileLink(req.photo);
+              const requestMessage = createMessageRequest(
+                {
+                  id: req.id,
+                  requestType: req.request_type,
+                  platformType: req.platform_type,
+                  userName: req.user_name,
+                  creationDate: req.creation_date,
+                  latitude: req.location.y,
+                  longitude: req.location.x,
+                  message: req.message,
+                },
+                VIBER,
+              );
               setTimeout(
                 () =>
                   sendOwnMessage({
                     chatId: response.userProfile.id,
                     photo: photoURL,
-                    request: req,
+                    requestId: req.id,
+                    message: requestMessage,
                   }),
                 1000 * i,
               );
