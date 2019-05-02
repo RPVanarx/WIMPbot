@@ -7,7 +7,9 @@
         "start": "node app.js",
         "test": "jest",
         "test-web-api": "jest /web-api",
-        "test-web-api-watch": "jest --watchAll /web-api"
+        "test-web-api-watch": "jest --watchAll /web-api",
+        "migrate-latest": "node ./node_modules/knex/bin/cli.js migrate:latest",
+        "migrate-rollback": "node ./node_modules/knex/bin/cli.js migrate:rollback"
     },
     "keywords": [
         "telegram",
