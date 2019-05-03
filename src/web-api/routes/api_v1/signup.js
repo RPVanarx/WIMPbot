@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-const { registerUser } = require('../../../services/user');
+const { create } = require('../../../services/user');
 
 const token = require('../../middleware/token');
 const validator = require('../../utils/validator');
@@ -36,7 +36,7 @@ async function signup(ctx) {
 
   let isRegistered = false;
   try {
-    isRegistered = await registerUser({
+    isRegistered = await create({
       platformId: ctx.chest.id,
       platformType: TELEGRAM,
       longitude,

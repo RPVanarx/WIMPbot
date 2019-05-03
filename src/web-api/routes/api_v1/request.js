@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 
 const {
-  request: { createRequest },
+  request: { create: createRequest },
   photo: { sendPhotoStream },
 } = require('../../../services');
 
