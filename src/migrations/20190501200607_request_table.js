@@ -2,10 +2,10 @@ exports.up = knex => {
   return knex.schema.withSchema('public').createTable('requests', table => {
     table.increments();
     table
-      .integer('ownerId')
+      .integer('userId')
       .unsigned()
       .notNullable();
-    table.foreign('ownerId').references('users.id');
+    table.foreign('userId').references('users.id');
 
     table.string('requestType', 10).notNullable();
     table.specificType('location', 'POINT').notNullable();
@@ -16,10 +16,7 @@ exports.up = knex => {
       .defaultTo(false)
       .notNullable();
 
-    table
-      .integer('moderatedBy')
-      .unsigned()
-      .defaultTo(0);
+    table.integer('moderatedBy').unsigned();
     table.foreign('moderatedBy').references('users.id');
 
     table.boolean('active').defaultTo(false);
