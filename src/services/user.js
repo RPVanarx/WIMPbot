@@ -1,69 +1,81 @@
-const { user } = require('../db');
+const db = require('../db');
 
 const {
-  localesUA: { CREATE_REQUEST_MESSAGES },
+  defaultValues: { BLOCK_INTERVAL },
 } = require('../config');
 
+function getUser({ platformId, platformType }) {
+  return db.user.get({ platformId, platformType });
+}
+
 module.exports = {
-  registerUser({ platformId, platformType, latitude, longitude }) {
-    return user.create({ platformId, platformType, latitude, longitude });
+  async create({ platformId, platformType, latitude, longitude }) {
+    const user = await db.user.get({ platformId, platformType });
+
+    if (user != null) {
+      return db.user.update({ id: user.id, latitude, longitude }).then(ids => ids[0]);
+    }
+
+    return db.user.create({ platformId, platformType, longitude, latitude });
   },
 
-  getUserId({ platformId, platformType }) {
-    return user.getId({ platformId, platformType });
+  async getUserId({ platformId, platformType }) {
+    const user = await getUser({ platformId, platformType });
+    return user && user.id;
   },
 
   changeUserActivity({ platformId, platformType, value }) {
-    return user.changeActivity({ platformId, platformType, value });
+    return db.user.update({ platformId, platformType, active: value });
   },
 
-  getUserActivity({ platformId, platformType }) {
-    return user.getActivityStatus({ platformId, platformType });
+  async getUserActivity({ platformId, platformType }) {
+    const user = await getUser({ platformId, platformType });
+    return user && user.active;
   },
 
-  getUsersInRequestRadius(location) {
-    return user.findUsersInRequestRadius(location);
+  getUsersInRadius(location) {
+    return db.user.getUsersInRadius(location);
   },
 
-  getUserName({ platformId, platformType }) {
-    return user.getName({ platformId, platformType });
+  async getUserName({ platformId, platformType }) {
+    const user = await getUser({ platformId, platformType });
+    return user && user.name;
   },
 
   setUserName({ platformId, platformType, userName }) {
-    return user.setName({ platformId, platformType, userName });
+    return db.user.update({ platformId, platformType, username: userName });
   },
 
-  getUserStep({ platformId, platformType }) {
-    return user.getStep({ platformId, platformType });
+  async getUserStep({ platformId, platformType }) {
+    const user = await getUser({ platformId, platformType });
+    return user && user.step;
   },
 
   setUserStep({ platformId, platformType, value }) {
-    return user.setStep({ platformId, platformType, value });
+    return db.user.update({ platformId, platformType, step: value });
   },
 
-  getUserLocation({ platformId, platformType }) {
-    return user.getLocation({ platformId, platformType });
+  async getUserLocation({ platformId, platformType }) {
+    const user = await getUser({ platformId, platformType });
+    return user && user.location;
   },
 
-  getPlatformTypeRequestId(requestId) {
-    return user.getPlatformTypeFromRequest(requestId);
-  },
-
-  getPlatformIdFromRequest(requestId) {
-    return user.getPlatformId(requestId);
+  async getRequestOwner(requestId) {
+    const { userId } = await db.request.get(requestId);
+    return db.user.get({ id: userId });
   },
 
   async canUserCreateRequest({ platformId, platformType }) {
-    const platform = { platformId, platformType };
-    const badRequestCount = await user.badRequestCount(platform);
-    if (badRequestCount < 5) {
-      return true;
-    }
-    const lastRequestTime = await user.getTimeOfLastRequest(platform);
-    if (new Date() - lastRequestTime < CREATE_REQUEST_MESSAGES.BLOCK_INTERVAL) {
+    const user = await getUser({ platformId, platformType });
+
+    if (user.badRequests < 5) return true;
+
+    const lastRequest = await db.request.getLastRequest({ userId: user.id });
+    if (lastRequest && new Date() - lastRequest.created < BLOCK_INTERVAL) {
       return false;
     }
-    await user.resetBadRequest(platform);
+
+    await db.user.update({ id: user.id, badRequests: 0 });
     return true;
   },
 };

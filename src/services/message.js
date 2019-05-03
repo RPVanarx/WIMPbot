@@ -17,10 +17,10 @@ module.exports = {
   async sendPhotoMessage({ platformType, userRequest, photo, chatId }) {
     const message = createMessageRequest(
       {
-        platformType: userRequest.platform_type,
-        requestType: userRequest.request_type,
-        userName: userRequest.user_name,
-        creationDate: userRequest.creation_date,
+        platformType: userRequest.platformType,
+        requestType: userRequest.requestType,
+        userName: userRequest.username,
+        creationDate: userRequest.creatied,
         message: userRequest.message,
         latitude: userRequest.location.y,
         longitude: userRequest.location.x,

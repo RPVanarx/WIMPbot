@@ -19,21 +19,28 @@ module.exports = {
 
   async processModerationRequest({ reqId, statusString, moderatorId }) {
     try {
-      const platformType = await user.getPlatformTypeRequestId(reqId);
       const status = JSON.parse(statusString);
-      const userRequest = await request.changeRequestActiveStatus({ reqId, status, moderatorId });
-      if (!status) {
-        message.sendMessage(platformType, userRequest.platform_id, MODERATION_FALSE);
-        return;
-      }
-      message.sendMessage(platformType, userRequest.platform_id, MODERATION_TRUE);
-      const users = await user.getUsersInRequestRadius(userRequest.location);
+      const req = await request.updateStatus({ reqId, status, moderatorId });
+
+      const { platformType, platformId, username } = await user.getRequestOwner(reqId);
+      const modMessage = status ? MODERATION_TRUE : MODERATION_FALSE;
+      message.sendMessage(platformType, platformId, modMessage);
+
+      if (!status) return;
+
+      const userRequest = {
+        ...req,
+        platformType,
+        username,
+      };
+
+      const users = await user.getUsersInRadius(req.location);
       users.forEach(client => {
         message.sendPhotoMessage({
-          platformType: client.platform_type,
+          platformType: client.platformType,
           userRequest,
-          photo: userRequest.photo,
-          chatId: client.platform_id,
+          photo: req.photo,
+          chatId: client.platformId,
         });
       });
     } catch (error) {
