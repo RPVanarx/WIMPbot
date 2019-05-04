@@ -51,8 +51,8 @@ module.exports = (request, recievePlatform) => {
   return `${recievePlatform === VIBER ? requestId(request.id) : ''}
 ${requestType(request.requestType)}
 ${messangerType(request.platformType)}
-${requestSender(request.userName, recievePlatform, request.platformType)}
-${requestDate(request.creationDate)}
+${requestSender(request.username, recievePlatform, request.platformType)}
+${requestDate(request.created)}
 ${requestLocation(request.latitude, request.longitude, recievePlatform)}
 ${userMessage(request.message)}`;
 };
