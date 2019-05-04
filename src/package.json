@@ -4,6 +4,7 @@
     "description": "telegram bot",
     "main": "index.js",
     "scripts": {
+        "prestart": "npm run migrate-latest",
         "start": "node app.js",
         "test": "jest",
         "test-web-api": "jest /web-api",
