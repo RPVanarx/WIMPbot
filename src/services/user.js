@@ -9,14 +9,14 @@ function getUser({ platformId, platformType }) {
 }
 
 module.exports = {
-  async create({ platformId, platformType, latitude, longitude }) {
+  async create({ platformId, platformType, latitude, longitude, username }) {
     const user = await db.user.get({ platformId, platformType });
 
     if (user != null) {
-      return db.user.update({ id: user.id, latitude, longitude }).then(ids => ids[0]);
+      return db.user.update({ id: user.id, latitude, longitude, username }).then(ids => ids[0]);
     }
 
-    return db.user.create({ platformId, platformType, longitude, latitude });
+    return db.user.create({ platformId, platformType, longitude, latitude, username });
   },
 
   async getUserId({ platformId, platformType }) {
