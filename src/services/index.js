@@ -17,16 +17,20 @@ module.exports = {
   message,
   photo,
 
-  async processModerationRequest({ reqId, statusString, moderatorId }) {
+  async processModerationRequest({
+    requestId,
+    approved,
+    moderator: { platformId: modPId, platformType: modPType },
+  }) {
     try {
-      const status = JSON.parse(statusString);
-      const req = await request.updateStatus({ reqId, status, moderatorId });
+      const moderatedBy = await user.getUserId({ platformType: modPType, platformId: modPId });
+      const req = await request.updateStatus({ requestId, approved, moderatedBy });
 
-      const { platformType, platformId, username } = await user.getRequestOwner(reqId);
-      const modMessage = status ? MODERATION_TRUE : MODERATION_FALSE;
+      const { platformType, platformId, username } = await user.getRequestOwner(requestId);
+      const modMessage = approved ? MODERATION_TRUE : MODERATION_FALSE;
       message.sendMessage(platformType, platformId, modMessage);
 
-      if (!status) return;
+      if (!approved) return;
 
       const userRequest = {
         ...req,
@@ -44,7 +48,7 @@ module.exports = {
         });
       });
     } catch (error) {
-      log.error({ err: error, reqId, statusString }, 'process moderate request');
+      log.error({ err: error, requestId, approved }, 'Cannot complete request moderation');
     }
   },
 };
