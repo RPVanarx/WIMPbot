@@ -14,29 +14,29 @@ module.exports = {
 
     if (user == null) throw new Error('Cannot create request: User (creator) not found');
 
-    const { id: reqId, created: creationDate } = await db.request.create({
+    const createdRequest = {
       ...request,
-      userId: user.id,
-    });
+      ...(await db.request.create({ ...request, userId: user.id })),
+    };
 
-    if (request.userName != null) user.username = request.userName;
+    if (createdRequest.username != null) user.username = request.username;
 
     user.badRequests++;
     await db.user.update(user);
 
     await telegram.sendPhotoMessageToModerate({
-      request: { ...request, reqId, creationDate },
+      request: createdRequest,
       moderatorId: MODERATOR_GROUP_ID,
     });
 
-    return reqId;
+    return createdRequest.id;
   },
 
-  async updateStatus({ reqId: id, status, moderatorId: moderatedBy }) {
-    const ids = await db.request.update({ id, approved: status, active: status, moderatedBy });
-    const request = await db.request.get({ id: ids[0] });
+  async updateStatus({ requestId: id, approved, moderatedBy }) {
+    const ids = await db.request.update({ id, approved, active: approved, moderatedBy });
+    const request = await db.request.get(ids[0]);
 
-    if (status) {
+    if (approved) {
       const owner = await db.user.get({ id: request.userId });
       owner.badRequests--;
       await db.user.update(owner);
@@ -46,7 +46,7 @@ module.exports = {
   },
 
   async getUserRequests({ platformId, platformType }) {
-    const user = db.user.get({ platformId, platformType });
+    const user = await db.user.get({ platformId, platformType });
 
     if (user == null) throw new Error('Cannot get requests: User (creator) not found');
 
