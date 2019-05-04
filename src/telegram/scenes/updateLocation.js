@@ -7,7 +7,7 @@ const {
   platformType: { TELEGRAM },
 } = require('../../config');
 const { mainMenu } = require('../menu');
-const { registerUser } = require('../../services/user');
+const { create: registerUser } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
 const scene = new WizardScene(
@@ -25,7 +25,7 @@ const scene = new WizardScene(
       await registerUser({
         platformId: ctx.message.from.id,
         platformType: TELEGRAM,
-        userName: ctx.message.from.username,
+        username: ctx.message.from.username,
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
       });

@@ -10,7 +10,7 @@ const {
 } = require('../../config');
 const { mainMenu, searchFoundMenu } = require('../menu');
 const {
-  request: { createRequest },
+  request: { create: createRequest },
   user: { canUserCreateRequest },
 } = require('../../services');
 const log = require('../../logger')(__filename);
@@ -85,7 +85,7 @@ const scene = new WizardScene(
       const request = {
         platformId: ctx.message.from.id,
         platformType: TELEGRAM,
-        userName: ctx.message.from.username,
+        username: ctx.message.from.username,
         requestType: ctx.session.userMessage.requestType,
         longitude: ctx.session.userMessage.location.longitude,
         latitude: ctx.session.userMessage.location.latitude,
