@@ -41,6 +41,7 @@ async function signup(ctx) {
       platformType: TELEGRAM,
       longitude,
       latitude,
+      username: ctx.chest.name,
     });
   } catch (err) {
     ctx.throw(500, 'Cannot register user!', { error: err });
