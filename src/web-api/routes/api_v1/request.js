@@ -33,9 +33,9 @@ function validateFormData(ctx, { fields: { msg, lon, lat }, files: { photo } }) 
   ctx.assert(!errors.length, 400, errors.join(' '));
 }
 
-async function formRequest({ fields: { lon, lat, msg } }, platformId, userName, photo) {
+async function formRequest({ fields: { lon, lat, msg } }, platformId, username, photo) {
   return {
-    userName,
+    username,
     platformId,
     platformType: TELEGRAM,
     requestType: REQUEST_TYPE_SEARCH,
@@ -104,8 +104,8 @@ async function getRequest(ctx) {
     ctx.throw(500, 'Cannot upload photo!', { error: err });
   }
 
-  const { id: platformId, name: userName } = ctx.chest;
-  return formRequest(formData, platformId, userName, photoId);
+  const { id: platformId, name: username } = ctx.chest;
+  return formRequest(formData, platformId, username, photoId);
 }
 
 async function postRequest(ctx) {
