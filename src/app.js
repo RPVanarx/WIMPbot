@@ -1,6 +1,6 @@
 const telegram = require('./telegram');
-const webApiServer = require('./web-api');
 const viber = require('./viber');
+const webApiServer = require('./web-api');
 
 function start() {
   telegram.launch();
