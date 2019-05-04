@@ -18,11 +18,11 @@ const router = new Router({
 
 async function signin(ctx, next) {
   const payload = { ...ctx.request.query };
-  // try {
-  //   auth(payload);
-  // } catch (err) {
-  //   ctx.throw(401, `Authentication failed: ${err.message}`);
-  // }
+  try {
+    auth(payload);
+  } catch (err) {
+    ctx.throw(401, `Authentication failed: ${err.message}`);
+  }
 
   let wimpUserId = null;
   try {
