@@ -36,7 +36,7 @@ function convertToResponse(dbRequests, ctx) {
       type: r.requestType,
       message: r.message,
       photoURL: getPhotoUrl(r.photo, ctx),
-      creationDate: r.created.getTime().toString(),
+      created: r.created.getTime().toString(),
       username: r.username,
       userPlatform: r.platformType,
       lon: r.location.x.toString(),

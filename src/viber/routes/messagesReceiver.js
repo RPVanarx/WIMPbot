@@ -42,7 +42,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           platformType: VIBER,
         })
       ) {
-        case 0: {
+        case undefined: {
           try {
             await registerUser({
               platformId: response.userProfile.id,
@@ -146,7 +146,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         await setUserName({
           platformId: response.userProfile.id,
           platformType: VIBER,
-          userName: message.contactPhoneNumber,
+          username: message.contactPhoneNumber,
         });
         await setUserStep({
           platformId: response.userProfile.id,
@@ -284,10 +284,10 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               const requestMessage = createMessageRequest(
                 {
                   id: req.id,
-                  requestType: req.request_type,
-                  platformType: req.platform_type,
-                  userName: req.user_name,
-                  creationDate: req.creation_date,
+                  requestType: req.requestType,
+                  platformType: req.platformType,
+                  username: req.username,
+                  created: req.created,
                   latitude: req.location.y,
                   longitude: req.location.x,
                   message: req.message,

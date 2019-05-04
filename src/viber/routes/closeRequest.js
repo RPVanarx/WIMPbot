@@ -15,7 +15,7 @@ const log = require('../../logger')(__filename);
 bot.onTextMessage(/closeRequest/, async (message, response) => {
   try {
     const requestId = Number.parseInt(message.text.split(':')[1], 10);
-    const { id: userIdFromRequest } = await getRequestOwner(requestId);
+    const { platformId: userIdFromRequest } = await getRequestOwner(requestId);
     if (
       (await getUserStep({
         platformId: response.userProfile.id,

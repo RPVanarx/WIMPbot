@@ -42,8 +42,8 @@ module.exports = {
     return user && user.name;
   },
 
-  setUserName({ platformId, platformType, userName }) {
-    return db.user.update({ platformId, platformType, username: userName });
+  setUserName({ platformId, platformType, username }) {
+    return db.user.update({ platformId, platformType, username });
   },
 
   async getUserStep({ platformId, platformType }) {

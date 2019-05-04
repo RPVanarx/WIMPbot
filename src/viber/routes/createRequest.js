@@ -39,6 +39,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
         platformType: VIBER,
         value: 5,
       });
+      usersRequestBase.set(response.userProfile.id, {});
       bot.sendMessage(response.userProfile, [
         new TextMessage(VIBER_TELEPHONE.NUMBER),
         keyboard.phoneShare,

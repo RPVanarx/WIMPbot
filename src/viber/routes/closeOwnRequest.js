@@ -49,15 +49,15 @@ bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
       value: 10,
     });
     requests.forEach(async (req, i) => {
-      req.user_name = YOU;
+      req.username = YOU;
       const photoURL = await getFileLink(req.photo);
       setTimeout(() => {
         const createMessage = createMessageRequest(
           {
             platformType: VIBER,
-            requestType: req.request_type,
-            userName: req.user_name,
-            creationDate: req.creation_date,
+            requestType: req.requestType,
+            username: req.username,
+            created: req.created,
             message: req.message,
             latitude: req.location.y,
             longitude: req.location.x,
