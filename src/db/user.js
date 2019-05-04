@@ -10,12 +10,13 @@ const USERS = 'users';
 const RADIUS_MI = distance.metersToMiles(RADIUS);
 
 module.exports = {
-  async create({ platformId, platformType, longitude, latitude }) {
+  async create({ platformId, platformType, longitude, latitude, username }) {
     const ids = await knex(USERS)
       .insert({
         platformId,
         platformType,
         location: helper.toPoint({ longitude, latitude }),
+        username,
       })
       .returning('id');
     return ids[0];
