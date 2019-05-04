@@ -23,13 +23,13 @@ function sendPhotoMessageToModerate({ request, moderatorId }) {
         [
           {
             text: MODER_BUTTON.APPROVE,
-            callback_data: `${MODERATE}:${request.reqId}${TRUE}`,
+            callback_data: `${MODERATE}:${request.id}${TRUE}`,
           },
         ],
         [
           {
             text: MODER_BUTTON.DECLINE,
-            callback_data: `${MODERATE}:${request.reqId}${FALSE}`,
+            callback_data: `${MODERATE}:${request.id}${FALSE}`,
           },
         ],
       ],

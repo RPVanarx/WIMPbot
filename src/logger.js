@@ -7,10 +7,6 @@ module.exports = (name = '', conf = { base: null }) => {
   if (ns) {
     ns = name.split('/src');
   }
-  const options = Object.assign({}, conf, {
-    name: ns[1],
-    level,
-  });
-  const log = pino(options);
-  return log;
+  const options = { ...conf, prettyPrint: { colorize: true }, name: ns[1], level };
+  return pino(options);
 };

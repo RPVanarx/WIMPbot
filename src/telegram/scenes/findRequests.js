@@ -12,7 +12,7 @@ const {
 const { mainMenu, newOrRegistrateLocation } = require('../menu');
 const log = require('../../logger')(__filename);
 const {
-  request: { getRequestsInRegLocation, getRequestsInArea },
+  request: { getInUserArea, getInArea },
   message: { sendPhotoMessage },
 } = require('../../services');
 
@@ -77,7 +77,7 @@ const scene = new WizardScene(
     try {
       let requests;
       if (!ctx.session.userMessage.location) {
-        requests = await getRequestsInRegLocation({
+        requests = await getInUserArea({
           platformId: ctx.message.from.id,
           platformType: TELEGRAM,
           radius: ctx.session.userMessage.newRadius,
@@ -85,7 +85,7 @@ const scene = new WizardScene(
         });
       }
       if (ctx.session.userMessage.location) {
-        requests = await getRequestsInArea({
+        requests = await getInArea({
           longitude: ctx.session.userMessage.location.longitude,
           latitude: ctx.session.userMessage.location.latitude,
           radius: ctx.session.userMessage.newRadius,

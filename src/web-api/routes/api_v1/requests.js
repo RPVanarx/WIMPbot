@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-const { getRequestsInArea } = require('../../../services/request');
+const { getInArea } = require('../../../services/request');
 
 const validator = require('../../utils/validator');
 
@@ -33,12 +33,12 @@ function convertToResponse(dbRequests, ctx) {
 
     return {
       id: r.id.toString(),
-      type: r.request_type,
+      type: r.requestType,
       message: r.message,
       photoURL: getPhotoUrl(r.photo, ctx),
-      creationDate: r.creation_date.getTime().toString(),
-      username: r.user_name,
-      userPlatform: r.platform_type,
+      created: r.created.getTime().toString(),
+      username: r.username,
+      userPlatform: r.platformType,
       lon: r.location.x.toString(),
       lat: r.location.y.toString(),
     };
@@ -53,7 +53,7 @@ function getRequests({ r, d, lon, lat }) {
     days: Number.parseInt(d, 10),
   };
 
-  return getRequestsInArea(payload) || [];
+  return getInArea(payload) || [];
 }
 
 async function getList(ctx) {

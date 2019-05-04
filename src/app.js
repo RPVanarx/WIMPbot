@@ -1,18 +1,11 @@
-const dbinit = require('./dbinit');
+const telegram = require('./telegram');
+const viber = require('./viber');
+const webApiServer = require('./web-api');
 
 function start() {
-  const telegram = require('./telegram'); // eslint-disable-line global-require
-  const webApiServer = require('./web-api'); // eslint-disable-line global-require
-  const viber = require('./viber'); // eslint-disable-line global-require
-
   telegram.launch();
   viber.launch();
   webApiServer.listen();
 }
 
-async function init() {
-  await dbinit.init();
-  start();
-}
-
-init();
+start();

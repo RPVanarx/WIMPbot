@@ -1,6 +1,6 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  localesUA: { DEACTIVATE_USER_MESSAGES },
+  localesUA: { DEACTIVATE_USER },
   telegramEvents: {
     SCENES: { DEACTIVATE_USER: name },
     BUTTONS: { YES },
@@ -14,12 +14,12 @@ const log = require('../../logger')(__filename);
 const scene = new WizardScene(
   name,
   ctx => {
-    ctx.reply(DEACTIVATE_USER_MESSAGES.QUESTION, yesNoQuestion);
+    ctx.reply(DEACTIVATE_USER.QUESTION, yesNoQuestion);
     return ctx.wizard.next();
   },
   async ctx => {
     if (!(ctx.update && ctx.update.callback_query && ctx.update.callback_query.data === YES)) {
-      ctx.reply(DEACTIVATE_USER_MESSAGES.FALSE, mainMenu);
+      ctx.reply(DEACTIVATE_USER.FALSE, mainMenu);
       return ctx.scene.leave();
     }
     try {
@@ -28,9 +28,9 @@ const scene = new WizardScene(
         platformType: TELEGRAM,
         value: false,
       });
-      ctx.reply(DEACTIVATE_USER_MESSAGES.TRUE, mainMenu);
+      ctx.reply(DEACTIVATE_USER.TRUE, mainMenu);
     } catch (error) {
-      ctx.reply(DEACTIVATE_USER_MESSAGES.FALSE, mainMenu);
+      ctx.reply(DEACTIVATE_USER.FALSE, mainMenu);
       log.error({ err: error }, 'deactivateUserScene');
     }
     return ctx.scene.leave();

@@ -82,10 +82,10 @@ callbackHandler.on(DELETE_REQUEST, async ctx => {
 });
 
 callbackHandler.on(MODERATE, async ctx => {
-  processModerationRequest({
-    reqId: ctx.state.reqId,
-    statusString: ctx.state.status,
-    moderatorId: ctx.update.callback_query.from.id,
+  await processModerationRequest({
+    requestId: ctx.state.reqId,
+    approved: ctx.state.status === 'true',
+    moderator: { platformId: ctx.update.callback_query.from.id, platformType: TELEGRAM },
   });
   ctx.deleteMessage();
 });

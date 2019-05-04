@@ -17,27 +17,38 @@ module.exports = {
   message,
   photo,
 
-  async processModerationRequest({ reqId, statusString, moderatorId }) {
+  async processModerationRequest({
+    requestId,
+    approved,
+    moderator: { platformId: modPId, platformType: modPType },
+  }) {
     try {
-      const platformType = await user.getPlatformTypeRequestId(reqId);
-      const status = JSON.parse(statusString);
-      const userRequest = await request.changeRequestActiveStatus({ reqId, status, moderatorId });
-      if (!status) {
-        message.sendMessage(platformType, userRequest.platform_id, MODERATION_FALSE);
-        return;
-      }
-      message.sendMessage(platformType, userRequest.platform_id, MODERATION_TRUE);
-      const users = await user.getUsersInRequestRadius(userRequest.location);
+      const moderatedBy = await user.getUserId({ platformType: modPType, platformId: modPId });
+      const req = await request.updateStatus({ requestId, approved, moderatedBy });
+
+      const { platformType, platformId, username } = await user.getRequestOwner(requestId);
+      const modMessage = approved ? MODERATION_TRUE : MODERATION_FALSE;
+      message.sendMessage(platformType, platformId, modMessage);
+
+      if (!approved) return;
+
+      const userRequest = {
+        ...req,
+        platformType,
+        username,
+      };
+
+      const users = await user.getUsersInRadius(req.location);
       users.forEach(client => {
         message.sendPhotoMessage({
-          platformType: client.platform_type,
+          platformType: client.platformType,
           userRequest,
-          photo: userRequest.photo,
-          chatId: client.platform_id,
+          photo: req.photo,
+          chatId: client.platformId,
         });
       });
     } catch (error) {
-      log.error({ err: error, reqId, statusString }, 'process moderate request');
+      log.error({ err: error, requestId, approved }, 'Cannot complete request moderation');
     }
   },
 };

@@ -23,8 +23,8 @@ const {
   },
 } = require('../../config');
 const {
-  user: { registerUser, setUserName, getUserStep, setUserStep },
-  request: { createRequest, getRequestsInArea },
+  user: { create: registerUser, setUserName, getUserStep, setUserStep },
+  request: { create: createRequest, getInArea },
   photo: { getNewPhotoId, getFileLink },
 } = require('../../services');
 const createMessageRequest = require('../../utils/createMessageRequest');
@@ -42,7 +42,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           platformType: VIBER,
         })
       ) {
-        case 0: {
+        case undefined: {
           try {
             await registerUser({
               platformId: response.userProfile.id,
@@ -146,14 +146,14 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
         await setUserName({
           platformId: response.userProfile.id,
           platformType: VIBER,
-          userName: message.contactPhoneNumber,
+          username: message.contactPhoneNumber,
         });
         await setUserStep({
           platformId: response.userProfile.id,
           platformType: VIBER,
           value: 6,
         });
-        usersRequestBase.get(response.userProfile.id).userName = message.contactPhoneNumber;
+        usersRequestBase.get(response.userProfile.id).username = message.contactPhoneNumber;
         bot.sendMessage(
           response.userProfile,
           new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu),
@@ -261,7 +261,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               return;
             }
             const requestParams = usersRequestBase.get(response.userProfile.id);
-            const requests = await getRequestsInArea({
+            const requests = await getInArea({
               latitude: requestParams.latitude,
               longitude: requestParams.longitude,
               radius: requestParams.radius,
@@ -284,10 +284,10 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               const requestMessage = createMessageRequest(
                 {
                   id: req.id,
-                  requestType: req.request_type,
-                  platformType: req.platform_type,
-                  userName: req.user_name,
-                  creationDate: req.creation_date,
+                  requestType: req.requestType,
+                  platformType: req.platformType,
+                  username: req.username,
+                  created: req.created,
                   latitude: req.location.y,
                   longitude: req.location.x,
                   message: req.message,

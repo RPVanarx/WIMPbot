@@ -9,7 +9,7 @@ const {
   webApi: {
     PREFIX: { SIGNIN },
   },
-  platformType: { PLATFORM_TYPE_TELEGRAM },
+  platformType: { TELEGRAM },
 } = require('../../../config');
 
 const router = new Router({
@@ -28,7 +28,7 @@ async function signin(ctx, next) {
   try {
     wimpUserId = await getUserId({
       platformId: payload.id,
-      platformType: PLATFORM_TYPE_TELEGRAM,
+      platformType: TELEGRAM,
     });
   } catch (err) {
     ctx.throw(500, 'Cannot get user ID!', { error: err });
