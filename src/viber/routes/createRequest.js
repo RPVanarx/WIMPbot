@@ -58,7 +58,7 @@ bot.onTextMessage(/createRequest/, async (message, response) => {
       platformType: VIBER,
       value: 6,
     });
-    usersRequestBase.set(response.userProfile.id, { userName: phoneNumber });
+    usersRequestBase.set(response.userProfile.id, { username: phoneNumber });
     bot.sendMessage(response.userProfile, new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu));
   } catch (error) {
     log.error({ err: error }, 'createRequest viber');

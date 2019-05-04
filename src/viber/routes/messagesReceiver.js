@@ -23,8 +23,8 @@ const {
   },
 } = require('../../config');
 const {
-  user: { registerUser, setUserName, getUserStep, setUserStep },
-  request: { createRequest, getRequestsInArea },
+  user: { create: registerUser, setUserName, getUserStep, setUserStep },
+  request: { create: createRequest, getInArea },
   photo: { getNewPhotoId, getFileLink },
 } = require('../../services');
 const createMessageRequest = require('../../utils/createMessageRequest');
@@ -153,7 +153,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
           platformType: VIBER,
           value: 6,
         });
-        usersRequestBase.get(response.userProfile.id).userName = message.contactPhoneNumber;
+        usersRequestBase.get(response.userProfile.id).username = message.contactPhoneNumber;
         bot.sendMessage(
           response.userProfile,
           new TextMessage(CHOICE_TYPE, keyboard.searchFoundMenu),
@@ -261,7 +261,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, async (message, response) => {
               return;
             }
             const requestParams = usersRequestBase.get(response.userProfile.id);
-            const requests = await getRequestsInArea({
+            const requests = await getInArea({
               latitude: requestParams.latitude,
               longitude: requestParams.longitude,
               radius: requestParams.radius,

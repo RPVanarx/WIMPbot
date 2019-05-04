@@ -1,5 +1,8 @@
 const KeyboardMessage = require('viber-bot').Message.Keyboard;
-const { getUserStep, getUserActivity, getUserRequests } = require('../services/user');
+const {
+  user: { getUserStep, getUserActivity },
+  request: { getUserRequests },
+} = require('../services');
 const keyboard = require('./menu');
 const {
   platformType: { VIBER },

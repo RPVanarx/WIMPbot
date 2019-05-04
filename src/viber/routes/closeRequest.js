@@ -7,7 +7,7 @@ const {
   localesUA: { VIBER_REQUEST_CLOSE },
 } = require('../../config');
 const {
-  user: { getUserStep, getPlatformIdFromRequest },
+  user: { getUserStep, getRequestOwner },
   request: { getUserRequests, deleteRequest },
 } = require('../../services');
 const log = require('../../logger')(__filename);
@@ -15,7 +15,7 @@ const log = require('../../logger')(__filename);
 bot.onTextMessage(/closeRequest/, async (message, response) => {
   try {
     const requestId = Number.parseInt(message.text.split(':')[1], 10);
-    const userIdFromRequest = await getPlatformIdFromRequest(requestId);
+    const { id: userIdFromRequest } = await getRequestOwner(requestId);
     if (
       (await getUserStep({
         platformId: response.userProfile.id,
