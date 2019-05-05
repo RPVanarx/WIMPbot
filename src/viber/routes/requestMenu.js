@@ -5,11 +5,12 @@ const badRequest = require('../badRequest');
 const {
   platformType: { VIBER },
   localesUA: { REQUEST_MENU_MESSAGE },
+  viberEvents: { REQUEST_MENU },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/requestMenu/, async (message, response) => {
+bot.onTextMessage(REQUEST_MENU, async (message, response) => {
   try {
     if (
       (await getUserStep({

@@ -7,11 +7,12 @@ const {
   localesUA: {
     FIND_REQUESTS_MESSAGES: { QUESTION_LOCATION },
   },
+  viberEvents: { FIND_USERS_REQUESTS },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/findUsersRequests/, async (message, response) => {
+bot.onTextMessage(FIND_USERS_REQUESTS, async (message, response) => {
   try {
     if (
       (await getUserStep({

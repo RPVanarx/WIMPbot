@@ -7,12 +7,13 @@ const {
   localesUA: {
     CREATE_REQUEST_MESSAGES: { PHOTO },
   },
+  viberEvents: { REQUEST_TYPE },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services/user');
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/requestType/, async (message, response) => {
+bot.onTextMessage(REQUEST_TYPE, async (message, response) => {
   try {
     const type = message.text.split(':')[1];
     if (

@@ -1,15 +1,16 @@
 const TextMessage = require('viber-bot').Message.Text;
-const keyboard = require('../menu');
 const bot = require('../bot');
+const keyboard = require('../menu');
 const {
   platformType: { VIBER },
   localesUA: { VIBER_BACK_MAIN_MENU },
+  viberEvents: { RETURN_MAIN_MENU },
 } = require('../../config');
 const { setUserStep } = require('../../services/user');
 const badRequest = require('../badRequest');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/returnMainMenu/, async (message, response) => {
+bot.onTextMessage(RETURN_MAIN_MENU, async (message, response) => {
   try {
     await setUserStep({
       platformId: response.userProfile.id,

@@ -8,6 +8,7 @@ const {
     VIBER_TELEPHONE,
     CREATE_REQUEST_MESSAGES: { MANY_BAD_REQUESTS, CHOICE_TYPE },
   },
+  viberEvents: { CREATE_REQUEST },
 } = require('../../config');
 const {
   getUserStep,
@@ -18,7 +19,7 @@ const {
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/createRequest/, async (message, response) => {
+bot.onTextMessage(CREATE_REQUEST, async (message, response) => {
   try {
     if (
       (await getUserStep({
