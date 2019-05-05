@@ -28,19 +28,17 @@ function getPhotoUrl(photoId, { origin }) {
 }
 
 function convertToResponse(dbRequests, ctx) {
-  return dbRequests.map(request => {
-    const r = { ...request };
-
+  return dbRequests.map(({ id, message, username, location: { x, y }, ...rest }) => {
     return {
-      id: r.id.toString(),
-      type: r.requestType,
-      message: r.message,
-      photoURL: getPhotoUrl(r.photo, ctx),
-      created: r.created.getTime().toString(),
-      username: r.username,
-      userPlatform: r.platformType,
-      lon: r.location.x.toString(),
-      lat: r.location.y.toString(),
+      id,
+      message,
+      username,
+      lon: x,
+      lat: y,
+      type: rest.requestType,
+      photoURL: getPhotoUrl(rest.photo, ctx),
+      created: rest.created.getTime().toString(),
+      userPlatform: rest.platformType,
     };
   });
 }
