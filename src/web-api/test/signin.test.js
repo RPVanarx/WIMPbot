@@ -52,7 +52,8 @@ describe(`${SIGNIN} route test`, () => {
       authorize.mockImplementationOnce(data => data);
       const response = await request(server).get(`${route}?id=0`);
       expect(response.status).toEqual(200);
-      expect(response.headers['set-cookie']).toBeDefined();
+      expect(response.headers['x-token']).toBeDefined();
+      expect(response.headers['x-token-expire']).toBeDefined();
     });
   });
 });
