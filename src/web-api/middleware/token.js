@@ -4,7 +4,8 @@ const {
   webApi: { AUTH_AGE },
 } = require('../../config');
 
-const FIELD_TOKEN = 'token';
+const HEADER_TOKEN = 'x-token';
+const HEADER_TOKEN_EXPIRE = 'x-token-expire';
 
 function set() {
   const maxAge = Number(AUTH_AGE);
@@ -14,7 +15,8 @@ function set() {
     ctx.assert(ctx.chest, 500, 'Token set error! No chest found!');
 
     const encryptedToken = webToken.put(ctx.chest);
-    ctx.cookies.set(FIELD_TOKEN, encryptedToken, { maxAge, overwrite: true });
+    ctx.set(HEADER_TOKEN, encryptedToken);
+    ctx.set(HEADER_TOKEN_EXPIRE, Date.now() + maxAge);
     await next();
   };
 }
@@ -23,7 +25,7 @@ function get() {
   let chest;
 
   return async (ctx, next) => {
-    const token = ctx.cookies.get(FIELD_TOKEN);
+    const token = ctx.request.get(HEADER_TOKEN);
     try {
       chest = webToken.get(token);
     } catch (err) {
