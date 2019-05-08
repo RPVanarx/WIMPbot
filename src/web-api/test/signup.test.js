@@ -22,7 +22,7 @@ describe(`${SIGNUP} route test`, () => {
     test(`should response with status 200 and proper JSON on valid request`, async () => {
       const response = await request(server)
         .get(validFakeRequest)
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(200);
       expect(response.headers['content-type']).toContain('application/json');
 
@@ -36,7 +36,7 @@ describe(`${SIGNUP} route test`, () => {
     test(`should response with status 400 on empty query GET ${route}`, async () => {
       const response = await request(server)
         .get(route)
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(400);
     });
     test(`should response with JSON that contains error message`, async () => {
@@ -50,7 +50,7 @@ describe(`${SIGNUP} route test`, () => {
     test(`should response with status 400 on invalid query`, async () => {
       const response = await request(server)
         .get(`${route}?a=1&b=2`)
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(400);
     });
     test(`should response with status 401 on invalid token`, async () => {

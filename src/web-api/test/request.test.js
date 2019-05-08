@@ -26,7 +26,7 @@ describe(`${REQUEST} route test`, () => {
       });
       const response = await request(server)
         .post(route)
-        .set('Cookie', [`token=${fakeToken}`])
+        .set('x-token', [`${fakeToken}`])
         .field({ lon: 10 })
         .field({ lat: 10 })
         .field({ msg: 'cat' })
@@ -57,7 +57,7 @@ describe(`${REQUEST} route test`, () => {
     test(`should response with 400 on empty POST`, async () => {
       const response = await request(server)
         .post(route)
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(400);
       expect(response.type).toContain('application/json');
 
@@ -70,7 +70,7 @@ describe(`${REQUEST} route test`, () => {
         .post(route)
         .field({ photo: 'Manny' })
         .field({ msg: 'cat' })
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(400);
       expect(response.type).toContain('application/json');
 
@@ -84,7 +84,7 @@ describe(`${REQUEST} route test`, () => {
         .field({ lon: 10 })
         .field({ lat: 10 })
         .field({ msg: 'cat' })
-        .set('Cookie', [`token=${fakeToken}`]);
+        .set('x-token', [`${fakeToken}`]);
       expect(response.status).toEqual(400);
       expect(response.type).toContain('application/json');
 
