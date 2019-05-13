@@ -34,9 +34,9 @@ function getPayload(ctx) {
 async function signup(ctx) {
   const { longitude, latitude } = getPayload(ctx);
 
-  let isRegistered = false;
+  let userId = false;
   try {
-    isRegistered = await create({
+    userId = await create({
       platformId: ctx.chest.id,
       platformType: TELEGRAM,
       longitude,
@@ -47,7 +47,7 @@ async function signup(ctx) {
     ctx.throw(500, 'Cannot register user!', { error: err });
   }
 
-  ctx.body = { registered: isRegistered };
+  ctx.body = { registered: !!userId };
 }
 
 router.get('/', token.get(), signup);
