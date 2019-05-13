@@ -19,7 +19,7 @@ const corsOptions = {
   origin: CORS.ORIGIN,
   allowMethods: CORS.ALLOW_METHODS,
   maxAge: CORS.MAX_AGE,
-  credentials: true,
+  exposeHeaders: [ 'x-token', 'x-token-expire' ],
   keepHeadersOnError: true,
 };
 
