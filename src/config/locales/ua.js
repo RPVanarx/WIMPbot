@@ -143,4 +143,6 @@ https://www.youtube.com/watch?v=vASw0m6YdWs`,
     BACK_MAIN_MENU: 'Повернутися в головне меню',
     CLOSE_REQUEST: 'Закрити заявку',
   },
+
+  ALREADY_REGISTRATED: 'Ви вже зареєстровані в системі',
 };

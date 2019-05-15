@@ -3,6 +3,8 @@ require('dotenv').config();
 module.exports = {
   TELEGRAM_TOKEN: process.env.TOKEN,
   VIBER_TOKEN: process.env.VIBER_TOKEN,
+  VIBER_WEBHOOK_PORT: process.env.VIBER_WEBHOOK_PORT,
+  VIBER_WEBHOOK_URL: process.env.VIBER_WEBHOOK_URL,
   DB: {
     USER: process.env.PGUSER,
     HOST: process.env.PGHOST,

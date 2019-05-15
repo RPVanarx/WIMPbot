@@ -3,7 +3,7 @@ const BotEvents = require('viber-bot').Events;
 const keyboard = require('../menu');
 const bot = require('../bot');
 const {
-  localesUA: { WELCOME_MESSAGE },
+  localesUA: { WELCOME_MESSAGE, ALREADY_REGISTRATED },
   platformType: { VIBER },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services/user');
@@ -25,8 +25,5 @@ bot.on(BotEvents.CONVERSATION_STARTED, async (response, isSubscribed) => {
     platformType: VIBER,
     value: 1,
   });
-  bot.sendMessage(
-    response.userProfile,
-    new TextMessage('Ви вже зареєстровані в системі', keyboard.mainMenu),
-  );
+  bot.sendMessage(response.userProfile, new TextMessage(ALREADY_REGISTRATED, keyboard.mainMenu));
 });

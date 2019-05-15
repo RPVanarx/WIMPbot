@@ -1,4 +1,7 @@
 module.exports = {
+  BOT_NAME: 'WIMPbot',
+  AVATAR_URL:
+    'https://dl-media.viber.com/5/share/2/long/vibes/icon/image/0x0/302d/913b8b544482db042d1ce87a479f70e8baf6414bba3574f777af112fcede302d.jpg',
   TRUE: 'true',
   FALSE: 'false',
   BUTTONS: {
