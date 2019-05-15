@@ -6,16 +6,21 @@ const {
     SCENES: { REGISTRATION_MENU, REQUEST_MENU },
     BUTTONS: { DELETE_REQUEST, MODERATE },
   },
-  localesUA: { WELCOME_MESSAGE, REGISTRATION_MENU_MESSAGE, REQUEST_MENU_MESSAGE },
+  localesUA: {
+    WELCOME_MESSAGE,
+    REGISTRATION_MENU_MESSAGE,
+    REQUEST_MENU_MESSAGE,
+    ALREADY_REGISTRATED,
+  },
   platformType: { TELEGRAM },
 } = require('../config');
 const log = require('../logger')(__filename);
 
 const { stage, stagesArray } = require('./scenes');
-const { startRegistrationButton, registrationMenu, requestMenu } = require('./menu');
+const { startRegistrationButton, registrationMenu, requestMenu, mainMenu } = require('./menu');
 const {
   request: { deleteRequest },
-  user: { getUserActivity },
+  user: { getUserActivity, getUserId },
   processModerationRequest,
 } = require('../services');
 
@@ -38,7 +43,13 @@ bot.use(stage.middleware());
 
 stagesArray.forEach(scene => bot.action(scene.name, ctx => ctx.scene.enter(scene.name)));
 
-bot.start(ctx => ctx.reply(WELCOME_MESSAGE, startRegistrationButton));
+bot.start(async ctx => {
+  if (!(await getUserId({ platformId: ctx.update.message.from.id, platformType: TELEGRAM }))) {
+    ctx.reply(WELCOME_MESSAGE, startRegistrationButton);
+    return;
+  }
+  ctx.reply(ALREADY_REGISTRATED, mainMenu);
+});
 
 bot.action(REGISTRATION_MENU, async ctx => {
   try {

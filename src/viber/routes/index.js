@@ -1,3 +1,5 @@
+const subscribed = require('./subscribed');
+const unsubscribed = require('./unsubscribed');
 const messagesReciever = require('./messagesReceiver');
 const conversationStarted = require('./conversationStarted');
 const registrate = require('./registrate');

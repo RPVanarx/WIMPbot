@@ -5,6 +5,7 @@ const badRequest = require('../badRequest');
 const {
   platformType: { VIBER },
   localesUA: { VIBER_REQUEST_CLOSE },
+  viberEvents: { CLOSE_REQUEST },
 } = require('../../config');
 const {
   user: { getUserStep, getRequestOwner },
@@ -12,7 +13,7 @@ const {
 } = require('../../services');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/closeRequest/, async (message, response) => {
+bot.onTextMessage(CLOSE_REQUEST, async (message, response) => {
   try {
     const requestId = Number.parseInt(message.text.split(':')[1], 10);
     const { platformId: userIdFromRequest } = await getRequestOwner(requestId);

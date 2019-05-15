@@ -4,12 +4,13 @@ const keyboard = require('../menu');
 const {
   platformType: { VIBER },
   localesUA: { REGISTRATION_MENU_MESSAGE },
+  viberEvents: { CONTROL_PANEL },
 } = require('../../config');
 const { getUserActivity, getUserStep, setUserStep } = require('../../services/user');
 const badRequest = require('../badRequest');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/controlPanel/, async (message, response) => {
+bot.onTextMessage(CONTROL_PANEL, async (message, response) => {
   try {
     if (
       (await getUserStep({

@@ -9,13 +9,14 @@ const {
   },
   viberEvents: {
     BUTTONS: { NEW_LOCATION, REGISTRATE_LOCATION },
+    LOCATION_CHOISE,
   },
 } = require('../../config');
 const { getUserStep, setUserStep, getUserLocation } = require('../../services/user');
 const usersRequestBase = require('../usersRequestBase');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/locationChoise/, async (message, response) => {
+bot.onTextMessage(LOCATION_CHOISE, async (message, response) => {
   try {
     const choise = message.text.split(':')[1];
     if (

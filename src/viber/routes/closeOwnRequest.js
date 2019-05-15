@@ -9,6 +9,7 @@ const {
     CLOSE_OWN_REQUESTS_MESSAGES: { NO_REQUESTS },
     YOU,
   },
+  viberEvents: { CLOSE_OWN_REQUEST },
 } = require('../../config');
 const {
   user: { getUserStep, setUserStep },
@@ -19,7 +20,7 @@ const createMessageRequest = require('../../utils/createMessageRequest');
 const { sendOwnMessage } = require('../utils');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/closeOwnRequest/, async (message, response) => {
+bot.onTextMessage(CLOSE_OWN_REQUEST, async (message, response) => {
   try {
     if (
       (await getUserStep({

@@ -7,11 +7,12 @@ const {
   localesUA: {
     UPDATE_LOCATION_MESSAGES: { UPDATE },
   },
+  viberEvents: { UPDATE_LOCATION },
 } = require('../../config');
 const { getUserStep, setUserStep } = require('../../services/user');
 const log = require('../../logger')(__filename);
 
-bot.onTextMessage(/updateLocation/, async (message, response) => {
+bot.onTextMessage(UPDATE_LOCATION, async (message, response) => {
   try {
     if (
       (await getUserStep({
