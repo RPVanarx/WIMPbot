@@ -4,6 +4,7 @@ const {
   telegramEvents: {
     SCENES: { REGISTRATION_USER: name },
   },
+  defaultValues: { TELEGRAM_HELP_PHOTO },
   platformType: { TELEGRAM },
 } = require('../../config');
 const { mainMenu, startRegistrationButton } = require('../menu');
@@ -14,6 +15,9 @@ const scene = new WizardScene(
   name,
   ctx => {
     ctx.reply(REGISTRATION_MESSAGES.CREATE);
+    ctx.replyWithPhoto({
+      url: TELEGRAM_HELP_PHOTO,
+    });
     return ctx.wizard.next();
   },
   async ctx => {
