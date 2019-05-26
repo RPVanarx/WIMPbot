@@ -6,14 +6,25 @@ const {
     BUTTONS: { MODERATE, FALSE, TRUE },
   },
   platformType: { TELEGRAM },
+  defaultValues: { TELEGRAM_ERROR_BLOCK },
 } = require('../config');
 const createMessageRequest = require('../utils/createMessageRequest');
+const { changeUserActivity } = require('../services/user');
 
-function sendPhotoMessageTelegram({ message, photo, chatId }) {
-  bot.telegram.sendPhoto(chatId, photo, {
-    caption: message,
-    parse_mode: 'HTML',
-  });
+async function sendPhotoMessageTelegram({ message, photo, chatId }) {
+  try {
+    await bot.telegram.sendPhoto(chatId, photo, {
+      caption: message,
+      parse_mode: 'HTML',
+    });
+  } catch (err) {
+    if (err.message === TELEGRAM_ERROR_BLOCK)
+      await changeUserActivity({
+        platformId: chatId,
+        platformType: TELEGRAM,
+        value: false,
+      });
+  }
 }
 
 function sendPhotoMessageToModerate({ request, moderatorId }) {

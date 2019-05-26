@@ -39,7 +39,7 @@ module.exports = {
 
   async getUserName({ platformId, platformType }) {
     const user = await getUser({ platformId, platformType });
-    return user && user.name;
+    return user && user.username;
   },
 
   setUserName({ platformId, platformType, username }) {

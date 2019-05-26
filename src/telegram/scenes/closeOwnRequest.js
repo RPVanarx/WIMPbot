@@ -1,6 +1,6 @@
 const WizardScene = require('telegraf/scenes/wizard');
 const {
-  localesUA: { CLOSE_OWN_REQUESTS_MESSAGES },
+  localesUA: { CLOSE_OWN_REQUESTS_MESSAGES, YOU },
   telegramEvents: {
     SCENES: { DELETE_REQUEST: name },
     BUTTONS: { DELETE_REQUEST },
@@ -9,6 +9,7 @@ const {
   defaultValues: { TIMEOUT_TELEGRAM_SAMPLE },
 } = require('../../config');
 const { getUserRequests } = require('../../services/request');
+const createMessageRequest = require('../../utils/createMessageRequest');
 const { mainMenu } = require('../menu');
 const log = require('../../logger')(__filename);
 
@@ -23,6 +24,20 @@ const scene = new WizardScene(name, async ctx => {
       return ctx.scene.leave();
     }
     requests.forEach(req => {
+      req.username = YOU;
+      const createMessage = createMessageRequest(
+        {
+          platformType: TELEGRAM,
+          requestType: req.requestType,
+          username: req.username,
+          created: req.created,
+          message: req.message,
+          latitude: req.location.y,
+          longitude: req.location.x,
+          id: req.id,
+        },
+        TELEGRAM,
+      );
       ctx.replyWithPhoto(req.photo, {
         reply_markup: {
           inline_keyboard: [
@@ -34,7 +49,8 @@ const scene = new WizardScene(name, async ctx => {
             ],
           ],
         },
-        caption: req.message,
+        caption: createMessage,
+        parse_mode: 'HTML',
       });
     });
     setTimeout(
